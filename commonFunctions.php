@@ -7,10 +7,10 @@ include("dbConnectionClass.php");
 class commonFunctions {
 
 	//protected $_dbHandle;
-    protected $_dbHandlepdo;
-	public $inputJsonArray;
-	protected $mail;
-	protected $req1;
+     $_dbHandlepdo;
+    $inputJsonArray;
+    $mail;
+    $req1;
 
 	function __construct($jsonString) {
 		
