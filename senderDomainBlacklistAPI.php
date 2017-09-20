@@ -41,13 +41,13 @@ fclose($fp);
 $to="shripad.kulkarni@nichelive.com";
 $subject="[Central ATM API] Email Alert to client for Sender Domain Blacklist ";
 $message="Email Alert for Sender Domain Blacklist from Central ATM API";
-$actionHandlerObj->sendEmailAlert($to,$subject,$message);
+$obj->sendEmailAlert($to,$subject,$message);
 
 //Send email alert to delivery team 
 $to="shripad.kulkarni@nichelive.com";
 $subject="Central ATM API] Email Alert to Deliver for Sender Domain Blacklist ";
 $message="Email Alert for Sender Domain Blacklist from Central ATM API";
-$actionHandlerObj->sendEmailAlert($to,$subject,$message);
+$obj->sendEmailAlert($to,$subject,$message);
 
 
 }
