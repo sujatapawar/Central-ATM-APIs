@@ -20,8 +20,13 @@ $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 
 $logsArray["Date/Time"]=date("Y-m-d");
 $logsArray["Req1"]=$obj->req1;
-$logsArray["Action1"]="XYZ IP Released";
-$logsArray["Action2"]="IP Wise Count Updated";
+//Releasing IP
+$obj->releaseIP();
+$logsArray["Action1"]=$json = "IP ID: ".$this->inputJsonArray['ip_id']." has been released";
+    
+//update IP wise count
+$obj->UpdateIPWiseCounts();
+$logsArray["Action2"]="IP wise counts are updated";
 
 
 if (file_exists($csvFileName)) {
