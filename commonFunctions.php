@@ -107,8 +107,8 @@ class commonFunctions {
     function releaseIP()
     {
         $json = $this->inputJsonArray;
-        $array = array(0,$json['ip_id'],$json['req1']);
-        $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=?,IP_id=?", " where req1_id=?",$array);        
+        $array = array(0,$json['req1']);
+        $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);        
         
     }// end of releaseIP
 	
