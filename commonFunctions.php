@@ -60,17 +60,11 @@ class commonFunctions {
 
 	} // end of sendEmailAlert
 
-	function callATMAPI()
-	{
-		//echo "Calling ATM API";
-
-	} // end of callATMAPI
+	
 
 	function postDataUsingCURL($url,$stringToPost)
     {
-        //echo "hi";
-        //echo $url;
-        //echo $stringToPost;
+        
 
         $curl_handle=curl_init();
         curl_setopt($curl_handle,CURLOPT_URL,$url);
@@ -86,16 +80,35 @@ class commonFunctions {
         }
 	}// end of postDataUsingCURL
 
-    function toGetIPWiseCount()
+    function UpdateIPWiseCounts()
     {
-        $arr=$this->_dbHandlepdo->forStatic_Query2($this->req1);
-        return $arr;
-    }
-    function toGetSpecificIPWiseCount($IP)
+        // Update IP wise sending counts (which table client_ip_detail and ipwise_count)
+	    echo "UpdateIPWiseCounts";
+    }// end of UpdateIPWiseCounts
+
+    function putAssetIntoFreezer($assetType, $asset)
     {
-        $arr=$this->_dbHandlepdo->forStatic_Query3($this->req1,$IP);
-        return $arr;
-    }
+	     echo "putAssetIntoFreezer";
+    
+    }// end of putAssetIntoFreezer	
+	
+     function putAssetIntoWarmup($assetType, $asset)
+    {
+	     echo "putAssetIntoWormup";
+    
+    }// end of putAssetIntoWormup
+    
+    function releaseIP()
+    {
+	    echo "releaseIP";
+    
+    }// end of releaseIP
+	
+	
+   
+	
+    	
+    
 
 }// end of class
 
