@@ -23,8 +23,8 @@ class commonFunctions {
 				
         //3. Instantiate common DB class using pdo
         $this->_dbHandlepdo = new DBConnection(DB_HOST,DB_NAME,DB_USER,DB_PASSWORD);
-
-		//mysql_select_db(DB_NAME, $this->_dbHandle);
+        
+        //mysql_select_db(DB_NAME, $this->_dbHandle);
 
 		//4. Instantiate PHPMailer
 	   $this->mail = new PHPMailer();
@@ -83,7 +83,13 @@ class commonFunctions {
     function UpdateIPWiseCounts()
     {
         // Update IP wise sending counts (which table client_ip_detail and ipwise_count)
-	    echo "UpdateIPWiseCounts";
+	    $json = $this->inputJsonArray;
+        foreach($json['ip_wise_counts'] as $IP=>$Count):
+            $array = array($Count,$IP);
+            $this->_dbHandlepdo->sql_Update("ipwise_count"," count=?", " where IP_id=?",$array);
+            $array = array($Count,$IP,$json['req1']);
+            $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=?", " where IP_id=? and req1_id=?",$array);  
+        endforeach;
     }// end of UpdateIPWiseCounts
 
     function putAssetIntoFreezer($assetType, $asset)
@@ -100,8 +106,10 @@ class commonFunctions {
     
     function releaseIP()
     {
-	    echo "releaseIP";
-    
+        $json = $this->inputJsonArray;
+        $array = array(0,$json['ip_id'],$json['req1']);
+        $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=?,IP_id=?", " where req1_id=?",$array);        
+        
     }// end of releaseIP
 	
 	
