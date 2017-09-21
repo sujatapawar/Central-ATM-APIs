@@ -9,7 +9,7 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":12345,"sending_ip_id":1,"IP":"50.17.178.225"}';//$_POST['jsonForBlacklistedIP'];
 
 //extract($_POST);
-$jsonString = '{"req1":12345,"Domain":"nichelive.com","ip_wise_counts":{"1":"200","2":"300"}}';//file_get_contents('php://input');
+$jsonString = '{"req1":2547,"Domain":"nichelive.com","ip_wise_counts":{"342":0,"343":"0"}}';//file_get_contents('php://input');
 
 if(isset($jsonString) and $jsonString!=""){
     $obj = new commonFunctions($jsonString);
@@ -19,10 +19,10 @@ $today_date = date("Y-m-d");
 $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 
 $logsArray["Date/Time"]=date("Y-m-d");
-$logsArray["Req1"]=$obj->req1;
+$logsArray["Input JSON "]=$jsonString;
 //Releasing IP
 $obj->releaseIP();
-$logsArray["Action1"]=$json = "IP ID: ".$this->inputJsonArray['ip_id']." has been released";
+$logsArray["Action1"]=$json = "IPs are released";
     
 //update IP wise count
 $obj->UpdateIPWiseCounts();
