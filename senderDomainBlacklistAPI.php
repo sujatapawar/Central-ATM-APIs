@@ -18,8 +18,8 @@ if(isset($jsonString) and $jsonString!=""){
 $today_date = date("Y-m-d");
 $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 
-$logsArray["Date/Time"]=date("Y-m-d");
-$logsArray["Input JSON "]=$jsonString;
+$logsArray["Date/Time"]=date("Y-m-d H:i:s");
+$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 //Releasing IP
 $obj->releaseIP();
 $logsArray["Action1"]=$json = "IPs are released";
