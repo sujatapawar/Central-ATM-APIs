@@ -10,6 +10,11 @@ class DBConnection
         $this->dbHandle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
      }
 
+     function connection_disconnect()
+     {
+        $this->dbHandle = null;
+     }
+
     function sql_Select($Table, $Fields, $Conditional = NULL, $array = NULL){
           $sql = "SELECT $Fields FROM $Table";
           if(!is_null($Conditional)){
@@ -61,7 +66,20 @@ class DBConnection
             return $deleteCount = $pre->rowCount();
     }
 
-
+    function sql_insert($Table, $Fields, $array){
+        $sql = "INSERT INTO $Table (";
+        $sql .= $Fields;
+        $sql .= ") Values(";
+        $val="";
+        for($i=0;$i<count($array);$i++)
+        {
+            $val .= "?,"; 
+        }
+        $sql .= rtrim($val,',').")";
+               $pre = $this->dbHandle->prepare($sql);
+                $pre->execute($array);
+                 return $insertCount = $this->dbHandle->lastInsertId();
+    }
 
 
 }

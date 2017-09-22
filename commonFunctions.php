@@ -22,7 +22,7 @@ class commonFunctions {
 		//2. Instantiate DB class
 				
         //3. Instantiate common DB class using pdo
-        $this->_dbHandlepdo = new DBConnection(DB_HOST,DB_NAME,DB_USER,DB_PASSWORD);
+        //$this->_dbHandlepdo = new DBConnection(DB_HOST,DB_NAME,DB_USER,DB_PASSWORD);
         
         //mysql_select_db(DB_NAME, $this->_dbHandle);
 
@@ -32,8 +32,18 @@ class commonFunctions {
 
 	} //end of construct
 
-	
-	
+	function connection_db_mail_master()
+    {
+        $this->_dbHandlepdo = new DBConnection(DBMAIL_MASTER_DB_HOST,DBMAIL_MASTER_DB_NAME,DBMAIL_MASTER_DB_USER,DBMAIL_MASTER_DB_PASSWORD);
+    }
+    function connection_atm()
+    {
+        $this->_dbHandlepdo = new DBConnection(AMT_DB_HOST,AMT_DB_NAME,AMT_DB_USER,AMT_DB_PASSWORD);
+    }
+	function connection_disconnect()
+    {
+        $this->_dbHandlepdo->connection_disconnect();
+    }
 	   
 	
     
@@ -83,13 +93,15 @@ class commonFunctions {
     function UpdateIPWiseCounts()
     {
         // Update IP wise sending counts (which table client_ip_detail and ipwise_count)
-	    $json = $this->inputJsonArray;
-        foreach($json['ip_wise_counts'] as $IP=>$Count):
-            $array = array($Count,$IP);
-            $this->_dbHandlepdo->sql_Update("ipwise_count"," count=?", " where IP_id=?",$array);
-            $array = array($Count,$IP,$json['req1']);
-            $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=?", " where IP_id=? and req1_id=?",$array);  
-        endforeach;
+        $this->connection_atm();
+            $json = $this->inputJsonArray;
+            foreach($json['ip_wise_counts'] as $IP=>$Count):
+                $array = array($Count,$IP);
+                $this->_dbHandlepdo->sql_Update("ipwise_count"," count=?", " where IP_id=?",$array);
+                $array = array($Count,$IP,$json['req1']);
+                $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=?", " where IP_id=? and req1_id=?",$array);  
+            endforeach;
+        $this->connection_disconnect();
     }// end of UpdateIPWiseCounts
 
     function putAssetIntoFreezer($assetType, $asset)
@@ -106,9 +118,11 @@ class commonFunctions {
     
     function releaseIP()
     {
-        $json = $this->inputJsonArray;
-        $array = array(0,$json['req1']);
-        $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);        
+        $this->connection_atm();
+            $json = $this->inputJsonArray;
+            $array = array(0,$json['req1']);
+            $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);
+        $this->connection_disconnect();        
         
     }// end of releaseIP
 	
