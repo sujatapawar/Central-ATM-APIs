@@ -6,12 +6,10 @@
 4. Notify client, client servicing, delivery.
 */
 include("commonFunctions.php");
-//$jsonString = '{"req1":12345,"sending_ip_id":1,"IP":"50.17.178.225"}';//$_POST['jsonForBlacklistedIP'];
+///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
+$jsonString = '{"req1":2545,"bounce_count":1,"ip_wise_counts":{"342":500,"343":"1000"}}';
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//extract($_POST);
-//$jsonString = '{"req1":2547,"Domain":"nichelive.com","ip_wise_counts":{"342":0,"343":"0"}}';//file_get_contents('php://input');
-$v = array('req1'=>2545,'bounce_count'=>1,'ip_wise_counts'=>array('342'=>500,'343'=>1000));
-$jsonString = json_encode($v);
 
 if(isset($jsonString) and $jsonString!=""){
     $obj = new commonFunctions($jsonString);
