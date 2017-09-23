@@ -10,7 +10,7 @@ include("commonFunctions.php");
 
 //extract($_POST);
 //$jsonString = '{"req1":2547,"Domain":"nichelive.com","ip_wise_counts":{"342":0,"343":"0"}}';//file_get_contents('php://input');
-$v = array('req1'=>2545,'spam_count'=>1,'ip_wise_counts'=>array('342'=>500,'343'=>1000));
+$v = array('req1'=>2545,'bounce_count'=>1,'ip_wise_counts'=>array('342'=>500,'343'=>1000));
 $jsonString = json_encode($v);
 
 if(isset($jsonString) and $jsonString!=""){
@@ -27,7 +27,7 @@ if(isset($jsonString) and $jsonString!=""){
         $array = array($Req1_Details[0]['cl_id']);
         $Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company", " where cl_id=?", $array);
         
-        $Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail']."\n Spam Count:".$json['bounce_count'];
+        $Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail']."\n Bounce Count:".$json['bounce_count'];
         $array=array(2,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
         $Exception_ID = $obj->_dbHandlepdo->sql_insert("client_exceptions", " exception_type_id,exception_client_id,exception_object_id,exception_open_date_time,exception_closed_date_time,exception_data,exception_status", $array);
         $array = array(32,$Exception_ID,$Req1_Details[0]['cl_id']);
