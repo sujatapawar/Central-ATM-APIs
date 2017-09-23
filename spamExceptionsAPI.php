@@ -11,7 +11,7 @@ include("commonFunctions.php");
 
 //extract($_POST);
 //$jsonString = '{"req1":2547,"Domain":"nichelive.com","ip_wise_counts":{"342":0,"343":"0"}}';//file_get_contents('php://input');
-$v = array('req1'=>14643,'spam_count'=>1,'ip_wise_counts'=>array('1'=>500,'2'=>1000));
+$v = array('req1'=>2545,'spam_count'=>1,'ip_wise_counts'=>array('342'=>500,'343'=>1000));
 $jsonString = json_encode($v);
 
 if(isset($jsonString) and $jsonString!="")
