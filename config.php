@@ -13,15 +13,4 @@ define('MAIL_PASSWORD', "ArkhvLuvGelk+vDYoR+UA/z0HWFUvOnMM5//1m+l9WcI");
 define('MAIL_SENDER_EMAIL', "customerfirst@juvlon.io");
 define('MAIL_SENDER_NAME', "Juvlon Support");
 
-
-
-define('DBMAIL_MASTER_DB_NAME', "dbmail_master");
-define('DBMAIL_MASTER_DB_USER', "root");
-define('DBMAIL_MASTER_DB_PASSWORD', "");
-define('DBMAIL_MASTER_DB_HOST', "localhost");
-
-define('AMT_DB_NAME', "ATM");
-define('AMT_DB_USER', "root");
-define('AMT_DB_PASSWORD', "");
-define('AMT_DB_HOST', "localhost");
 ?>
