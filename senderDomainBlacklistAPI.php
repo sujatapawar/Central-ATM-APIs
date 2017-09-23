@@ -8,8 +8,9 @@
 include("commonFunctions.php");
 //$jsonString = '{"req1":12345,"sending_ip_id":1,"IP":"50.17.178.225"}';//$_POST['jsonForBlacklistedIP'];
 
+
 //extract($_POST);
-$jsonString = '{"req1":2547,"Domain":"nichelive.com","ip_wise_counts":{"342":0,"343":"0"}}';//file_get_contents('php://input');
+$jsonString = '{"req1":2545,"Domain":"nichelive.com","ip_wise_counts":{"342":500,"343":"1000"}}';//file_get_contents('php://input');
 
 if(isset($jsonString) and $jsonString!=""){
     $obj = new commonFunctions($jsonString);
