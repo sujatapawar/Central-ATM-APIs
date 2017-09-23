@@ -40,18 +40,19 @@ if(isset($jsonString) and $jsonString!="")
 
     //Give our CSV file a name.
     $today_date = date("Y-m-d");
-    $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
+    $csvFileName = 'logs/spam_exceptions/'.$today_date.'.csv';
 
     $logsArray["Date/Time"]=date("Y-m-d H:i:s");
     $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
     //Releasing IP
     $obj->releaseIP();
-    $logsArray["Action1"]=$json = "IPs are released";
+    $logsArray["Action1"] = "IPs are released";
         
     //update IP wise count
     $obj->UpdateIPWiseCounts();
     $logsArray["Action2"]="IP wise counts are updated";
 
+    $logsArray["Action3"]="Execption generated and sending functions are blocked";
 
     if (file_exists($csvFileName)) {
     $fp = fopen($csvFileName, 'a');
