@@ -38,7 +38,7 @@ class commonFunctions {
     }
     function connection_atm()
     {
-        $this->_dbHandlepdo = new DBConnection(AMT_DB_HOST,AMT_DB_NAME,AMT_DB_USER,AMT_DB_PASSWORD);
+        $this->_dbHandlepdo = new DBConnection(ATM_DB_HOST,ATM_DB_NAME,ATM_DB_USER,ATM_DB_PASSWORD);
     }
 	function connection_disconnect()
     {
