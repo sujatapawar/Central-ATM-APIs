@@ -10,7 +10,7 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":2545,"Domain":"nichelive.com","ip_wise_counts":{"342":500,"343":"1000"}}';
+$jsonString = '{"req1":2550,"Domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!=""){
     $obj = new commonFunctions($jsonString);
