@@ -164,13 +164,20 @@ class commonFunctions {
     /* End Get IP From warm-up */
 	
 	
-   function getAllChildPool_ids($badIpId)
+   function getAllChildPoolIds($badIpId)
    {
      $this->connection_atm();
      $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_IPs", "childPool_id", " where IP_id=?", array($badIpId));
      return $arrayOfChildPoolIds;
 
-   }
+   }// end of getAllChildPoolIds
+	
+   function removeIP($badIPId)
+   {
+     $this->connection_atm();
+     $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIpId));
+
+   }// end of removeIP
 	
     	
     
