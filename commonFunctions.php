@@ -179,6 +179,14 @@ class commonFunctions {
 
    }// end of removeIP
 	
+   replanishIP($warmedUpIP,$childPoolId)
+   {
+    $this->connection_atm();
+    $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPoolId,$warmedUpIP,'1',1));
+   } // end of replanishIP	
+   	
+  
+	
     	
     
 
