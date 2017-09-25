@@ -96,8 +96,17 @@ class commonFunctions {
         $this->connection_atm();
             $json = $this->inputJsonArray;
             foreach($json['ip_wise_counts'] as $IP=>$Count):
-                $array = array($Count,$IP);
-                $this->_dbHandlepdo->sql_Update("ipwise_count"," count=count+?", " where IP_id=?",$array);
+                $array = array($IP,date('Y-m-d'));
+                $RecordExist = $this->_dbHandlepdo->sql_Select("ipwise_count", "id", " where IP_id=? and date=?", $array);
+                $array = array($Count,$IP,date('Y-m-d'));
+                
+                /* check ipwise_count for ip exist */
+                if(!empty($RecordExist)):
+                    $this->_dbHandlepdo->sql_Update("ipwise_count"," count=count+?", " where IP_id=? and date=? ",$array);
+                else:
+                    $this->_dbHandlepdo->sql_insert("ipwise_count", "count,IP_id,date", $array);
+                endif;
+                
                 $array = array($Count,$IP,$json['req1']);
                 $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=sent+?", " where IP_id=? and req1_id=?",$array);  
             endforeach;
