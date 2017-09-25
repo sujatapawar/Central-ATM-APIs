@@ -15,6 +15,11 @@ class DBConnection
         $this->dbHandle = null;
      }
 
+     function get_connection_variable()
+     {
+         return $this->dbHandle;
+     }
+
     function sql_Select($Table, $Fields, $Conditional = NULL, $array = NULL){
           $sql = "SELECT $Fields FROM $Table";
           if(!is_null($Conditional)){
