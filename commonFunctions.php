@@ -160,6 +160,7 @@ class commonFunctions {
             $SQL_DeleteIP->execute(array($WarmUpIP));
 
         $this->connection_disconnect();
+        return $WarmUpIP;
     }
     /* End Get IP From warm-up */
 	
@@ -168,6 +169,7 @@ class commonFunctions {
    {
      $this->connection_atm();
      $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_IPs", "childPool_id", " where IP_id=?", array($badIpId));
+     $this->connection_disconnect();
      return $arrayOfChildPoolIds;
 
    }// end of getAllChildPoolIds
@@ -176,25 +178,28 @@ class commonFunctions {
    {
      $this->connection_atm();
      $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIpId));
-
+     $this->connection_disconnect();
    }// end of removeIP
 	
    replanishIP($warmedUpIP,$childPoolId)
    {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPoolId,$warmedUpIP,'1',1));
+    $this->connection_disconnect();
    } // end of replanishIP	
 
     putIPInFreezer($badIPId)
    {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(10344,$badIPId,'1',1));
+    $this->connection_disconnect();
    }// end of putIPInFreezer
 
    putIPInWarmup($badIPId)
    {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(97,$badIPId,'1',1));
+    $this->connection_disconnect();
    }// end of putIPInWarmup
    	
   
