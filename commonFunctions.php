@@ -135,8 +135,33 @@ class commonFunctions {
         
     }// end of releaseIP
 	
-	
-   
+	/* Get IP From Warm-up */
+    function getIPFromWarmUp($IP_ID)
+    {
+        $this->connection_atm();
+            $Conn = $this->_dbHandlepdo->get_connection_variable();
+            $SQL_WarmUpIP = $Conn->prepare(
+                                            "select chip.IP_id from childPool_IPs  as chip, IP_master as ipm
+                                            where chip.IP_id=ipm.IP_id
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=1)
+                                            and ipm.env_id = (select env_id from IP_master where IP_id=?)
+                                            and ipm.grade = (select grade from IP_master where IP_id=?)
+                                            and chip.IP_id!=? order by chip.childStage_id DESC LIMIT 1"
+                                          );
+            $SQL_WarmUpIP->execute(array(3,3,3));
+            $WarmUpIP = $SQL_WarmUpIP->fetchAll();
+            $WarmUpIP = $WarmUpIP[0]['IP_id'];
+            
+            $SQL_DeleteIP = $Conn->prepare(
+                                            "delete from childPool_IPs 
+                                            where IP_id=? 
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=1)"
+                                          );
+            $SQL_DeleteIP->execute(array($WarmUpIP));
+
+        $this->connection_disconnect();
+    }
+    /* End Get IP From warm-up */
 	
     	
     
