@@ -184,6 +184,18 @@ class commonFunctions {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPoolId,$warmedUpIP,'1',1));
    } // end of replanishIP	
+
+    putIPInFreezer($badIPId)
+   {
+    $this->connection_atm();
+    $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(10344,$badIPId,'1',1));
+   }// end of putIPInFreezer
+
+   putIPInWarmup($badIPId)
+   {
+    $this->connection_atm();
+    $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(97,$badIPId,'1',1));
+   }// end of putIPInWarmup
    	
   
 	
