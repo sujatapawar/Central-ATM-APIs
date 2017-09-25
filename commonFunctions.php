@@ -163,6 +163,15 @@ class commonFunctions {
     }
     /* End Get IP From warm-up */
 	
+	
+   function getAllChildPool_ids($badIpId)
+   {
+     $this->connection_atm();
+     $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_IPs", "childPool_id", " where IP_id=?", array($badIpId));
+     return $arrayOfChildPoolIds;
+
+   }
+	
     	
     
 
