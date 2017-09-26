@@ -23,7 +23,7 @@ if(isset($jsonString) and $jsonString!="")
 
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-
+	
     $obj = new commonFunctions($jsonString);
 
     $lowRepIPId = $obj->inputJsonArray['ip_id'];
@@ -49,6 +49,22 @@ if(isset($jsonString) and $jsonString!="")
 		
 		/* insert IP in client_ip_detail */
 		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP);
+		
+		/* return from lowIPReputationAPI */
+		$obj->connection_atm();
+		$Result = $obj->_dbHandlepdo->sql_Select("domain_master as dm, Domain_MTA_mapping as dmm", 
+						 "dm.IP_id as 'IP ID', dm.domain_name as 'Sending Domain', dmm.mta as 'MTA Server ID', dmm.mta_name as 'MTA Server ID IP Address'", 
+						 " where dm.domain_id=dmm.domain_id and dm.IP_id =?", 
+						 array($warmedUpIP));
+
+		$ReturnArray = array('ip_id'=>$warmedUpIP,
+							 'sending_domain'=>$Result[0]['Sending Domain'],
+							 'mta_ip_address'=>$Result[0]['MTA Server ID IP Address'],
+							 'mta_id'=>$Result[0]['MTA Server ID']
+							); 
+		$obj->connection_disconnect();
+		header('Content-Type: application/json');
+		echo json_encode($ReturnArray);
 		
     }
     else
@@ -95,7 +111,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message="Email Alert for Low IP Reputation from Central ATM API";
 	$obj->sendEmailAlert($to,$subject,$message);
 
-
+	
 }
 
 
