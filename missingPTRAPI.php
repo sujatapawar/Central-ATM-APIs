@@ -44,6 +44,10 @@ if(isset($jsonString) and $jsonString!="")
     	  	$obj->replanishIP($warmedUpIP,$childPoolId);
     	  }
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
+
+		/* insert IP in client_ip_detail */
+		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP);
+		
     }
     else
     {
