@@ -23,10 +23,11 @@ if(isset($jsonString) and $jsonString!="")
 
     $obj = new commonFunctions($jsonString);
 
-    $blacklistedIPId = $obj->inputJsonArray['ip_id'];
+    echo $blacklistedIPId = $obj->inputJsonArray['ip_id'];
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
+	print_r($childPoolIdsArray); die;
 
     //delete all entries of the IP_Id 
     $obj->removeIP($blacklistedIPId);
