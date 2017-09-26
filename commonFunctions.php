@@ -177,7 +177,7 @@ class commonFunctions {
    function removeIP($badIPId)
    {
      $this->connection_atm();
-     $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIpId));
+     $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIPId));
      $this->connection_disconnect();
    }// end of removeIP
 	
