@@ -148,7 +148,7 @@ class commonFunctions {
                                             and ipm.grade = (select grade from IP_master where IP_id=?)
                                             and chip.IP_id!=? order by chip.childStage_id DESC LIMIT 1"
                                           );
-            $SQL_WarmUpIP->execute(array(3,3,3));
+            $SQL_WarmUpIP->execute(array($IP_ID,$IP_ID,$IP_ID));
             $WarmUpIP = $SQL_WarmUpIP->fetchAll();
             $WarmUpIP = $WarmUpIP[0]['IP_id'];
             
