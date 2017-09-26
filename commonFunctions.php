@@ -164,7 +164,21 @@ class commonFunctions {
     }
     /* End Get IP From warm-up */
 	
-	
+	/* Insert IP in client_ip_detail */
+    function insert_IP_in_ClientIP_Detail($WarmUp_IP_ID)
+    {
+        $this->connection_atm();
+        $json = $this->inputJsonArray;
+        
+        $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id", " where req1_id=?", array($json['req1']));
+        $ClientID = $ClientID[0]['cl_id'];
+        
+        $array = array($json['req1'],$ClientID,$WarmUp_IP_ID,0,1,date('Y-m-d')); 
+        $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $array);
+        $this->connection_disconnect();
+    }
+    /* End Insert IP in client_ip_detail */
+
    function getAllChildPoolIds($badIpId)
    {
      $this->connection_atm();
