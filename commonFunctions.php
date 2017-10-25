@@ -102,13 +102,13 @@ class commonFunctions {
                 
                 /* check ipwise_count for ip exist */
                 if(!empty($RecordExist)):
-                    $this->_dbHandlepdo->sql_Update("ipwise_count"," count=count+?", " where IP_id=? and date=? ",$array);
+                    $this->_dbHandlepdo->sql_Update("ipwise_count"," count=count-?", " where IP_id=? and date=? ",$array);
                 else:
                     $this->_dbHandlepdo->sql_insert("ipwise_count", "count,IP_id,date", $array);
                 endif;
                 
                 $array = array($Count,$IP,$json['req1']);
-                $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=sent+?", " where IP_id=? and req1_id=?",$array);  
+                $this->_dbHandlepdo->sql_Update("client_ip_detail"," sent=sent-?", " where IP_id=? and req1_id=?",$array);  
             endforeach;
         $this->connection_disconnect();
     }// end of UpdateIPWiseCounts
