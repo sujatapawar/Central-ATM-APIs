@@ -9,7 +9,7 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":34,"ip_id":342,"ip_wise_counts":{"342":5000,"352":"4000"}}';
+$jsonString = '{"req1":44,"ip_id":342,"ip_wise_counts":{"342":10}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
@@ -27,10 +27,10 @@ if(isset($jsonString) and $jsonString!="")
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
-	//print_r($childPoolIdsArray); die;
+	print_r($childPoolIdsArray); //die;
 
     //delete all entries of the IP_Id 
-    $obj->removeIP($blacklistedIPId);
+   // $obj->removeIP($blacklistedIPId);
 
     $logsArray["Action1"]="IP Removed";
 
@@ -41,8 +41,10 @@ if(isset($jsonString) and $jsonString!="")
          //replanish all the pools with new warmed-up IP 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	$obj->replanishIP($warmedUpIP,$childPoolId);
+    	  	//$obj->replanishIP($warmedUpIP,$childPoolId);
+		 echo "\n $childPoolId Replanied with Warmedup IP- $warmedUpIP";
     	  }
+	die;    
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
     }
     else
