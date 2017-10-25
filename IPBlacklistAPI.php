@@ -42,7 +42,7 @@ if(isset($jsonString) and $jsonString!="")
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
     	  	//$obj->replanishIP($warmedUpIP,$childPoolId);
-		 echo "\n $childPoolId Replanied with Warmedup IP- $warmedUpIP";
+		 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
     	  }
 	die;    
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
