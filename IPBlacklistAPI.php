@@ -27,7 +27,7 @@ if(isset($jsonString) and $jsonString!="")
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
-	print_r($childPoolIdsArray); //die;
+	//print_r($childPoolIdsArray); //die;
 
     //delete all entries of the IP_Id 
    // $obj->removeIP($blacklistedIPId);
@@ -41,10 +41,10 @@ if(isset($jsonString) and $jsonString!="")
          //replanish all the pools with new warmed-up IP 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	//$obj->replanishIP($warmedUpIP,$childPoolId);
-		 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+    	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+		// echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
     	  }
-	die;    
+	//die;    
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
     }
     else
