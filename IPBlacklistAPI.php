@@ -30,7 +30,7 @@ if(isset($jsonString) and $jsonString!="")
 	//print_r($childPoolIdsArray); //die;
 
     //delete all entries of the IP_Id 
-   // $obj->removeIP($blacklistedIPId);
+    $obj->removeIP($blacklistedIPId);
 
     $logsArray["Action1"]="IP Removed";
 
@@ -42,7 +42,7 @@ if(isset($jsonString) and $jsonString!="")
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
     	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
-		// echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+		 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
     	  }
 	//die;    
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
