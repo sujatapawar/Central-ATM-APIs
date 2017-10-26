@@ -19,7 +19,7 @@ if(isset($jsonString) and $jsonString!="")
 
 	//log file a name.
 	$today_date = date("Y-m-d");
-	$csvFileName = 'logs/IP_Blacklisted/'.$today_date.'.csv';
+	$csvFileName = 'logs/Low_Reputation/'.$today_date.'.csv';
 
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
@@ -43,7 +43,7 @@ if(isset($jsonString) and $jsonString!="")
          //replanish all the pools with new warmed-up IP 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	$obj->replanishIP($warmedUpIP,$childPoolId);
+    	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
     	  }
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 		
