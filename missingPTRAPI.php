@@ -17,7 +17,7 @@ if(isset($jsonString) and $jsonString!="")
 
 	//log file a name.
 	$today_date = date("Y-m-d");
-	$csvFileName = 'logs/IP_Blacklisted/'.$today_date.'.csv';
+	$csvFileName = 'logs/Missing_PTR/'.$today_date.'.csv';
 
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
