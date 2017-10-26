@@ -179,8 +179,8 @@ class commonFunctions {
           
         
        /* $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
-        $ClientID = $ClientID[0]['cl_id'];
-	$Sent = $ClientID[0]['sent'];*/
+       */ $ClientID = $ClientID[0]['cl_id'];
+	$Sent = $ClientID[0]['sent'];
 	   
         
         $array = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
