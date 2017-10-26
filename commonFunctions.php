@@ -169,13 +169,22 @@ class commonFunctions {
     {
         $this->connection_atm();
         $req1 = $this->req1;
+	    
+        $Conn = $this->_dbHandlepdo->get_connection_variable();
+            $SQL_ClientIP_Detail = $Conn->prepare(
+                                            "select cl_id, sent from client_ip_detail where req1_id=?"
+                                          );
+            $SQL_ClientIP_Detail->execute(array($req1));
+            $ClientID = $SQL_ClientIP_Detail->fetchAll();
+          
         
-        $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
+       /* $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
         $ClientID = $ClientID[0]['cl_id'];
-	$Sent = $ClientID[0]['sent'];
-	print_r($ClientID);    
+	$Sent = $ClientID[0]['sent'];*/
+	   
         
         $array = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
+	   print_r($array); die;   
         $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $array);
         $this->connection_disconnect();
     }
