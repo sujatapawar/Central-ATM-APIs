@@ -10,7 +10,7 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":2550,"ip_id":351,"ip_wise_counts":{"351":5000,"352":"4000"}}';
+$jsonString = '{"req1":44,"ip_id":342,"ip_wise_counts":{"342":10}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
@@ -41,7 +41,7 @@ if(isset($jsonString) and $jsonString!="")
 		//replanish all the pools with new warmed-up IP 
 		foreach($childPoolIdsArray as $childPoolId)
 		{
-		$obj->replanishIP($warmedUpIP,$childPoolId);
+		$obj->replanishIP($warmedUpIP,$childPoolId[0]);
 		}
 		$logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 
