@@ -175,7 +175,7 @@ class commonFunctions {
 	$Sent = $ClientID[0]['sent'];
 	print_r($ClientID);    
         
-        $array = array($json['req1'],$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
+        $array = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
         $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $array);
         $this->connection_disconnect();
     }
