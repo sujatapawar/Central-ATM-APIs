@@ -32,7 +32,7 @@ if(isset($jsonString) and $jsonString!="")
     $childPoolIdsArray = $obj->getAllChildPoolIds($lowRepIPId);
 
     //delete all entries of the IP_Id 
-    $obj->removeIP($lowRepIPId);
+    //$obj->removeIP($lowRepIPId);
 
     $logsArray["Action1"]="IP Removed";
 
@@ -43,7 +43,7 @@ if(isset($jsonString) and $jsonString!="")
          //replanish all the pools with new warmed-up IP 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+    	  	//$obj->replanishIP($warmedUpIP,$childPoolId[0]);
     	  }
         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 		
