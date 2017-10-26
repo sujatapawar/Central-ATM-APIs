@@ -184,7 +184,7 @@ class commonFunctions {
 	   
         
         $array = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
-	   print_r($array); die;   
+	 //  print_r($array); die;   
         $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $array);
         $this->connection_disconnect();
     }
