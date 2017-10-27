@@ -54,7 +54,7 @@ if(isset($jsonString) and $jsonString!="")
     }
 
     //Insert bad domain id into frezzer
-    $obj->putRPDomainInFreezer($blacklistedIPId);
+    $obj->putRPDomainInFreezer($blacklistedDomainId);
     $logsArray["Action3"]="IP put into Freezer";
 	
 	//Releasing IP
