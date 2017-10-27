@@ -46,7 +46,7 @@ if(isset($jsonString) and $jsonString!="")
 		$logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 
 		/* insert IP in client_ip_detail */
-		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP);
+		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP,$missedPTRIP);
 		
 		/* return from missingPTRAPI */
 		$obj->connection_atm();
