@@ -178,9 +178,10 @@ class commonFunctions {
             $client_ip_details_data = $SQL_ClientIP_Detail->fetchAll();
           
         foreach($client_ip_details_data as $data) {
+		print_r($data);
        /* $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
-       */ $ClientID = $data[0]['cl_id'];
-	  $Sent = $data[0]['sent'];	   
+       */ $ClientID = $data['cl_id'];
+	  $Sent = $data['sent'];	   
         
         
 	 //  print_r($array); die;   
