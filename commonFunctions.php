@@ -272,7 +272,7 @@ class commonFunctions {
                                             "select chip.IP_id from childPool_RPDomains  as chip, domain_master as ipm
                                             where chip.domain_id=ipm.domain_id and ipm.type='return_path' and ipm.active='1'
                                             and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)
-                                            and chip.domain_id!=? order by chip.childStage_id DESC LIMIT 1"
+                                            and chip.domain_id!=? LIMIT 1"
                                           );
             $SQL_WarmUpIP->execute(array($blacklistedDomainId,$blacklistedDomainId,$blacklistedDomainId));
             $WarmUpDomain = $SQL_WarmUpIP->fetchAll();
@@ -289,6 +289,14 @@ class commonFunctions {
         return $WarmUpDomainId;
    
    }//end of getRPDomainFromWarmUp
+	
+  function replanishRPDomain($warmedUpDomainId,$childPoolId)
+   {
+	    $this->connection_atm();
+	    $this->_dbHandlepdo->sql_insert("childPool_RPDomains", "childPool_id,domain_id,web", array($childPoolId,$warmedUpDomainId,'1'));
+	    $this->connection_disconnect();
+   }// end of replanishRPDomain
+	
 	
    function putRPDomainInFreezer($blacklistedDomainId)
    {
