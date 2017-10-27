@@ -9,7 +9,7 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":2550,"domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
+$jsonString = '{"req1":59,"domain":"mail.yesbank.in","ip_wise_counts":{"342":3000,"352":2000}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
@@ -41,7 +41,7 @@ if(isset($jsonString) and $jsonString!="")
          //replanish all the pools with new warmed-up domain 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+    	  	$obj->replanishRPDomain($warmedUpDomain,$childPoolId[0]);
 		 echo "\n $childPoolId[0] Replanied with Warmedup Domain- $warmedUpDomain";
     	  }
 	//die;    
