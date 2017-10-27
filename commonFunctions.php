@@ -241,7 +241,7 @@ class commonFunctions {
    function getDomainId($domain)
    {
      $this->connection_atm();
-     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where domain_name=?", array($domain));
+     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where domain_name=? ", array($domain));
      $this->connection_disconnect();
      return $arrayOfDomainId;
    
@@ -274,7 +274,7 @@ class commonFunctions {
                                             and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)
                                             and chip.domain_id!=? LIMIT 1"
                                           );
-            $SQL_WarmUpIP->execute(array($blacklistedDomainId,$blacklistedDomainId,$blacklistedDomainId));
+            $SQL_WarmUpIP->execute(array($blacklistedDomainId));
             $WarmUpDomain = $SQL_WarmUpIP->fetchAll();
             $WarmUpDomainId = $WarmUpDomain[0]['domain_id'];
             
