@@ -165,16 +165,16 @@ class commonFunctions {
     /* End Get IP From warm-up */
 	
 	/* Insert IP in client_ip_detail */
-    function insert_IP_in_ClientIP_Detail($WarmUp_IP_ID)
+    function insert_IP_in_ClientIP_Detail($WarmUp_IP_ID,$badIpId)
     {
         $this->connection_atm();
         $req1 = $this->req1;
 	    
         $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_ClientIP_Detail = $Conn->prepare(
-                                            "select cl_id, sent from client_ip_detail where req1_id=?"
+                                            "select cl_id, sent from client_ip_detail where req1_id=? and IP_id=?"
                                           );
-            $SQL_ClientIP_Detail->execute(array($req1));
+            $SQL_ClientIP_Detail->execute(array($req1,$badIpId));
             $client_ip_details_data = $SQL_ClientIP_Detail->fetchAll();
           
         foreach($client_ip_details_data as $data) {
