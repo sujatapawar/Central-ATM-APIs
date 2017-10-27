@@ -269,7 +269,7 @@ class commonFunctions {
 	    $this->connection_atm();
             $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_WarmUpIP = $Conn->prepare(
-                                            "select chip.IP_id from childPool_RPDomains  as chip, domain_master as ipm
+                                            "select chip.domain_id from childPool_RPDomains  as chip, domain_master as ipm
                                             where chip.domain_id=ipm.domain_id and ipm.type='return_path' and ipm.active='1'
                                             and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)
                                             and chip.domain_id!=? LIMIT 1"
