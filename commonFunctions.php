@@ -177,15 +177,24 @@ class commonFunctions {
             $SQL_ClientIP_Detail->execute(array($req1));
             $client_ip_details_data = $SQL_ClientIP_Detail->fetchAll();
           
-        
+        foreach($client_ip_details_data as $data) {
        /* $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
-       */ $ClientID = $client_ip_details_data[0]['cl_id'];
-	$Sent = $client_ip_details_data[0]['sent'];
-	   
+       */ $ClientID = $data[0]['cl_id'];
+	  $Sent = $data[0]['sent'];	   
         
-        $array = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
+        
 	 //  print_r($array); die;   
-        $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $array);
+	        $arrayToCheck = array($WarmUp_IP_ID,$ClientID);
+		$RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "id", " where IP_id=? and cl_id=?", $arrayToCheck);
+               
+                if(!empty($RecordExist)):
+	           $arrayToUpdate = array($req1,$Sent,1,date('Y-m-d'),$WarmUp_IP_ID); 
+                    $this->_dbHandlepdo->sql_Update("client_ip_detail"," req1_id=?,sent=sent+?,in_use=?,date=?", " where IP_id=? ",$arrayToUpdate);
+                else:    
+	           $arrayToInsert = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
+        	    $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $arrayToInsert);
+	        endif;
+	} //end foreach loop	
         $this->connection_disconnect();
     }
     /* End Insert IP in client_ip_detail */
@@ -227,6 +236,68 @@ class commonFunctions {
     $this->connection_disconnect();
    }// end of putIPInWarmup
    	
+	
+   function getDomainId($domain)
+   {
+     $this->connection_atm();
+     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where domain_name=?", array($domain));
+     $this->connection_disconnect();
+     return $arrayOfDomainId;
+   
+   }//end of getDomainId
+	
+   function getAllChildPoolIdsOfRP($blacklistedDomainId)
+   {
+     $this->connection_atm();
+     $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_RPDomains", "childPool_id", " where domain_id=?", array($blacklistedDomainId));
+     $this->connection_disconnect();
+     return $arrayOfChildPoolIds;
+   
+   }// end of getAllChildPoolIdsOfRP
+	
+   function removeRPDomain($blacklistedDomainId)
+   {
+     $this->connection_atm();
+     $this->_dbHandlepdo->sql_delete("childPool_RPDomains", " where domain_id=?", array($blacklistedDomainId));
+     $this->connection_disconnect();	   
+   
+   }//end of removeRPDomain
+	
+   function getRPDomainFromWarmUp($blacklistedDomainId)
+   {
+	    $this->connection_atm();
+            $Conn = $this->_dbHandlepdo->get_connection_variable();
+            $SQL_WarmUpIP = $Conn->prepare(
+                                            "select chip.IP_id from childPool_RPDomains  as chip, domain_master as ipm
+                                            where chip.domain_id=ipm.domain_id and ipm.type='return_path' and ipm.active='1'
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)
+                                            and chip.domain_id!=? order by chip.childStage_id DESC LIMIT 1"
+                                          );
+            $SQL_WarmUpIP->execute(array($blacklistedDomainId,$blacklistedDomainId,$blacklistedDomainId));
+            $WarmUpDomain = $SQL_WarmUpIP->fetchAll();
+            $WarmUpDomainId = $WarmUpDomain[0]['domain_id'];
+            
+            $SQL_DeleteIP = $Conn->prepare(
+                                            "delete from childPool_RPDomains 
+                                            where domain_id=? 
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)"
+                                          );
+            $SQL_DeleteIP->execute(array($WarmUpDomainId));
+
+        $this->connection_disconnect();
+        return $WarmUpDomainId;
+   
+   }//end of getRPDomainFromWarmUp
+	
+   function putRPDomainInFreezer($blacklistedDomainId)
+   {
+	    $this->connection_atm();
+	    $this->_dbHandlepdo->sql_insert("childPool_RPDomains", "childPool_id,domain_id,web", array(10366,$blacklistedDomainId,'1'));
+	    $this->connection_disconnect();
+
+   }//end of putRPDomainInFreezer
+	
+	
   
 	
     	
