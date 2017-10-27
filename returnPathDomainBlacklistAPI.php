@@ -23,7 +23,8 @@ if(isset($jsonString) and $jsonString!="")
 
     $obj = new commonFunctions($jsonString);
 
-     $blacklistedDomainId = $obj->getDomainId($obj->inputJsonArray['domain']);
+     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
+	echo $blacklistedDomainId=$blacklistedDomainIdArr[0]; die;
 
     //Retain 'childPool_id' of all pools with given domain id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIdsOfRP($blacklistedDomainId);
