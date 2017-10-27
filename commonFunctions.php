@@ -185,7 +185,7 @@ class commonFunctions {
         
 	 //  print_r($array); die;   
 	        $arrayToCheck = array($WarmUp_IP_ID,$ClientID);
-		$RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "id", " where IP_id=? and cl_id=?", $arrayToCheck);
+		$RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "req1_id", " where IP_id=? and cl_id=?", $arrayToCheck);
                
                 if(!empty($RecordExist)):
 	           $arrayToUpdate = array($req1,$Sent,1,date('Y-m-d'),$WarmUp_IP_ID); 
