@@ -45,8 +45,7 @@ if(isset($jsonString) and $jsonString!="")
 		}
 		$logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 
-		/* insert IP in client_ip_detail */
-		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP,$missedPTRIP);
+		
 		
 		/* return from missingPTRAPI */
 		$obj->connection_atm();
@@ -82,6 +81,10 @@ if(isset($jsonString) and $jsonString!="")
 	//update IP wise count
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
+	
+	/* insert IP in client_ip_detail */
+	if($warmedUpIP!='')
+		$obj->insert_IP_in_ClientIP_Detail($warmedUpIP,$missedPTRIP);
 
     //write logs
 	if (file_exists($csvFileName)) {
