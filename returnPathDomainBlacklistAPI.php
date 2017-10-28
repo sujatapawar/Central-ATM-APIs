@@ -27,22 +27,22 @@ if(isset($jsonString) and $jsonString!="")
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
 
     //Retain 'childPool_id' of all pools with given domain id in an array 
-    $childPoolIdsArray = $obj->getAllChildPoolIdsOfRP($blacklistedDomainId);
+    $childPoolIdsArray = $obj->getAllChildPoolIdsOfDomains($blacklistedDomainId,"childPool_RPDomains");
 	//print_r($childPoolIdsArray); //die;
 
     //delete all entries of the domain id 
-    $obj->removeRPDomain($blacklistedDomainId);
+    $obj->removeDomain($blacklistedDomainId,"childPool_RPDomains");
 
     $logsArray["Action1"]="Domain Removed";
 
     // get new domain from warm up
-    $warmedUpDomain = $obj->getRPDomainFromWarmUp($blacklistedDomainId);
+    $warmedUpDomain = $obj->getDomainFromWarmUp($blacklistedDomainId,"childPool_RPDomains");
     if($warmedUpDomain !='')
     {
          //replanish all the pools with new warmed-up domain 
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
-    	  	$obj->replanishRPDomain($warmedUpDomain,$childPoolId[0]);
+    	  	$obj->replanishDomain($warmedUpDomain,$childPoolId[0],"childPool_RPDomains");
 		 echo "\n $childPoolId[0] Replanied with Warmedup Domain- $warmedUpDomain";
     	  }
 	//die;    
@@ -55,7 +55,7 @@ if(isset($jsonString) and $jsonString!="")
     }
 
     //Insert bad domain id into frezzer
-    $obj->putRPDomainInFreezer($blacklistedDomainId);
+    $obj->putDomainInFreezer($blacklistedDomainId,"childPool_RPDomains");
     $logsArray["Action3"]="Domain put into Freezer";
 	
 	//Releasing IP
