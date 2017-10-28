@@ -247,31 +247,39 @@ class commonFunctions {
    
    }//end of getDomainId
 	
-   function getAllChildPoolIdsOfRP($blacklistedDomainId)
+   function getAllChildPoolIdsOfDomains($blacklistedDomainId,$tableName)
    {
      $this->connection_atm();
-     $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_RPDomains", "childPool_id", " where domain_id=?", array($blacklistedDomainId));
+     $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select($tableName, "childPool_id", " where domain_id=?", array($blacklistedDomainId));
      $this->connection_disconnect();
      return $arrayOfChildPoolIds;
    
    }// end of getAllChildPoolIdsOfRP
 	
-   function removeRPDomain($blacklistedDomainId)
+   function removeDomain($blacklistedDomainId,$tableName)
    {
      $this->connection_atm();
-     $this->_dbHandlepdo->sql_delete("childPool_RPDomains", " where domain_id=?", array($blacklistedDomainId));
+     $this->_dbHandlepdo->sql_delete($tableName, " where domain_id=?", array($blacklistedDomainId));
      $this->connection_disconnect();	   
    
    }//end of removeRPDomain
 	
-   function getRPDomainFromWarmUp($blacklistedDomainId)
+   function getDomainFromWarmUp($blacklistedDomainId,$tableName)
    {
+        if($tableName=='childPool_RPDomains')
+            $childpool_type=2;
+        if($tableName=='childPool_LinkDomains')
+            $childpool_type=3;
+        if($tableName=='childPool_ImageDomains')
+            $childpool_type=5;
+
+
 	    $this->connection_atm();
             $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_WarmUpIP = $Conn->prepare(
-                                            "select chip.domain_id from childPool_RPDomains  as chip, domain_master as ipm
-                                            where chip.domain_id=ipm.domain_id and ipm.type='return_path' and ipm.active='1'
-                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)
+                                            "select chip.domain_id from ".$tableName." as chip, domain_master as dm
+                                            where chip.domain_id=dm.domain_id and dm.active='1'
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=$childpool_type)
                                             and chip.domain_id!=? LIMIT 1"
                                           );
             $SQL_WarmUpIP->execute(array($blacklistedDomainId));
@@ -279,9 +287,9 @@ class commonFunctions {
             $WarmUpDomainId = $WarmUpDomain[0]['domain_id'];
             
             $SQL_DeleteIP = $Conn->prepare(
-                                            "delete from childPool_RPDomains 
+                                            "delete from ".$tableName." 
                                             where domain_id=? 
-                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=2)"
+                                            and childPool_id = (select childPool_ID from childPool_master where pool_id = 1 and childPool_type_id=$childpool_type)"
                                           );
             $SQL_DeleteIP->execute(array($WarmUpDomainId));
 
@@ -290,23 +298,38 @@ class commonFunctions {
    
    }//end of getRPDomainFromWarmUp
 	
-  function replanishRPDomain($warmedUpDomainId,$childPoolId)
+  function replanishDomain($warmedUpDomainId,$childPoolId,$tableName)
    {
 	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert("childPool_RPDomains", "childPool_id,domain_id,web", array($childPoolId,$warmedUpDomainId,'1'));
+	    $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($childPoolId,$warmedUpDomainId,'1'));
 	    $this->connection_disconnect();
    }// end of replanishRPDomain
 	
 	
-   function putRPDomainInFreezer($blacklistedDomainId)
+   function putDomainInFreezer($blacklistedDomainId,$tableName)
    {
+        if($tableName=='childPool_RPDomains')
+            $freezerId=10366;
+        if($tableName=='childPool_LinkDomains')
+            $freezerId=10367;
+        if($tableName=='childPool_ImageDomains')
+            $freezerId=10367;
+
 	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert("childPool_RPDomains", "childPool_id,domain_id,web", array(10366,$blacklistedDomainId,'1'));
+	    $this->_dbHandlepdo->sql_insert(,$tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
 	    $this->connection_disconnect();
 
    }//end of putRPDomainInFreezer
 	
-	
+    function getDomainName($warmedUpDomainId)
+    {
+
+    $this->connection_atm();
+    $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_name", " where  domain_id=? ", array($warmedUpDomainId));
+    $this->connection_disconnect();
+    return $arrayOfDomainName;
+
+    } // end of getDomainName
   
 	
     	
