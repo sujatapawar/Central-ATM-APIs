@@ -211,6 +211,7 @@ class commonFunctions {
 	
    function removeIP($badIPId)
    {
+	   echo "id: ".$badIPId; die;
      $this->connection_atm();
      $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIPId));
      $this->connection_disconnect();
