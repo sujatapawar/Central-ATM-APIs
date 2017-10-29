@@ -22,7 +22,7 @@ if(isset($jsonString) and $jsonString!="")
 	
 	//fetch IP belongs to domain
 	
-	 $ipIds = $obj->getDomainIpId($blacklistedDomainId);
+	 $ipIds = $obj->getDomainIpId($obj->inputJsonArray['domain']);
 	print_r($ipIds); die;
 	
 	// Deactivate the domain
