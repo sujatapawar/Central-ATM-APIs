@@ -7,7 +7,7 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":59,"domain":"mail.yesbank.in","ip_wise_counts":{"342":3000,"352":2000}}';
+$jsonString = '{"req1":59,"domain":"ml77.bintfin.com","ip_wise_counts":{"342":3000,"352":2000}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
