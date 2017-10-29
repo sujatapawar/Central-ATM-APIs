@@ -328,7 +328,7 @@ class commonFunctions {
     {
 
     $this->connection_atm();
-    $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_name", " where  domain_id=? ", array($warmedUpDomainId));
+    $arrayOfDomainName = $this->_dbHandlepdo->sql_Select("domain_master", "domain_name", " where  domain_id=? ", array($warmedUpDomainId));
     $this->connection_disconnect();
     return $arrayOfDomainName;
 
