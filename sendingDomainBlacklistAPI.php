@@ -16,18 +16,49 @@ if(isset($jsonString) and $jsonString!="")
 	$csvFileName = 'logs/Sending_Domain_Blacklisted/'.$today_date.'.csv';
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-    $obj = new commonFunctions($jsonString);
-     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
-   
-    $logsArray["Action1"]="Domain Removed";
-  ////////////////////////////////////////   Coding Needed //////////////////
+        $obj = new commonFunctions($jsonString);
+        $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
+	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
+	
+	// Deactivate the domain
+	$obj->deactivateDomain($blacklistedDomainId);     
+        $logsArray["Action1"]="Domain deactivated";
+	
+        $ipIds = $obj->getDomainIpId($blacklistedDomainId);
+	
+	//Retain 'childPool_id' of all pools with given IP_Id in an array 
+        $childPoolIdsArray = $obj->getAllChildPoolIds($ipIds[0]['IP_id']);
+	
+        //delete all entries of the IP_Id from all pools to setup with new
+	$obj->removeIP($ipIds[0]['IP_id']);
+	  
+        // get new IP from warm up
+       $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']);
+       if($warmedUpIP !='')
+	{
+		 //replanish all the pools with new warmed-up IP 
+		  foreach($childPoolIdsArray as $childPoolId)
+		  {
+			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+		  }
+		//die;    
+		$logsArray["Action2"]=$ipIds[0]['IP_id']." IP Replanied with Warmedup IP- $warmedUpIP";
+	 }
+	else
+	 {
+		$logsArray["Action2"]="Warmedup IP not available";
+
+	 }
+		
+	
+	//put Ip in available_assets pool
+	$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
+	
   
-  
-  ///////////////////////////////////////////////////////////////////////////
-  
-    //Insert bad domain id into frezzer
-    $obj->putDomainInFreezer($blacklistedDomainId,"childPool_LinkDomains");
-    $logsArray["Action3"]="Domain put into Freezer";
+	//Insert bad domain id into frezzer
+	$obj->putDomainInFreezer($blacklistedDomainId,"childPool_SendingDomains");
+	$logsArray["Action3"]="Domain put into Freezer";
 	
 	//Releasing IP
 	$obj->releaseIP();
