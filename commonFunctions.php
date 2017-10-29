@@ -341,10 +341,10 @@ class commonFunctions {
      } //end of deactivateDomain
 	
 	
-    function getDomainIpId($blacklistedDomainId)
+    function getDomainIpId($blacklistedDomain)
     {
      $this->connection_atm();
-     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "IP_id", " where  domain_id=? ", array($blacklistedDomainId));
+     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "IP_id", " where  domain_name=? ", array($blacklistedDomain));
      $this->connection_disconnect();
      return $arrayOfDomainName;
     
