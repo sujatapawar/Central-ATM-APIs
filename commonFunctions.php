@@ -314,9 +314,11 @@ class commonFunctions {
             $freezerId=10367;
         if($tableName=='childPool_ImageDomains')
             $freezerId=10367;
+	if($tableName=='childPool_SendingDomains')
+            $freezerId=10735;   
 
 	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
+	    $this->_dbHandlepdo->sql_insert(,$tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
 	    $this->connection_disconnect();
 
    }//end of putRPDomainInFreezer
@@ -330,6 +332,35 @@ class commonFunctions {
     return $arrayOfDomainName;
 
     } // end of getDomainName
+	
+    function deactivateDomain($blacklistedDomainId)
+    {
+     $this->connection_atm();
+     $this->_dbHandlepdo->sql_Update("domain_master"," status='listed',active='0',IP_id=0 ", " where domain_id=?",array($blacklistedDomainId));
+     $this->connection_disconnect();      
+     } //end of deactivateDomain
+	
+	
+    function getDomainIpId($blacklistedDomainId)
+    {
+     $this->connection_atm();
+     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "IP_id", " where  domain_id=? ", array($blacklistedDomainId));
+     $this->connection_disconnect();
+     return $arrayOfDomainName;
+    
+    } //end of getDomainIpId
+	
+    function putAssetIntoAvailablePool($asset_id,$asset_type='IP')
+    {
+     if($asset_type=='IP')
+     {
+       $this->connection_atm();
+       $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(10734,$asset_id,'1',1));
+       $this->connection_disconnect();
+     
+     }
+    
+    }
   
 	
     	
