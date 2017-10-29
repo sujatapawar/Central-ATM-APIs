@@ -344,7 +344,7 @@ class commonFunctions {
     function getDomainIpId($blacklistedDomain)
     {
      $this->connection_atm();
-     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "IP_id", " where  domain_name=? ", array($blacklistedDomain));
+     $arrayOfDomainName = $this->_dbHandlepdo->sql_Select("domain_master", "IP_id", " where  domain_name=? ", array($blacklistedDomain));
      $this->connection_disconnect();
      return $arrayOfDomainName;
     
