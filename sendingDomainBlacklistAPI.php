@@ -40,7 +40,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->removeIP($ipIds[0]['IP_id']);
 	  
         // get new IP from warm up
-       echo $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']); die;
+        $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']); 
        if($warmedUpIP !='')
 	{
 		 //replanish all the pools with new warmed-up IP 
