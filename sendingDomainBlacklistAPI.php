@@ -23,7 +23,7 @@ if(isset($jsonString) and $jsonString!="")
 	//fetch IP belongs to domain
 	
 	 $ipIds = $obj->getDomainIpId($obj->inputJsonArray['domain']);
-	echo $obj->inputJsonArray['domain']; die;
+	//echo $obj->inputJsonArray['domain']; die;
 	
 	// Deactivate the domain
 	$obj->deactivateDomain($blacklistedDomainId);     
@@ -37,7 +37,7 @@ if(isset($jsonString) and $jsonString!="")
 	
 	
         //delete all entries of the IP_Id from all pools to setup with new
-	$obj->removeIP($ipId);
+	$obj->removeIP($ipIds[0]['IP_id']);
 	  die;
         // get new IP from warm up
        $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']);
