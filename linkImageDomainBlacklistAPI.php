@@ -55,7 +55,7 @@ if(isset($jsonString) and $jsonString!="")
     	  foreach($childPoolIdsArray as $childPoolId)
     	  {
     	  	$obj->replanishDomain($warmedUpDomain,$childPoolId[0],"childPool_LinkDomains");
-		 echo "\n $childPoolId[0] Replanied with Warmedup Domain- $warmedUpDomain";
+		// echo "\n $childPoolId[0] Replanied with Warmedup Domain- $warmedUpDomain";
     	  }
 	//die;    
         $logsArray["Action2"]="Domain Replanied with Warmedup Domain - $warmedUpDomain";
