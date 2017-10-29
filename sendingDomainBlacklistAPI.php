@@ -23,7 +23,7 @@ if(isset($jsonString) and $jsonString!="")
 	//fetch IP belongs to domain
 	
 	 $ipIds = $obj->getDomainIpId($obj->inputJsonArray['domain']);
-	print_r($ipIds); die;
+	
 	
 	// Deactivate the domain
 	$obj->deactivateDomain($blacklistedDomainId);     
@@ -33,6 +33,8 @@ if(isset($jsonString) and $jsonString!="")
 	
 	//Retain 'childPool_id' of all pools with given IP_Id in an array 
         $childPoolIdsArray = $obj->getAllChildPoolIds($ipIds[0]['IP_id']);
+	
+	print_r($childPoolIdsArray); die;
 	
         //delete all entries of the IP_Id from all pools to setup with new
 	$obj->removeIP($ipIds[0]['IP_id']);
