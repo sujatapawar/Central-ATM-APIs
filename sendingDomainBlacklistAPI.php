@@ -35,9 +35,9 @@ if(isset($jsonString) and $jsonString!="")
         $childPoolIdsArray = $obj->getAllChildPoolIds($ipIds[0]['IP_id']);
 	 
 	
-	
+	$ipId = $ipIds[0]['IP_id'];
         //delete all entries of the IP_Id from all pools to setup with new
-	$obj->removeIP($ipIds[0]['IP_id']);
+	$obj->removeIP($ipId);
 	  die;
         // get new IP from warm up
        $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']);
