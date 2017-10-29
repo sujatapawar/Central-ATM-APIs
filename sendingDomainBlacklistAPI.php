@@ -20,11 +20,15 @@ if(isset($jsonString) and $jsonString!="")
         $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
 	
+	//fetch IP belongs to domain
+	
+	 $ipIds = $obj->getDomainIpId($blacklistedDomainId);
+	
 	// Deactivate the domain
 	$obj->deactivateDomain($blacklistedDomainId);     
         $logsArray["Action1"]="Domain deactivated";
 	
-        $ipIds = $obj->getDomainIpId($blacklistedDomainId);
+       
 	
 	//Retain 'childPool_id' of all pools with given IP_Id in an array 
         $childPoolIdsArray = $obj->getAllChildPoolIds($ipIds[0]['IP_id']);
