@@ -316,7 +316,7 @@ class commonFunctions {
             $freezerId=10367;
 
 	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert(,$tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
+	    $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
 	    $this->connection_disconnect();
 
    }//end of putRPDomainInFreezer
