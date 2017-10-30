@@ -7,7 +7,7 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":3000,"352":2000}}';
+$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":30000,"352":20000}}';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
