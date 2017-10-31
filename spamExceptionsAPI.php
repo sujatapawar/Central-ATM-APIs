@@ -75,13 +75,13 @@ if(isset($jsonString) and $jsonString!="")
     //Send email alert to client
     $to="shripad.kulkarni@nichelive.com";
     $subject="[Central ATM API] Email Alert to client for Spam Exception ";
-    $message="Email Alert for Sender Domain Blacklist from Central ATM API";
+    $message="Email Alert for Spam Exception from Central ATM API";
     $obj->sendEmailAlert($to,$subject,$message);
 
     //Send email alert to delivery team 
     $to="shripad.kulkarni@nichelive.com";
     $subject="Central ATM API] Email Alert to Deliver for Spam Exception ";
-    $message="Email Alert for Sender Domain Blacklist from Central ATM API";
+    $message="Email Alert for Spam Exception from Central ATM API";
     $obj->sendEmailAlert($to,$subject,$message);
 
 
