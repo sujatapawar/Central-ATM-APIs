@@ -7,7 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":2550,"bounce_count":905,"ip_wise_counts":{"351":5000,"352":"4000"}}';
+//$jsonString = '{"req1":2550,"bounce_count":905,"ip_wise_counts":{"351":5000,"352":"4000"}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -84,7 +85,14 @@ $obj->sendEmailAlert($to,$subject,$message);
 
 
 }
-
+else
+{
+	//Send email alert to delivery team 
+	$to="shripad.kulkarni@nichelive.com";
+	$subject="Central ATM API] Email Alert for Domain Blacklist";
+	$message="Blank JSON Input";
+	$obj->sendEmailAlert($to,$subject,$message);
+}
 
 
 ?>
