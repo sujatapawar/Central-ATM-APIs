@@ -12,6 +12,7 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":79,"domain":"sendm.net","ip_wise_counts":{"342":3000,"352":2000}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
 
@@ -22,7 +23,7 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 
-    $obj = new commonFunctions($jsonString);
+    
 
      $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
