@@ -11,10 +11,9 @@ include("commonFunctions.php");
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+$obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
-    $obj = new commonFunctions($jsonString);
-
+    
     $json = $obj->inputJsonArray;
     /* Create Exception */
     $obj->connection_atm();
