@@ -12,7 +12,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":59,"ip_id":342,"ip_wise_counts":{"342":3000,"352":2000}}';
+//$jsonString = '{"req1":59,"ip_id":342,"ip_wise_counts":{"342":3000,"352":2000}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
@@ -117,7 +118,14 @@ if(isset($jsonString) and $jsonString!="")
 
 	
 }
-
+else
+{
+	//Send email alert to delivery team 
+	$to="shripad.kulkarni@nichelive.com";
+	$subject="Central ATM API] Email Alert for Low IP Reputation ";
+	$message="Blank JSON Input";
+	$obj->sendEmailAlert($to,$subject,$message);
+}
 
 
 ?>
