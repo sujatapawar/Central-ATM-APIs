@@ -6,9 +6,9 @@
 4. Notify client and client servicing
 5. Notify delivery team
 */
-echo "ok"; exit;
-include("commonFunctions.php");
 
+include("commonFunctions.php");
+echo "ok"; exit;
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
 //$jsonString = '{"req1":59,"ip_id":342,"ip_wise_counts":{"342":2000, "352":5000}}';
 $jsonString = file_get_contents('php://input');
