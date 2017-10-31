@@ -13,8 +13,9 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":2550,"Domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
-    $obj = new commonFunctions($jsonString);
+    
 
 //Give our CSV file a name.
 $today_date = date("Y-m-d");
