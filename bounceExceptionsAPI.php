@@ -73,13 +73,13 @@ fclose($fp);
 
 //Send email alert to client
 $to="shripad.kulkarni@nichelive.com";
-$subject="[Central ATM API] Email Alert to client for Sender Domain Blacklist ";
+$subject="[Central ATM API] Email Alert to client for Bounce Exception ";
 $message="Email Alert for Sender Domain Blacklist from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
 
 //Send email alert to delivery team 
 $to="shripad.kulkarni@nichelive.com";
-$subject="Central ATM API] Email Alert to Deliver for Sender Domain Blacklist ";
+$subject="Central ATM API] Email Alert to Deliver for Bounce Exception ";
 $message="Email Alert for Sender Domain Blacklist from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
 
@@ -89,7 +89,7 @@ else
 {
 	//Send email alert to delivery team 
 	$to="shripad.kulkarni@nichelive.com";
-	$subject="Central ATM API] Email Alert for Domain Blacklist";
+	$subject="Central ATM API] Email Alert for Bounce Exception";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
 }
