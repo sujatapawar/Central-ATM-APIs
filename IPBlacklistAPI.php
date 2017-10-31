@@ -97,7 +97,7 @@ if(isset($jsonString) and $jsonString!="")
 else
 {
 	//Send email alert to delivery team 
-	$to="sarah.gidwani@nichelive.com";
+	$to="shripad.kulkarni@nichelive.com";
 	$subject="Central ATM API] Email Alert for IP Blacklist ";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
