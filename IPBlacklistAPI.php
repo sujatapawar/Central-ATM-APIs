@@ -6,6 +6,7 @@
 4. Notify client and client servicing
 5. Notify delivery team
 */
+echo "ok"; exit;
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
