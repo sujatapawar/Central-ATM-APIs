@@ -6,7 +6,7 @@
 4. Notify client and client servicing
 5. Notify delivery team
 */
-error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
 
 include("commonFunctions.php");
 
