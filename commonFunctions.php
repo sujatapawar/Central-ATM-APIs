@@ -15,10 +15,12 @@ class commonFunctions {
 	function __construct($jsonString) {
 		
 		//1. Accept Json file and assign file conetents in array format to a class variable
-		$this->inputJsonArray=json_decode($jsonString, true);
+		if($jsonString!='')
+		{
+			$this->inputJsonArray=json_decode($jsonString, true);
 
-		$this->req1=$this->inputJsonArray['req1'];
-		
+			$this->req1=$this->inputJsonArray['req1'];
+		}
 		//2. Instantiate DB class
 				
         //3. Instantiate common DB class using pdo
