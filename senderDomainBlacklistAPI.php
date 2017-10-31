@@ -10,7 +10,8 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":2550,"Domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
+//$jsonString = '{"req1":2550,"Domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!=""){
     $obj = new commonFunctions($jsonString);
@@ -55,6 +56,14 @@ $subject="Central ATM API] Email Alert to Deliver for Sender Domain Blacklist ";
 $message="Email Alert for Sender Domain Blacklist from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
 
+
+}
+else{
+//Send email alert to delivery team 
+$to="shripad.kulkarni@nichelive.com";
+$subject="Central ATM API] Email Alert Sender Domain Blacklist ";
+$message="Blank Json Input";
+$obj->sendEmailAlert($to,$subject,$message);
 
 }
 
