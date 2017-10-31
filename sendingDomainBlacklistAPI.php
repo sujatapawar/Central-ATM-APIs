@@ -7,7 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":30000,"352":20000}}';
+//$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":30000,"352":20000}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 if(isset($jsonString) and $jsonString!="")
 {
@@ -95,6 +96,15 @@ if(isset($jsonString) and $jsonString!="")
 	$subject="Central ATM API] Email Alert to Deliver for Sending domain Blacklist ";
 	$message="Email Alert for Sending domain Blacklist from Central ATM API";
 	$obj->sendEmailAlert($to,$subject,$message);
+}
+else
+{
+	//Send email alert to delivery team 
+	$to="shripad.kulkarni@nichelive.com";
+	$subject="Central ATM API] Email Alert for Sending domain Blacklist ";
+	$message="Blank Json Input";
+	$obj->sendEmailAlert($to,$subject,$message);
+
 }
 
 
