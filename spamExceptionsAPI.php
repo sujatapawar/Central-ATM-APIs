@@ -13,10 +13,10 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":2550,"spam_count":3005,"ip_wise_counts":{"351":5000,"352":"4000"}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$obj = new commonFunctions($jsonString);
 
 if(isset($jsonString) and $jsonString!="")
 {
-    $obj = new commonFunctions($jsonString);
     $json = $obj->inputJsonArray;
     /* Create Exception */
     $obj->connection_atm();
