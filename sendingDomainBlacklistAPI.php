@@ -10,6 +10,7 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":30000,"352":20000}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
 	//log file a name.
@@ -17,7 +18,6 @@ if(isset($jsonString) and $jsonString!="")
 	$csvFileName = 'logs/Sending_Domain_Blacklisted/'.$today_date.'.csv';
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-        $obj = new commonFunctions($jsonString);
         $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
 	
