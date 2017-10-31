@@ -13,8 +13,9 @@ include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
 //$jsonString = '{"req1":59,"ip_id":342,"ip_wise_counts":{"342":2000, "352":5000}}';
 $jsonString = file_get_contents('php://input');
-echo $jsonString; exit;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
 
@@ -25,7 +26,7 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 
-    $obj = new commonFunctions($jsonString);
+    
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
 
