@@ -21,8 +21,8 @@ If the number of times that the domain is blacklisted for this client exceeds 1,
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":59,"domain":"ml10.juvldc10.net","ip_wise_counts":{"342":3000,"352":2000}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":158,"domain":"link.sendm.net","ip_wise_counts":{"342":7,"861":3}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
