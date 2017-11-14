@@ -10,8 +10,8 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":2550,"Domain":"nichelive.com","ip_wise_counts":{"351":5000,"352":"4000"}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":158,"Domain":"newsletter@cgfhkl.website","ip_wise_counts":{"342":7,"861":"3"}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
