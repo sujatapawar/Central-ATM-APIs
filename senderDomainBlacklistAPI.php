@@ -10,7 +10,7 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":158,"Domain":"sarah","ip_wise_counts":{"342":"7","861":"3"}}';
+$jsonString = '{"req1":158,"Domain":"","ip_wise_counts":{"342":"7","861":"3"}}';
 //$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
