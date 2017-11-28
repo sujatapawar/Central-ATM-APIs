@@ -21,12 +21,8 @@ class commonFunctions {
 
 			$this->req1=$this->inputJsonArray['req1'];
 		}
-		//2. Instantiate DB class
-				
-        //3. Instantiate common DB class using pdo
-        //$this->_dbHandlepdo = new DBConnection(DB_HOST,DB_NAME,DB_USER,DB_PASSWORD);
-        
-        //mysql_select_db(DB_NAME, $this->_dbHandle);
+		
+		
 
 		//4. Instantiate PHPMailer
 	   $this->mail = new PHPMailer();
@@ -37,10 +33,34 @@ class commonFunctions {
 	function connection_db_mail_master()
     {
         $this->_dbHandlepdo = new DBConnection(DBMAIL_MASTER_DB_HOST,DBMAIL_MASTER_DB_NAME,DBMAIL_MASTER_DB_USER,DBMAIL_MASTER_DB_PASSWORD);
+        
     }
     function connection_atm()
     {
         $this->_dbHandlepdo = new DBConnection(ATM_DB_HOST,ATM_DB_NAME,ATM_DB_USER,ATM_DB_PASSWORD);
+	
+    }
+	
+    function get_request_type()
+    {
+        $array = array($this->req1);
+        $Req1_Details = $this->_dbHandlepdo->sql_Select("Req1", "cl_id,sending_type", " where req1_id=?", $array);
+	if($Req1_Details[0]['sending_type']=='test')
+	{
+	  return "Test";
+	}
+	    
+        $this->connection_disconnect(); 
+	$obj->connection_db_mail_master();
+        $array = array($Req1_Details[0]['cl_id']);
+        $Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "client_type", " where cl_id=?", $array);
+	if($Client_Details[0]['client_type']=='trial')
+	{
+	   return "Trial";
+	
+	}
+	else return "PostORPrep";    
+    
     }
 	function connection_disconnect()
     {
