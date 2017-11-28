@@ -18,15 +18,17 @@ $jsonString = file_get_contents('php://input');
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
-
+  
 	//log file a name.
 	$today_date = date("Y-m-d");
 	$csvFileName = 'logs/IP_Blacklisted/'.$today_date.'.csv';
 
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-
-    
+	
+        if($obj->get_request_type()=="PostORPrep") 
+    {
+      $logsArray["Request Type"]="PostORPrep";
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
 
@@ -69,22 +71,8 @@ if(isset($jsonString) and $jsonString!="")
 	//update IP wise count
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
-
-    //write logs
-	if (file_exists($csvFileName)) {
-	$fp = fopen($csvFileName, 'a');
-	} else {
-	$fp = fopen($csvFileName, 'w');
-	 fputcsv($fp, array_keys($logsArray));
-
-	}
-	//Loop through the associative array.
-	fputcsv($fp, $logsArray);
-	//Finally, close the file pointer.
-	fclose($fp);
-	
-	
-	/////////////// Blocking Sending functions //////////////////////////////////////////
+		
+    /////////////// Blocking Sending functions //////////////////////////////////////////
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
 
@@ -108,13 +96,35 @@ if(isset($jsonString) and $jsonString!="")
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
 		  
 		}
-	    $obj->connection_disconnect();
-	
-	
-	
-	
+	    $obj->connection_disconnect();	
 	
 	////////////////////////////////////////////////////////////////////////////////////
+		
+	} // if close for request type	
+	
+	$logsArray["Request Type"]=$obj->get_request_type();
+	 $logsArray["Action1"]="";
+	 $logsArray["Action2"]="";
+	 $logsArray["Action3"]="";
+	 $logsArray["Action4"]="";
+	 $logsArray["Action5"]="";
+	
+
+    //write logs
+	if (file_exists($csvFileName)) {
+	$fp = fopen($csvFileName, 'a');
+	} else {
+	$fp = fopen($csvFileName, 'w');
+	 fputcsv($fp, array_keys($logsArray));
+
+	}
+	//Loop through the associative array.
+	fputcsv($fp, $logsArray);
+	//Finally, close the file pointer.
+	fclose($fp);
+	
+	
+	
 
 
 	//Send email alert to client
