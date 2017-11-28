@@ -23,6 +23,9 @@ $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
 if($obj->get_request_type()=="PostORPrep") 
  {
+  // update Req1
+   $obj->updateReq1Status("Stopped");		
+	
    $logsArray["Request Type"]="PostORPrep";	
     
     $json = $obj->inputJsonArray;
