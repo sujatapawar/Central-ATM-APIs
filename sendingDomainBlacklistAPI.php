@@ -18,6 +18,10 @@ if(isset($jsonString) and $jsonString!="")
 	$csvFileName = 'logs/Sending_Domain_Blacklisted/'.$today_date.'.csv';
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
+	if($obj->get_request_type()=="PostORPrep") 
+       {
+	
+	
         $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
 	
@@ -103,7 +107,19 @@ if(isset($jsonString) and $jsonString!="")
 		}
 	    $obj->connection_disconnect();	
 	
+	 $logsArray["Action6"]="Sending functions are blocked";
 	////////////////////////////////////////////////////////////////////////////////////
+		
+	} // if close for request type	
+	else {
+	$logsArray["Request Type"]=$obj->get_request_type();
+	 $logsArray["Action1"]="";
+	 $logsArray["Action2"]="";
+	 $logsArray["Action3"]="";
+	 $logsArray["Action4"]="";
+	 $logsArray["Action5"]="";
+	 $logsArray["Action6"]="";
+	}
     //write logs
 	if (file_exists($csvFileName)) {
 	$fp = fopen($csvFileName, 'a');
