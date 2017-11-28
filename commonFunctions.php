@@ -43,6 +43,7 @@ class commonFunctions {
 	
     function get_request_type()
     {
+	$this->connection_atm();
         $array = array($this->req1);
         $Req1_Details = $this->_dbHandlepdo->sql_Select("Req1", "cl_id,sending_type", " where req1_id=?", $array);
 	if($Req1_Details[0]['sending_type']=='test')
