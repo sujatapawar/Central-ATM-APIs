@@ -158,6 +158,16 @@ class commonFunctions {
         
     }// end of releaseIP
 	
+  function updateReq1Status($status)
+    {
+        $this->connection_atm();
+            $json = $this->inputJsonArray;
+            $array = array($status,$json['req1']);
+            $this->_dbHandlepdo->sql_Update("Req1"," status=? ", " where req1_id=?",$array);
+        $this->connection_disconnect();        
+        
+    }// end of releaseIP	
+	
 	/* Get IP From Warm-up */
     function getIPFromWarmUp($IP_ID)
     {
