@@ -26,7 +26,9 @@ $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
 if($obj->get_request_type()=="PostORPrep") 
  {
- $logsArray["Request Type"]="PostORPrep";	
+ $logsArray["Request Type"]="PostORPrep";
+// update Req1
+ $obj->updateReq1Status("Stopped");		
 //Releasing IP
 $obj->releaseIP();
 $logsArray["Action1"]=$json = "IPs are released";
