@@ -20,7 +20,8 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	if($obj->get_request_type()=="PostORPrep") 
        {
-	
+	// update Req1
+          $obj->updateReq1Status("Stopped");	
 	
         $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
