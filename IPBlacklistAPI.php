@@ -97,18 +97,19 @@ if(isset($jsonString) and $jsonString!="")
 		  
 		}
 	    $obj->connection_disconnect();	
-	
+	  $logsArray["Action6"]="Sending functions are blocked";
 	////////////////////////////////////////////////////////////////////////////////////
 		
 	} // if close for request type	
-	
+	else {
 	$logsArray["Request Type"]=$obj->get_request_type();
 	 $logsArray["Action1"]="";
 	 $logsArray["Action2"]="";
 	 $logsArray["Action3"]="";
 	 $logsArray["Action4"]="";
 	 $logsArray["Action5"]="";
-	
+	 $logsArray["Action6"]="";
+	}
 
     //write logs
 	if (file_exists($csvFileName)) {
