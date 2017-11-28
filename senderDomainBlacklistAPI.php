@@ -10,8 +10,8 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":158,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"7","861":"3"}}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":158,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"7","861":"3"}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
@@ -23,6 +23,10 @@ $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
+	
+if($obj->get_request_type()=="PostORPrep") 
+ {
+ $logsArray["Request Type"]="PostORPrep";	
 //Releasing IP
 $obj->releaseIP();
 $logsArray["Action1"]=$json = "IPs are released";
@@ -58,7 +62,19 @@ $logsArray["Action2"]="IP wise counts are updated";
 		}
 	    $obj->connection_disconnect();	
 	
-	////////////////////////////////////////////////////////////////////////////////////    
+	 $logsArray["Action6"]="Sending functions are blocked";
+	////////////////////////////////////////////////////////////////////////////////////
+		
+	} // if close for request type	
+	else {
+	$logsArray["Request Type"]=$obj->get_request_type();
+	 $logsArray["Action1"]="";
+	 $logsArray["Action2"]="";
+	 $logsArray["Action3"]="";
+	 $logsArray["Action4"]="";
+	 $logsArray["Action5"]="";
+	 $logsArray["Action6"]="";
+	}
 
 
 if (file_exists($csvFileName)) {
