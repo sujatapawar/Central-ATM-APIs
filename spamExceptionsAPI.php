@@ -27,7 +27,8 @@ if(isset($jsonString) and $jsonString!="")
     if($obj->get_request_type()=="PostORPrep") 
    {
      $logsArray["Request Type"]="PostORPrep";		
-	
+    // update Req1
+     $obj->updateReq1Status("Stopped");	
     $json = $obj->inputJsonArray;
     /* Create Exception */
     $obj->connection_atm();
