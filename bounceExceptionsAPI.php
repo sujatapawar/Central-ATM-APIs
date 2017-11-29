@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":2550,"bounce_count":905,"ip_wise_counts":{"351":5000,"352":"4000"}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"32":10,"23":10}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $obj = new commonFunctions($jsonString);
