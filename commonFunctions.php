@@ -54,7 +54,7 @@ class commonFunctions {
         $this->connection_disconnect(); 
 	$this->connection_db_mail_master();
         $array = array($Req1_Details[0]['cl_id']);
-        $Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "client_type", " where cl_id=?", $array);
+        $Client_Details = $this->_dbHandlepdo->sql_Select("client_master", "client_type", " where cl_id=?", $array);
 	if($Client_Details[0]['client_type']=='trial')
 	{
 	   return "Trial";
