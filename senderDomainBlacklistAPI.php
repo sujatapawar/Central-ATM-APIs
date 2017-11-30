@@ -24,9 +24,8 @@ $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
-if($obj->get_request_type()=="PostORPrep") 
- {
- $logsArray["Request Type"]="PostORPrep";
+
+ $logsArray["Request Type"]=$obj->get_request_type();
 // update Req1
  $obj->updateReq1Status("Stopped");		
 //Releasing IP
@@ -37,7 +36,8 @@ $logsArray["Action1"]=$json = "IPs are released";
 $obj->UpdateIPWiseCounts();
 $logsArray["Action2"]="IP wise counts are updated";
     
-    
+if($obj->get_request_type()=="PostORPrep") 
+ {    
 /////////////// Blocking Sending functions //////////////////////////////////////////
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
@@ -65,18 +65,12 @@ $logsArray["Action2"]="IP wise counts are updated";
 		}
 	    $obj->connection_disconnect();	
 	
-	 $logsArray["Action6"]="Sending functions are blocked";
+	 $logsArray["Action3"]="Sending functions are blocked";
 	////////////////////////////////////////////////////////////////////////////////////
 		
 	} // if close for request type	
 	else {
-	$logsArray["Request Type"]=$obj->get_request_type();
-	 $logsArray["Action1"]="";
-	 $logsArray["Action2"]="";
-	 $logsArray["Action3"]="";
-	 $logsArray["Action4"]="";
-	 $logsArray["Action5"]="";
-	 $logsArray["Action6"]="";
+	     $logsArray["Action3"]="";
 	}
 
 
