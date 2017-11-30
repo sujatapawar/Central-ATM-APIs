@@ -21,14 +21,15 @@ $csvFileName = 'logs/bounce_exceptions/'.$today_date.'.csv';
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
-if($obj->get_request_type()=="PostORPrep") 
- {
+
   // update Req1
    $obj->updateReq1Status("Stopped");		
 	
-   $logsArray["Request Type"]="PostORPrep";	
+   $logsArray["Request Type"]=$obj->get_request_type();	
     
     $json = $obj->inputJsonArray;
+   if($obj->get_request_type()=="PostORPrep") 
+ {	
     /* Create Exception */
     $obj->connection_atm();
         $array = array($obj->req1);
@@ -53,11 +54,12 @@ if($obj->get_request_type()=="PostORPrep")
          
 	}
     $obj->connection_disconnect();
+   $logsArray["Action1"]="Execption generated and sending functions are blocked";  
 	
 } //close if of get_request_type
 else
 {
-  $logsArray["Request Type"]=$obj->get_request_type();
+  $logsArray["Action1"]="";
   
 }
 	
@@ -65,13 +67,13 @@ else
 
 //Releasing IP
 $obj->releaseIP();
-$logsArray["Action1"] = "IPs are released";
+$logsArray["Action2"] = "IPs are released";
     
 //update IP wise count
 $obj->UpdateIPWiseCounts();
-$logsArray["Action2"]="IP wise counts are updated";
+$logsArray["Action3"]="IP wise counts are updated";
     
-$logsArray["Action3"]="Execption generated and sending functions are blocked";    
+  
 
 
 	
