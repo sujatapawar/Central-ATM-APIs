@@ -100,6 +100,7 @@ if(isset($jsonString) and $jsonString!="")
 		if(!isset($Exception_Details[0]['exception_id'])) // check if exception already exist
 		{ 
 		    $Exception_ID = $obj->_dbHandlepdo->sql_insert("client_exceptions", " exception_type_id,exception_client_id,exception_object_id,exception_open_date_time,exception_closed_date_time,exception_data,exception_status", $array);
+		    $obj->_dbHandlepdo->sql_insert("exception_process_log", " exception_id,datetime,initiated_by,account_exception_id", array($Exception_ID,date('Y-m-d H:i:s'),'Client',$Exception_ID));
 		    $array = array(32,$Exception_ID,$Req1_Details[0]['cl_id']);
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
 		    $array = array(33,$Exception_ID,$Req1_Details[0]['cl_id']);
