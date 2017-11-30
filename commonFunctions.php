@@ -162,7 +162,7 @@ class commonFunctions {
     {
         $this->connection_atm();
             $json = $this->inputJsonArray;
-            $array = array($status,$json['req1']);
+            $array = array("Paused",$json['req1']);
             $this->_dbHandlepdo->sql_Update("Req1"," status=? ", " where req1_id=?",$array);
         $this->connection_disconnect();        
         
