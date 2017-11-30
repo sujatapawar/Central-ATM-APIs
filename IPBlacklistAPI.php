@@ -26,8 +26,7 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
-        if($obj->get_request_type()=="PostORPrep") 
-    {
+       
       $logsArray["Request Type"]="PostORPrep";
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
@@ -73,6 +72,8 @@ if(isset($jsonString) and $jsonString!="")
 	//update IP wise count
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
+ if($obj->get_request_type()=="PostORPrep") 
+    {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
 	   $array = array($obj->req1);
@@ -107,13 +108,8 @@ if(isset($jsonString) and $jsonString!="")
 		
 	} // if close for request type	
 	else {
-	$logsArray["Request Type"]=$obj->get_request_type();
-	 $logsArray["Action1"]="";
-	 $logsArray["Action2"]="";
-	 $logsArray["Action3"]="";
-	 $logsArray["Action4"]="";
-	 $logsArray["Action5"]="";
-	 $logsArray["Action6"]="";
+	       $logsArray["Request Type"]=$obj->get_request_type();
+	       $logsArray["Action6"]="";
 	}
 
     //write logs
