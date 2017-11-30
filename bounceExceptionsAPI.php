@@ -53,6 +53,14 @@ if($obj->get_request_type()=="PostORPrep")
          
 	}
     $obj->connection_disconnect();
+	
+} //close if of get_request_type
+else
+{
+  $logsArray["Request Type"]=$obj->get_request_type();
+  
+}
+	
 
 
 //Releasing IP
@@ -65,15 +73,7 @@ $logsArray["Action2"]="IP wise counts are updated";
     
 $logsArray["Action3"]="Execption generated and sending functions are blocked";    
 
-} //close if of get_request_type
-else
-{
-  $logsArray["Request Type"]=$obj->get_request_type();
-  $logsArray["Action1"]="";
-  $logsArray["Action2"]="";
-  $logsArray["Action3"]="";	
 
-}
 	
 
 if (file_exists($csvFileName)) {
