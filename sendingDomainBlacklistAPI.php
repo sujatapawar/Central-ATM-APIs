@@ -18,8 +18,8 @@ if(isset($jsonString) and $jsonString!="")
 	$csvFileName = 'logs/Sending_Domain_Blacklisted/'.$today_date.'.csv';
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-	if($obj->get_request_type()=="PostORPrep") 
-       {
+	$logsArray["Request Type"]=$obj->get_request_type();
+	
 	// update Req1
           $obj->updateReq1Status("Stopped");	
 	
@@ -81,7 +81,8 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
 	
-	
+	if($obj->get_request_type()=="PostORPrep") 
+       {
 	/////////////// Blocking Sending functions //////////////////////////////////////////
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
@@ -114,13 +115,8 @@ if(isset($jsonString) and $jsonString!="")
 		
 	} // if close for request type	
 	else {
-	$logsArray["Request Type"]=$obj->get_request_type();
-	 $logsArray["Action1"]="";
-	 $logsArray["Action2"]="";
-	 $logsArray["Action3"]="";
-	 $logsArray["Action4"]="";
-	 $logsArray["Action5"]="";
-	 $logsArray["Action6"]="";
+	
+	   $logsArray["Action6"]="";
 	}
     //write logs
 	if (file_exists($csvFileName)) {
