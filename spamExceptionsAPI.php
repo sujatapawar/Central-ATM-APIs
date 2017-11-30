@@ -24,12 +24,13 @@ if(isset($jsonString) and $jsonString!="")
 
     $logsArray["Date/Time"]=date("Y-m-d H:i:s");
     $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-    if($obj->get_request_type()=="PostORPrep") 
-   {
-     $logsArray["Request Type"]="PostORPrep";		
+    
+     $logsArray["Request Type"]=$obj->get_request_type();		
     // update Req1
      $obj->updateReq1Status("Stopped");	
     $json = $obj->inputJsonArray;
+    if($obj->get_request_type()=="PostORPrep") 
+   {	
     /* Create Exception */
     $obj->connection_atm();
         $array = array($obj->req1);
@@ -55,26 +56,23 @@ if(isset($jsonString) and $jsonString!="")
          
 	}
     $obj->connection_disconnect();
-
+   
+    $logsArray["Action1"]="Execption generated and sending functions are blocked";
+ } //close if of get_request_type
+  else
+  {
+    $logsArray["Action1"]="";
+  }
     
     //Releasing IP
     $obj->releaseIP();
-    $logsArray["Action1"] = "IPs are released";
+    $logsArray["Action2"] = "IPs are released";
         
     //update IP wise count
     $obj->UpdateIPWiseCounts();
-    $logsArray["Action2"]="IP wise counts are updated";
-
-    $logsArray["Action3"]="Execption generated and sending functions are blocked";
-	    
-   } //close if of get_request_type
-	else
-	{
-	  $logsArray["Request Type"]=$obj->get_request_type();
-	  $logsArray["Action1"]="";
-	  $logsArray["Action2"]="";
-	  $logsArray["Action3"]="";	
-	}
+    $logsArray["Action3"]="IP wise counts are updated";  
+  
+	
 
     if (file_exists($csvFileName)) {
     $fp = fopen($csvFileName, 'a');
