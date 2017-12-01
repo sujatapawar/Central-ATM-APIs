@@ -84,6 +84,7 @@ if(isset($jsonString) and $jsonString!="")
 	if($obj->get_request_type()=="PostORPrep") 
        {
 	/////////////// Blocking Sending functions //////////////////////////////////////////
+	  $obj->connection_atm();	
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
 
