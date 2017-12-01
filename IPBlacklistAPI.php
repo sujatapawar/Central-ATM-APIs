@@ -77,7 +77,7 @@ if(isset($jsonString) and $jsonString!="")
     {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
-	   $this->connection_atm();
+	   $obj->connection_atm();
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
 
