@@ -31,7 +31,7 @@ if(isset($jsonString) and $jsonString!="")
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
      // update Req1
-     obj->updateReq1Status("Stopped");		
+     $obj->updateReq1Status("Stopped");		
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
