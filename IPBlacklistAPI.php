@@ -11,8 +11,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":225,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":225,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
+$jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -31,7 +31,7 @@ if(isset($jsonString) and $jsonString!="")
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
      // update Req1
-  /*   $obj->updateReq1Status("Stopped");		
+     obj->updateReq1Status("Stopped");		
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
@@ -72,7 +72,7 @@ if(isset($jsonString) and $jsonString!="")
 	//update IP wise count
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
-*/	
+	
  if($obj->get_request_type()=="PostORPrep") 
     {	
 		
