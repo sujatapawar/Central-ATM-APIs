@@ -11,8 +11,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":225,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":230,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
+//$jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
