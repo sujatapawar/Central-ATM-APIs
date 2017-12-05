@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":79,"domain":"nl1.sendm.net","ip_wise_counts":{"342":30000,"352":20000}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":249,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
