@@ -405,8 +405,8 @@ class commonFunctions {
                                             "select cm.childPool_id from childPool_master as cm, pool_master pm where cm.pool_id=pm.pool_id and pm.pool_name=? and cm.childPool_type_id=?"
                                           );
             $SQL_ChildPoolId->execute(array('Available assets',1));
-            $arrayOfResult = $SQL_WarmUpIP->fetchAll();
-            $$childPool_id = $arrayOfResult[0]['childPool_id'];
+            $arrayOfResult = $SQL_ChildPoolId->fetchAll();
+            $childPool_id = $arrayOfResult[0]['childPool_id'];
 
        $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPool_id,$asset_id,'1',1));
        $this->connection_disconnect();
