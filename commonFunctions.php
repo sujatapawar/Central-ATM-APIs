@@ -6,31 +6,31 @@ include("dbConnectionClass.php");
 /* Base Class */
 class commonFunctions {
 
-	//protected $_dbHandle;
+    //protected $_dbHandle;
     public $_dbHandlepdo;
     public $inputJsonArray;
     public $mail;
     public $req1;
 
-	function __construct($jsonString) {
-		
-		//1. Accept Json file and assign file conetents in array format to a class variable
-		if($jsonString!='')
-		{
-			$this->inputJsonArray=json_decode($jsonString, true);
+    function __construct($jsonString) {
+        
+        //1. Accept Json file and assign file conetents in array format to a class variable
+        if($jsonString!='')
+        {
+            $this->inputJsonArray=json_decode($jsonString, true);
 
-			$this->req1=$this->inputJsonArray['req1'];
-		}
-		
-		
+            $this->req1=$this->inputJsonArray['req1'];
+        }
+        
+        
 
-		//4. Instantiate PHPMailer
-	   $this->mail = new PHPMailer();
-		
+        //4. Instantiate PHPMailer
+       $this->mail = new PHPMailer();
+        
 
-	} //end of construct
+    } //end of construct
 
-	function connection_db_mail_master()
+    function connection_db_mail_master()
     {
         $this->_dbHandlepdo = new DBConnection(DBMAIL_MASTER_DB_HOST,DBMAIL_MASTER_DB_NAME,DBMAIL_MASTER_DB_USER,DBMAIL_MASTER_DB_PASSWORD);
         
@@ -38,45 +38,45 @@ class commonFunctions {
     function connection_atm()
     {
         $this->_dbHandlepdo = new DBConnection(ATM_DB_HOST,ATM_DB_NAME,ATM_DB_USER,ATM_DB_PASSWORD);
-	
-    }
-	
-    function get_request_type()
-    {
-	$this->connection_atm();
-        $array = array($this->req1);
-        $Req1_Details = $this->_dbHandlepdo->sql_Select("Req1", "cl_id,sending_type", " where req1_id=?", $array);
-	if($Req1_Details[0]['sending_type']=='test')
-	{
-	  return "Test";
-	}
-	    
-        $this->connection_disconnect(); 
-	$this->connection_db_mail_master();
-        $array = array($Req1_Details[0]['cl_id']);
-        $Client_Details = $this->_dbHandlepdo->sql_Select("client_master", "client_type", " where cl_id=?", $array);
-	if($Client_Details[0]['client_type']=='trial')
-	{
-	   return "Trial";
-	
-	}
-	else return "PostORPrep";    
     
     }
-	function connection_disconnect()
+    
+    function get_request_type()
+    {
+    $this->connection_atm();
+        $array = array($this->req1);
+        $Req1_Details = $this->_dbHandlepdo->sql_Select("Req1", "cl_id,sending_type", " where req1_id=?", $array);
+    if($Req1_Details[0]['sending_type']=='test')
+    {
+      return "Test";
+    }
+        
+        $this->connection_disconnect(); 
+    $this->connection_db_mail_master();
+        $array = array($Req1_Details[0]['cl_id']);
+        $Client_Details = $this->_dbHandlepdo->sql_Select("client_master", "client_type", " where cl_id=?", $array);
+    if($Client_Details[0]['client_type']=='trial')
+    {
+       return "Trial";
+    
+    }
+    else return "PostORPrep";    
+    
+    }
+    function connection_disconnect()
     {
         $this->_dbHandlepdo->connection_disconnect();
     }
-	   
-	
+       
     
-	function sendEmailAlert($to,$subject,$message)
-	{
-                    $this->mail->SetLanguage("en", "/var/www/html/atm2.0/library/phpmailer/language/");			 		
+    
+    function sendEmailAlert($to,$subject,$message)
+    {
+                    $this->mail->SetLanguage("en", "/var/www/html/atm2.0/library/phpmailer/language/");                 
                     $this->mail->IsSMTP();
                     $this->mail->Host =MAIL_HOST;
                     $this->mail->Username =MAIL_USERNAME;    
-                    $this->mail->Password =MAIL_PASSWORD; 	
+                    $this->mail->Password =MAIL_PASSWORD;   
                     $this->mail->SMTPAuth =true;
                     $this->mail->Port=465;
                     $this->mail->SMTPSecure = 'tls'; 
@@ -91,11 +91,11 @@ class commonFunctions {
                     $this->mail->Send();         
 
 
-	} // end of sendEmailAlert
+    } // end of sendEmailAlert
 
-	
+    
 
-	function postDataUsingCURL($url,$stringToPost)
+    function postDataUsingCURL($url,$stringToPost)
     {
         
 
@@ -111,7 +111,7 @@ class commonFunctions {
                 //echo $res;
                 //echo "Data Posted successfully";
         }
-	}// end of postDataUsingCURL
+    }// end of postDataUsingCURL
 
     function UpdateIPWiseCounts()
     {
@@ -138,13 +138,13 @@ class commonFunctions {
 
     function putAssetIntoFreezer($assetType, $asset)
     {
-	     echo "putAssetIntoFreezer";
+         echo "putAssetIntoFreezer";
     
-    }// end of putAssetIntoFreezer	
-	
+    }// end of putAssetIntoFreezer  
+    
      function putAssetIntoWarmup($assetType, $asset)
     {
-	     echo "putAssetIntoWormup";
+         echo "putAssetIntoWormup";
     
     }// end of putAssetIntoWormup
     
@@ -157,7 +157,7 @@ class commonFunctions {
         $this->connection_disconnect();        
         
     }// end of releaseIP
-	
+    
   function updateReq1Status($status)
     {
         $this->connection_atm();
@@ -166,9 +166,9 @@ class commonFunctions {
             $this->_dbHandlepdo->sql_Update("Req1"," status=? ", " where req1_id=?",$array);
         $this->connection_disconnect();        
         
-    }// end of releaseIP	
-	
-	/* Get IP From Warm-up */
+    }// end of releaseIP    
+    
+    /* Get IP From Warm-up */
     function getIPFromWarmUp($IP_ID)
     {
         $this->connection_atm();
@@ -196,13 +196,13 @@ class commonFunctions {
         return $WarmUpIP;
     }
     /* End Get IP From warm-up */
-	
-	/* Insert IP in client_ip_detail */
+    
+    /* Insert IP in client_ip_detail */
     function insert_IP_in_ClientIP_Detail($WarmUp_IP_ID,$badIpId)
     {
         $this->connection_atm();
         $req1 = $this->req1;
-	    
+        
         $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_ClientIP_Detail = $Conn->prepare(
                                             "select cl_id, sent from client_ip_detail where req1_id=? and IP_id=?"
@@ -211,24 +211,24 @@ class commonFunctions {
             $client_ip_details_data = $SQL_ClientIP_Detail->fetchAll();
           
         foreach($client_ip_details_data as $data) {
-		//print_r($data);
+        //print_r($data);
        /* $ClientID = $this->_dbHandlepdo->sql_Select("client_ip_detail", "cl_id,sent", " where req1_id=?", array($req1));
        */ $ClientID = $data['cl_id'];
-	  $Sent = $data['sent'];	   
+      $Sent = $data['sent'];       
         
         
-	 //  print_r($array); die;   
-	        $arrayToCheck = array($WarmUp_IP_ID,$ClientID);
-		$RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "req1_id", " where IP_id=? and cl_id=?", $arrayToCheck);
+     //  print_r($array); die;   
+            $arrayToCheck = array($WarmUp_IP_ID,$ClientID);
+        $RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "req1_id", " where IP_id=? and cl_id=?", $arrayToCheck);
                
                 if(!empty($RecordExist)):
-	           $arrayToUpdate = array($req1,$Sent,1,date('Y-m-d'),$WarmUp_IP_ID); 
+               $arrayToUpdate = array($req1,$Sent,1,date('Y-m-d'),$WarmUp_IP_ID); 
                     $this->_dbHandlepdo->sql_Update("client_ip_detail"," req1_id=?,sent=sent+?,in_use=?,date=?", " where IP_id=? ",$arrayToUpdate);
                 else:    
-	           $arrayToInsert = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
-        	    $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $arrayToInsert);
-	        endif;
-	} //end foreach loop	
+               $arrayToInsert = array($req1,$ClientID,$WarmUp_IP_ID,$Sent,1,date('Y-m-d')); 
+                $this->_dbHandlepdo->sql_insert("client_ip_detail", "req1_id,cl_id,IP_id,sent,in_use,date", $arrayToInsert);
+            endif;
+    } //end foreach loop    
         $this->connection_disconnect();
     }
     /* End Insert IP in client_ip_detail */
@@ -241,21 +241,21 @@ class commonFunctions {
      return $arrayOfChildPoolIds;
 
    }// end of getAllChildPoolIds
-	
+    
    function removeIP($badIPId)
    {
-	  
+      
      $this->connection_atm();
      $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIPId));
      $this->connection_disconnect();
    }// end of removeIP
-	
+    
    function replanishIP($warmedUpIP,$childPoolId)
    {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPoolId,$warmedUpIP,'1',1));
     $this->connection_disconnect();
-   } // end of replanishIP	
+   } // end of replanishIP  
 
    function putIPInFreezer($badIPId)
    {
@@ -270,8 +270,8 @@ class commonFunctions {
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(97,$badIPId,'1',1));
     $this->connection_disconnect();
    }// end of putIPInWarmup
-   	
-	
+    
+    
    function getDomainId($domain)
    {
      $this->connection_atm();
@@ -280,7 +280,7 @@ class commonFunctions {
      return $arrayOfDomainId;
    
    }//end of getDomainId
-	
+    
    function getAllChildPoolIdsOfDomains($blacklistedDomainId,$tableName)
    {
      $this->connection_atm();
@@ -289,15 +289,15 @@ class commonFunctions {
      return $arrayOfChildPoolIds;
    
    }// end of getAllChildPoolIdsOfRP
-	
+    
    function removeDomain($blacklistedDomainId,$tableName)
    {
      $this->connection_atm();
      $this->_dbHandlepdo->sql_delete($tableName, " where domain_id=?", array($blacklistedDomainId));
-     $this->connection_disconnect();	   
+     $this->connection_disconnect();       
    
    }//end of removeRPDomain
-	
+    
    function getDomainFromWarmUp($blacklistedDomainId,$tableName)
    {
         if($tableName=='childPool_RPDomains')
@@ -308,7 +308,7 @@ class commonFunctions {
             $childpool_type=5;
 
 
-	    $this->connection_atm();
+        $this->connection_atm();
             $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_WarmUpIP = $Conn->prepare(
                                             "select chip.domain_id from ".$tableName." as chip, domain_master as dm
@@ -331,32 +331,43 @@ class commonFunctions {
         return $WarmUpDomainId;
    
    }//end of getRPDomainFromWarmUp
-	
+    
   function replanishDomain($warmedUpDomainId,$childPoolId,$tableName)
    {
-	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($childPoolId,$warmedUpDomainId,'1'));
-	    $this->connection_disconnect();
+        $this->connection_atm();
+        $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($childPoolId,$warmedUpDomainId,'1'));
+        $this->connection_disconnect();
    }// end of replanishRPDomain
-	
-	
+    
+    
    function putDomainInFreezer($blacklistedDomainId,$tableName)
    {
+        $this->connection_atm();
         if($tableName=='childPool_RPDomains')
-            $freezerId=10366;
-        if($tableName=='childPool_LinkDomains')
-            $freezerId=10367;
-        if($tableName=='childPool_ImageDomains')
-            $freezerId=10367;
-	if($tableName=='childPool_SendingDomains')
-            $freezerId=10735;   
+        {
+          $arrayOfResult = $this->_dbHandlepdo->sql_Select("childPool_master", "childPool_ID", " where pool_id =? and childPool_type_id=? ", array(2,2));
+          $freezerId=$arrayOfResult[0]['childPool_ID'];//10366;
+        }
+            
+        if($tableName=='childPool_LinkDomains' or $tableName=='childPool_ImageDomains')
+        {
+          $arrayOfResult = $this->_dbHandlepdo->sql_Select("childPool_master", "childPool_ID", " where pool_id =? and childPool_type_id=? ", array(2,3));
+          $freezerId=$arrayOfResult[0]['childPool_ID'];//10367;
+        }
+        
+        if($tableName=='childPool_SendingDomains')
+        {
+          $arrayOfResult = $this->_dbHandlepdo->sql_Select("childPool_master", "childPool_ID", " where pool_id =? and childPool_type_id=? ", array(2,8));
+          $freezerId=$arrayOfResult[0]['childPool_ID'];//10735;
+        }
+              
 
-	    $this->connection_atm();
-	    $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
-	    $this->connection_disconnect();
+        
+        $this->_dbHandlepdo->sql_insert($tableName, "childPool_id,domain_id,web", array($freezerId,$blacklistedDomainId,'1'));
+        $this->connection_disconnect();
 
    }//end of putRPDomainInFreezer
-	
+    
     function getDomainName($warmedUpDomainId)
     {
 
@@ -366,15 +377,15 @@ class commonFunctions {
     return $arrayOfDomainName;
 
     } // end of getDomainName
-	
+    
     function deactivateDomain($blacklistedDomainId)
     {
      $this->connection_atm();
      $this->_dbHandlepdo->sql_Update("domain_master"," status='listed',active='0',IP_id=0 ", " where domain_id=?",array($blacklistedDomainId));
      $this->connection_disconnect();      
      } //end of deactivateDomain
-	
-	
+    
+    
     function getDomainIpId($blacklistedDomain)
     {
      $this->connection_atm();
@@ -383,21 +394,29 @@ class commonFunctions {
      return $arrayOfDomainName;
     
     } //end of getDomainIpId
-	
+    
     function putAssetIntoAvailablePool($asset_id,$asset_type='IP')
     {
+      $this->connection_atm();
      if($asset_type=='IP')
      {
-       $this->connection_atm();
-       $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(10734,$asset_id,'1',1));
+            $Conn = $this->_dbHandlepdo->get_connection_variable();
+            $SQL_ChildPoolId = $Conn->prepare(
+                                            "select cm.childPool_id from childPool_master as cm, pool_master pm where cm.pool_id=pm.pool_id and pm.pool_name=? and cm.childPool_type_id=?"
+                                          );
+            $SQL_ChildPoolId->execute(array('Available assets',1));
+            $arrayOfResult = $SQL_WarmUpIP->fetchAll();
+            $$childPool_id = $arrayOfResult[0]['childPool_id'];
+
+       $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPool_id,$asset_id,'1',1));
        $this->connection_disconnect();
      
      }
     
     }
   
-	
-    	
+    
+        
     
 
 }// end of class
