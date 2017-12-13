@@ -7,13 +7,13 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"32":10,"23":10}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"32":10,"23":10}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
-	
+/*	
 //Give our CSV file a name.
 $today_date = date("Y-m-d");
 $csvFileName = 'logs/bounce_exceptions/'.$today_date.'.csv';
@@ -30,7 +30,7 @@ $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
     $json = $obj->inputJsonArray;
    if($obj->get_request_type()=="PostORPrep") 
  {	
-    /* Create Exception */
+    // Create Exception
     $obj->connection_atm();
         $array = array($obj->req1);
         $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
@@ -89,16 +89,16 @@ $fp = fopen($csvFileName, 'w');
 fputcsv($fp, $logsArray);
 //Finally, close the file pointer.
 fclose($fp);
-
+*/
 
 //Send email alert to client
-$to="shripad.kulkarni@nichelive.com";
+$to="mahesh.jagdale@nichelive.com";
 $subject="[Central ATM API] Email Alert to client for Bounce Exception ";
 $message="Email Alert for Bounce Exception from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
 
 //Send email alert to delivery team 
-$to="shripad.kulkarni@nichelive.com";
+$to="mahesh.jagdale@nichelive.com";
 $subject="Central ATM API] Email Alert to Deliver for Bounce Exception ";
 $message="Email Alert for Bounce Exception from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
@@ -108,7 +108,7 @@ $obj->sendEmailAlert($to,$subject,$message);
 else
 {
 	//Send email alert to delivery team 
-	$to="shripad.kulkarni@nichelive.com";
+	$to="mahesh.jagdale@nichelive.com";
 	$subject="Central ATM API] Email Alert for Bounce Exception";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
