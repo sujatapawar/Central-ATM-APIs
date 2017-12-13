@@ -152,9 +152,11 @@ class commonFunctions {
     {
         $this->connection_atm();
             $json = $this->inputJsonArray;
+            $RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "IP_id", " where req1_id=?", array($json['req1']));
             $array = array(0,$json['req1']);
             $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);
-        $this->connection_disconnect();        
+        $this->connection_disconnect();
+        return $RecordExist;        
         
     }// end of releaseIP
     
