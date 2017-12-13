@@ -20,7 +20,8 @@ $csvFileName = 'logs/bounce_exceptions/'.$today_date.'.csv';
 
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-	
+$AccountBlockStatus=0;	
+
 
   // update Req1
    $obj->updateReq1Status("Stopped");		
@@ -38,7 +39,7 @@ $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
     
     $obj->connection_db_mail_master();
         $array = array($Req1_Details[0]['cl_id']);
-        $Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company", " where cl_id=?", $array);
+        $Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email", " where cl_id=?", $array);
         
         $Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail']."\n Bounce Count:".$json['bounce_count'];
         $array=array(2,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -51,7 +52,7 @@ $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
             $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
             $array = array(33,$Exception_ID,$Req1_Details[0]['cl_id']);
             $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
-         
+            $AccountBlockStatus=1;
 	}
     $obj->connection_disconnect();
    $logsArray["Action1"]="Execption generated and sending functions are blocked";  
@@ -92,26 +93,61 @@ fclose($fp);
 
 
 //Send email alert to client
-$to="shripad.kulkarni@nichelive.com";
-$subject="[Central ATM API] Email Alert to client for Bounce Exception ";
-$message="Email Alert for Bounce Exception from Central ATM API";
-$obj->sendEmailAlert($to,$subject,$message);
+$to = array("mahesh.jagdale@nichelive.com");
+$subject="Your mailing ".$obj->req1." has been discontinued";
+$message  = "Dear ".$Client_Details[0]['cl_name'].",<br/>";
+$message .= "<p>Your mailing (details below) has resulted in more than 10% hard bounces. In order to protect any degradation of our infrastructure, your mailing has been stopped.</p>";
+$message .= "<b>Client: </b>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")<br/>";
+$message .= "<b>Email: </b>(ID: ".$Req1_Details[0]['mailer_id'].")<br/>";
+$message .= "<b>Sending Request ID: </b>".$obj->req1."<br/>";
+$message .= "<b>Total Recipients: </b>".$Req1_Details[0]['total_unique_mail']."<br/>";
+$message .= "<b>Total Sent:-</b><br/>";
+$message .= "<b>Total hard bounces:</b>".$json['bounce_count']."";
+$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.<p/>";
+$message .= "Sincerely<br/>";
+$message .= "Juvlon Support";
+foreach($to as $t)
+{
+  $obj->sendEmailAlert($t,$subject,$message);
+}
 
 //Send email alert to delivery team 
-$to="shripad.kulkarni@nichelive.com";
-$subject="Central ATM API] Email Alert to Deliver for Bounce Exception ";
-$message="Email Alert for Bounce Exception from Central ATM API";
-$obj->sendEmailAlert($to,$subject,$message);
-
+$to="mahesh.jagdale@nichelive.com";
+$subject="Hard bounce exception occurred for ".$obj->req1." of ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
+$message  = "Hi,<br/>";
+$message .= "<p>The Juvlon delivery system has detected a hard bounce exception during the sending activity of a client. As a result, the client's sending has been stopped.</p>";
+$message .= "<p>Please find below the details of the sending that caused the hard bounce exception:</p>";
+$message .= "<b>Client: </b>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")<br/>";
+$message .= "<b>Email: </b>(ID: ".$Req1_Details[0]['mailer_id'].")<br/>";
+$message .= "<b>Req1_id: </b>".$obj->req1."<br/> ";
+$message .= "<b>Total Recipients: </b>".$Req1_Details[0]['total_unique_mail']."<br/>";
+$message .= "<b>Total Sent:</b> - <br/>";
+$message .= "<b>Total hard bounces: </b>".$json['bounce_count']." <br/>";
+$message .= "<b>Environment:</b><br/>";
+$message .= "<b>List of PMTAs where this job ID was killed : </b><br/>";
+$message .= "<b>IPs released:</b><br/>";
+$message .= "<b>Client's sending functions blocked?:".($AccountBlockStatus==1)?"Yes":"No"."</b><br/>";
+$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.
+</p>";
+$message .= "Regards<br/>";
+$message .= "Juvlon Delivery System";
+foreach($to as $t)
+{
+  $obj->sendEmailAlert($t,$subject,$message);
+}
 
 }
 else
 {
 	//Send email alert to delivery team 
-	$to="shripad.kulkarni@nichelive.com";
+	$to = array("mahesh.jagdale@nichelive.com");
 	$subject="Central ATM API] Email Alert for Bounce Exception";
 	$message="Blank JSON Input";
-	$obj->sendEmailAlert($to,$subject,$message);
+	foreach($to as $t)
+  {
+    $obj->sendEmailAlert($t,$subject,$message);
+  }
 }
 
 
