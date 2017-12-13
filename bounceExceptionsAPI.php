@@ -92,13 +92,13 @@ fclose($fp);
 */
 
 //Send email alert to client
-$to="pramod.suryawanshi@nichelive.com";
+$to="mahesh.jagdale@nichelive.com";
 $subject="[Central ATM API] Email Alert to client for Bounce Exception ";
 $message="Email Alert for Bounce Exception from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
 
 //Send email alert to delivery team 
-$to="pramod.suryawanshi@nichelive.com";
+$to="mahesh.jagdale@nichelive.com";
 $subject="Central ATM API] Email Alert to Deliver for Bounce Exception ";
 $message="Email Alert for Bounce Exception from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
@@ -108,7 +108,7 @@ echo "mail send";
 else
 {
 	//Send email alert to delivery team 
-	$to="pramod.suryawanshi@nichelive.com";
+	$to="mahesh.jagdale@nichelive.com";
 	$subject="Central ATM API] Email Alert for Bounce Exception";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
