@@ -113,7 +113,7 @@ foreach($to as $t)
 }
 
 //Send email alert to delivery team 
-$to="mahesh.jagdale@nichelive.com";
+$to=array("mahesh.jagdale@nichelive.com");
 $subject="Hard bounce exception occurred for ".$obj->req1." of ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 $message  = "Hi,<br/>";
 $message .= "<p>The Juvlon delivery system has detected a hard bounce exception during the sending activity of a client. As a result, the client's sending has been stopped.</p>";
