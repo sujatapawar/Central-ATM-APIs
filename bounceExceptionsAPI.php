@@ -102,7 +102,7 @@ $to="mahesh.jagdale@nichelive.com";
 $subject="Central ATM API] Email Alert to Deliver for Bounce Exception ";
 $message="Email Alert for Bounce Exception from Central ATM API";
 $obj->sendEmailAlert($to,$subject,$message);
-
+echo "mail send";
 
 }
 else
@@ -112,6 +112,7 @@ else
 	$subject="Central ATM API] Email Alert for Bounce Exception";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
+	echo "blank json";
 }
 
 
