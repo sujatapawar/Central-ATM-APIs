@@ -36,7 +36,7 @@ if(isset($jsonString) and $jsonString!="")
 	}
 	$obj->connection_disconnect();
 	
-     /* $logsArray["Request Type"]=$obj->get_request_type();
+      $logsArray["Request Type"]=$obj->get_request_type();
       // update Req1
      $obj->updateReq1Status("Stopped");		     
 
@@ -139,7 +139,7 @@ if(isset($jsonString) and $jsonString!="")
 	//Loop through the associative array.
 	fputcsv($fp, $logsArray);
 	//Finally, close the file pointer.
-	fclose($fp);*/
+	fclose($fp);
 
 
 	//Send email alert to client
