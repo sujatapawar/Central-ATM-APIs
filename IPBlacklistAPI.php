@@ -11,8 +11,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":230,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":230,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
+$jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -141,7 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to = array("shripad.kulkarni@nichelive.com");
+	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -161,7 +161,7 @@ if(isset($jsonString) and $jsonString!="")
 	}
 	
 	//Send email alert to delivery team 
-	$to=array("shripad.kulkarni@nichelive.com");
+	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="IP ".$AssignIP[0]['IP']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
