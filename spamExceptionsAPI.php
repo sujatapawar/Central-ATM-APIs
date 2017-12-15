@@ -25,13 +25,14 @@ if(isset($jsonString) and $jsonString!="")
     $logsArray["Date/Time"]=date("Y-m-d H:i:s");
     $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
     
+    $AccountBlockStatus=0;
      $logsArray["Request Type"]=$obj->get_request_type();		
     // update Req1
      $obj->updateReq1Status("Stopped");	
     $json = $obj->inputJsonArray;
     if($obj->get_request_type()=="PostORPrep") 
    {	
-    /* Create Exception */
+    // Create Exception 
     $obj->connection_atm();
         $array = array($obj->req1);
         $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
@@ -53,7 +54,7 @@ if(isset($jsonString) and $jsonString!="")
             $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
             $array = array(33,$Exception_ID,$Req1_Details[0]['cl_id']);
             $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
-         
+            $AccountBlockStatus=1;
 	}
     $obj->connection_disconnect();
    
@@ -65,7 +66,14 @@ if(isset($jsonString) and $jsonString!="")
   }
     
     //Releasing IP
-    $obj->releaseIP();
+    $IPID = $obj->releaseIP();
+    $IPRelease = array();
+    $obj->connection_atm();
+    foreach($IPID as $I)
+    {
+      $IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
+    }
+    $obj->connection_disconnect();
     $logsArray["Action2"] = "IPs are released";
         
     //update IP wise count
@@ -88,18 +96,49 @@ if(isset($jsonString) and $jsonString!="")
 
 
     //Send email alert to client
-    $to="shripad.kulkarni@nichelive.com";
-    $subject="[Central ATM API] Email Alert to client for Spam Exception ";
-    $message="Email Alert for Spam Exception from Central ATM API";
-    $obj->sendEmailAlert($to,$subject,$message);
+    $to = array("mahesh.jagdale@nichelive.com");
+    $subject="Your mailing ".$obj->req1." has been discontinued";
+    $message  = "Dear ".$Client_Details[0]['cl_name'].",<br/>";
+    $message .= "<p>Your mailing (details below) has resulted in more than 3% spam complaints. In order to protect any degradation of our infrastructure, your mailing has been stopped.</p>";
+    $message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+    $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+    $message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
+    $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+    $message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr>";
+    $message .= "<tr><td><b>Total Spam Complaints:</b></td><td>".$json['spam_count']."</td></tr></table>";
+    $message .= "<p>Please see the log(s) attached that clearly show the spam complaints that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+    $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
+    $message .= "Sincerely<br/>";
+    $message .= "Juvlon Support";
+    foreach($to as $t)
+    {
+      $obj->sendEmailAlert($t,$subject,$message);
+    }
 
     //Send email alert to delivery team 
-    $to="shripad.kulkarni@nichelive.com";
-    $subject="Central ATM API] Email Alert to Deliver for Spam Exception ";
-    $message="Email Alert for Spam Exception from Central ATM API";
-    $obj->sendEmailAlert($to,$subject,$message);
-
-
+    $to=array("mahesh.jagdale@nichelive.com");
+    $subject="Spam complaints exception occurred for ".$obj->req1." of ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
+    $AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
+    $message  = "Hi,<br/>";
+    $message .= "<p>The Juvlon delivery system has detected a spam complaints exception during the sending activity of a client. As a result, the client's sending has been stopped.</p>";
+    $message .= "<p>Please find below the details of the sending that caused the spam complaints exception:</p>";
+    $message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+    $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+    $message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
+    $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+    $message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+    $message .= "<tr><td><b>Total spam complaints: </b></td><td>".$json['spam_count']." </td></tr>";
+    $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
+    $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+    $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+    $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
+    $message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.</p>";
+    $message .= "Regards<br/>";
+    $message .= "Juvlon Delivery System";
+    foreach($to as $t)
+    {
+      $obj->sendEmailAlert($t,$subject,$message);
+    }
 }
 else
 {
