@@ -11,8 +11,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":230,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":230,"ip_id":342,"ip_wise_counts":{"342":0, "352":0}}';
+//$jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -30,6 +30,7 @@ if(isset($jsonString) and $jsonString!="")
       $logsArray["Request Type"]="PostORPrep";
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
+	 $AccountBlockStatus = 0;
      // update Req1
      $obj->updateReq1Status("Stopped");		
 
@@ -40,11 +41,11 @@ if(isset($jsonString) and $jsonString!="")
     //delete all entries of the IP_Id 
     $obj->removeIP($blacklistedIPId);
 
-    $logsArray["Action1"]="IP Removed";
+	$logsArray["Action1"]="IP Removed";
 
     // get new IP from warm up
     $warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
-    if($warmedUpIP !='')
+	if($warmedUpIP !='')
     {
          //replanish all the pools with new warmed-up IP 
     	  foreach($childPoolIdsArray as $childPoolId)
@@ -66,7 +67,14 @@ if(isset($jsonString) and $jsonString!="")
     $logsArray["Action3"]="IP put into Freezer";
 	
 	//Releasing IP
-	$obj->releaseIP();
+	$IPID = $obj->releaseIP();
+	$IPRelease = array();
+	$obj->connection_atm();
+	foreach($IPID as $I)
+	{
+	$IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
+	}
+	$obj->connection_disconnect();
 	$logsArray["Action4"]=$json = "IPs are released";
 	    
 	//update IP wise count
@@ -79,8 +87,9 @@ if(isset($jsonString) and $jsonString!="")
     /////////////// Blocking Sending functions //////////////////////////////////////////
 	   $obj->connection_atm();
 	   $array = array($obj->req1);
-           $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
-
+           $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", $array);
+		   $AssignIP = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($blacklistedIPId));
+		   $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
 	   $obj->connection_disconnect();
     
 	    $obj->connection_db_mail_master();
@@ -102,7 +111,7 @@ if(isset($jsonString) and $jsonString!="")
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
 		    $array = array(33,$Exception_ID,$Req1_Details[0]['cl_id']);
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
-		  
+			$AccountBlockStatus =1;
 		}
 	    $obj->connection_disconnect();	
 	  $logsArray["Action6"]="Sending functions are blocked";
@@ -132,17 +141,49 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to="sarah.gidwani@nichelive.com";
-	$subject="[Central ATM API] Email Alert to client for IP Blacklist ";
-	$message="Email Alert for IP Blacklist from Central ATM API";
-	$obj->sendEmailAlert($to,$subject,$message);
-
+	$to = array("shripad.kulkarni@nichelive.com");
+	$subject="Your mailing ".$obj->req1." has been discontinued";
+	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
+	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
+	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
+	$message .= "<tr><td><b>Assigned IP: </b></td><td>".$AssignIP[0]['IP']."</td></tr>";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
+	$message .= "Sincerely<br/>";
+	$message .= "Juvlon Support";
+	foreach($to as $t)
+	{
+		$obj->sendEmailAlert($t,$subject,$message);
+	}
+	
 	//Send email alert to delivery team 
-	$to="sarah.gidwani@nichelive.com";
-	$subject="Central ATM API] Email Alert to Deliver for IP Blacklist ";
-	$message="Email Alert for IP Blacklist from Central ATM API";
-	$obj->sendEmailAlert($to,$subject,$message);
-
+	$to=array("shripad.kulkarni@nichelive.com");
+	$subject="IP ".$AssignIP[0]['IP']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
+	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
+	$message  = "Hi,<br/>";
+	$message .= "<p>The Juvlon delivery system has detected an IP blacklisting during the sending activity of a client. As a result, the client's sending has been stopped and some changes have been made in certain pools to ensure that the blacklisted IP does not get used for another sending.</p>";
+	$message .= "<p>Please find below the details of the blacklisted IP and the sending that caused the blacklisting:</p>";
+	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_ID[0]['pool_name']."</td></tr>";
+	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
+	$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.
+	</p>";
+	$message .= "Regards<br/>";
+	$message .= "Juvlon Delivery System";
+	foreach($to as $t)
+	{
+		$obj->sendEmailAlert($t,$subject,$message);
+	}
 
 }
 else
