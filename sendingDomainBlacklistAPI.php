@@ -10,6 +10,7 @@ include("commonFunctions.php");
 //$jsonString = '{"req1":249,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+$AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
@@ -74,7 +75,14 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Action3"]="Domain put into Freezer";
 	
 	//Releasing IP
-	$obj->releaseIP();
+	$IPID = $obj->releaseIP();
+	$IPRelease = array();
+	$obj->connection_atm();
+	foreach($IPID as $I)
+	{
+	$IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
+	}
+	$obj->connection_disconnect();
 	$logsArray["Action4"]=$json = "IPs are released";
 	    
 	//update IP wise count
@@ -107,7 +115,7 @@ if(isset($jsonString) and $jsonString!="")
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
 		    $array = array(33,$Exception_ID,$Req1_Details[0]['cl_id']);
 		    $obj->_dbHandlepdo->sql_insert("client_blocked_functions", " blocked_function_id,exception_id,client_id", $array);
-		  
+			$AccountBlockStatus = 1;
 		}
 	    $obj->connection_disconnect();	
 	
@@ -131,15 +139,57 @@ if(isset($jsonString) and $jsonString!="")
 	//Finally, close the file pointer.
 	fclose($fp);
 	//Send email alert to client
-	$to="sarah.gidwani@nichelive.com";
-	$subject="[Central ATM API] Email Alert to client for Sending domain Blacklist ";
-	$message="Email Alert for Sending domain Blacklist from Central ATM API";
-	$obj->sendEmailAlert($to,$subject,$message);
+	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$subject="Your mailing ".$obj->req1." has been discontinued";
+	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
+	$message .= "<p>Your mailing (details below) has caused our sending domain to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
+	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
+	$message .= "<tr><td><b>Sending Domain:  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
+	$message .= "Sincerely<br/>";
+	$message .= "Juvlon Support";
+	foreach($to as $t)
+	{
+		$obj->sendEmailAlert($t,$subject,$message);
+	}
+
 	//Send email alert to delivery team 
-	$to="sarah.gidwani@nichelive.com";
-	$subject="Central ATM API] Email Alert to Deliver for Sending domain Blacklist ";
-	$message="Email Alert for Sending domain Blacklist from Central ATM API";
-	$obj->sendEmailAlert($to,$subject,$message);
+	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$subject="The entire Pool <pool name> (id: <pool id>) inactivated while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
+	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
+	$message  = "Hi,<br/>";
+	$message .= "<p>The Juvlon delivery system has detected a Sending domain blacklisting during the sending activity of a client. As a result, the client's sending has been stopped and, some changes have been made in certain pools to ensure that the Sending domain does not get used for another sending.</p>";
+	$message .= "<p>Please find below the details of the blacklisted Sending domain and the sending that caused the blacklisting:</p>";
+	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
+	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
+	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+	$message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
+	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
+	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>Please find below the changes made to replace the blacklisted Sending domain</p>";
+	$message .= "<p>Inactivated Pools: <list of pool names and ids which do not have any IPs left as a result of this blacklisting></p>";
+	$message .= "<p>Blacklisted sending domain moved to: Freezer</p>";
+	$message .= "<p>All host names deleted: Yes</p>";
+	$message .= "<p>Associated IPs moved to: Available Assets</p>";
+	$message .= "<p>Pool IDs from where the Sending domain was removed: <list of all pool ids where the blacklisted Sending domain belonged></p>";
+	$message .= "<p>New Sending domain picked from warm-up: <domain name> (id: <id>) / None (no appropriate Sending domains available in warm-up pool)</p>";
+	$message .= "<p>Pool IDs where the new Sending domain is added: <list of all pool ids> / None (if no Sending domain was found from the warm-up pool)</p>";
+	$message .= "<p>PMTAs where the config files will be updated: </p>";
+	$message .= "Regards<br/>";
+	$message .= "Juvlon Delivery System";
+	foreach($to as $t)
+	{
+		$obj->sendEmailAlert($t,$subject,$message);
+	}
 }
 else
 {
