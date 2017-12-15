@@ -106,7 +106,7 @@ if(isset($jsonString) and $jsonString!="")
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
-	$IPRel46ease = array();
+	$IPRelease = array();
 	$obj->connection_atm();
 	foreach($IPID as $I)
 	{
