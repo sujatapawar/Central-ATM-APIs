@@ -30,6 +30,27 @@ if(isset($jsonString) and $jsonString!="")
       $logsArray["Request Type"]="PostORPrep";
 
      $blacklistedIPId = $obj->inputJsonArray['ip_id'];
+	 $jsonData = json_decode($jsonString,true);
+	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+	 $PMTAList = array();
+	 $obj->connection_atm(); 
+	 foreach($IP_IDs as $IP_ID)
+	 {
+		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
+		$PMTAName = $obj->_dbHandlepdo->sql_Select("Domain_MTA_mapping", "mta_name", " where domain_id=?", array($Domain[0]['domain_id']));
+		$PMTAList[] = $PMTAName[0]['mta_name'];
+	 }
+	 $Conn = $obj->_dbHandlepdo->get_connection_variable();
+	 $Env_ID = $Conn->prepare(
+								"select env_name 
+								from enviornment_master
+								join IP_master on enviornment_master.env_id = IP_master.env_id
+								where IP_master.IP_id = ?
+								"
+							);
+	 $Env_ID->execute(array($blacklistedIPId));
+	 $Env_Name = $Env_ID->fetch();
+	 $obj->connection_disconnect();
 	 $AccountBlockStatus = 0;
      // update Req1
      $obj->updateReq1Status("Stopped");		
@@ -172,12 +193,11 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
-	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_ID[0]['pool_name']."</td></tr>";
-	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name['env_name']."</td></tr>";
+	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.
-	</p>";
+	$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.</p>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	foreach($to as $t)
