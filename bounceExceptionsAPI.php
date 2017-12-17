@@ -7,7 +7,7 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"32":10,"23":10}}';
+//$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"342":10,"352":10}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,8 +21,17 @@ $csvFileName = 'logs/bounce_exceptions/'.$today_date.'.csv';
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 $AccountBlockStatus = 0;	
-
-
+   $jsonData = json_decode($jsonString,true);
+	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+	 $PMTAList = array();
+	 $obj->connection_atm(); 
+	 foreach($IP_IDs as $IP_ID)
+	 {
+		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
+		$PMTAName = $obj->_dbHandlepdo->sql_Select("Domain_MTA_mapping", "mta_name", " where domain_id=?", array($Domain[0]['domain_id']));
+		$PMTAList[] = $PMTAName[0]['mta_name'];
+	 }
+   
   // update Req1
    $obj->updateReq1Status("Stopped");		
 	
@@ -35,7 +44,6 @@ $AccountBlockStatus = 0;
     $obj->connection_atm();
         $array = array($obj->req1);
         $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", $array);
-        $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
     $obj->connection_disconnect();
     
     $obj->connection_db_mail_master();
@@ -101,7 +109,7 @@ fputcsv($fp, $logsArray);
 fclose($fp);
 
 //Send email alert to client
-$to = array($Client_Details[0]['cl_email'],"support@nichelive.com");
+$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 $subject="Your mailing ".$obj->req1." has been discontinued";
 $message  = "Dear ".$Client_Details[0]['cl_name'].",<br/>";
 $message .= "<p>Your mailing (details below) has resulted in more than 10% hard bounces. In order to protect any degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -121,7 +129,7 @@ foreach($to as $t)
 }
 
 //Send email alert to delivery team 
-$to=array("delivery@nichelive.com");
+$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 $subject="Hard bounce exception occurred for ".$obj->req1." of ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 $AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 $message  = "Hi,<br/>";
@@ -133,8 +141,8 @@ $message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 $message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
 $message .= "<tr><td><b>Total hard bounces: </b></td><td>".$json['bounce_count']." </td></tr>";
-$message .= "<tr><td><b>Environment:</b></td><td>".$Env_ID[0]['pool_name']."</td></tr>";
-$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+$message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
+$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 $message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.
