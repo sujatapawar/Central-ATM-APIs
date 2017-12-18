@@ -204,7 +204,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 	$message .= "<p>Please find the log(s) on below URL that clearly show the blacklisting has occurred during the mailing.</p>";
-	$message .= "<b>URL:</b> http://52.44.195.201/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
