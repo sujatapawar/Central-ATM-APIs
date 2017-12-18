@@ -115,7 +115,7 @@ if(isset($jsonString) and $jsonString!="")
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
-		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company", " where cl_id=?", $array);
+		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email", " where cl_id=?", $array);
 
 		$Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail'];
 		$array=array(21,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -162,7 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$to = array($Client_Details[0]['cl_email'],"support@juvlon.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -171,9 +171,10 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Assigned IP: </b></td><td>".$AssignIP[0]['IP']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	/*$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
 	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
 	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
+	*/
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
 	foreach($to as $t)
@@ -182,7 +183,7 @@ if(isset($jsonString) and $jsonString!="")
 	}
 	
 	//Send email alert to delivery team 
-	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$to=array("delivery@nichelive.com","techsupport@nichelive.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="IP ".$AssignIP[0]['IP']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
@@ -198,7 +199,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 	$message .= "<p>Please find the log(s) on below URL that clearly show the blacklisting has occurred during the mailing.</p>";
-	$message .= "<b>URL:</b> http://52.44.195.201/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	foreach($to as $t)
