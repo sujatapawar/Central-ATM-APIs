@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":209,"bounce_count":10,"ip_wise_counts":{"342":10,"352":10}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":294,"bounce_count":10,"ip_wise_counts":{"342":10,"352":10}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $obj = new commonFunctions($jsonString);
@@ -109,7 +109,7 @@ fputcsv($fp, $logsArray);
 fclose($fp);
 
 //Send email alert to client
-$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 $subject="Your mailing ".$obj->req1." has been discontinued";
 $message  = "Dear ".$Client_Details[0]['cl_name'].",<br/>";
 $message .= "<p>Your mailing (details below) has resulted in more than 10% hard bounces. In order to protect any degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -117,19 +117,20 @@ $message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_nam
 $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 $message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr>";
+//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr>";
 $message .= "<tr><td><b>Total hard bounces:</b></td><td>".$json['bounce_count']."</td></tr></table>";
-$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+$message .= "<p>Please see the log(s) on below URL that clearly show the hard bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt<br/>";
 $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.<p/>";
 $message .= "Sincerely<br/>";
 $message .= "Juvlon Support";
-foreach($to as $t)
-{
-  $obj->sendEmailAlert($t,$subject,$message);
-}
+$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
+$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 
 //Send email alert to delivery team 
-$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 $subject="Hard bounce exception occurred for ".$obj->req1." of ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 $AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 $message  = "Hi,<br/>";
@@ -145,14 +146,15 @@ $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
 $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-$message .= "<p>Please see the log(s) attached that clearly show the hard bounces that have occurred during the mailing.
+$message .= "<p>Please see the log(s) using below URL, that clearly show the hard bounces that have occurred during the mailing.
 </p>";
+$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt<br/>";	
 $message .= "Regards<br/>";
 $message .= "Juvlon Delivery System";
-foreach($to as $t)
-{
-  $obj->sendEmailAlert($t,$subject,$message);
-}
+$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
 }
 else
 {
