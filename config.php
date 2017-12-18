@@ -12,5 +12,6 @@ define('MAIL_USERNAME', "AKIAIPDG5EDXPIJFECDA");
 define('MAIL_PASSWORD', "ArkhvLuvGelk+vDYoR+UA/z0HWFUvOnMM5//1m+l9WcI");
 define('MAIL_SENDER_EMAIL', "customerfirst@juvlon.io");
 define('MAIL_SENDER_NAME', "Juvlon Support");
+define('BOUNCE_SERVER', "52.44.195.201");
 
 ?>
