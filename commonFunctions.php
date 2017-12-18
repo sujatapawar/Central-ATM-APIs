@@ -84,6 +84,7 @@ class commonFunctions {
                     $this->mail->FromName = MAIL_SENDER_NAME;
                     $this->mail->Sender =MAIL_SENDER_EMAIL;   
                     $this->mail->AddAddress($to);
+                    $to="";
                     $this->mail->WordWrap = 50;    
                     $this->mail->IsHTML(true);   
                     $this->mail->Subject  = $subject;
