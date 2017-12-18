@@ -162,7 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -177,13 +177,18 @@ if(isset($jsonString) and $jsonString!="")
 	*/
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
-	foreach($to as $t)
+	/*foreach($to as $t)
 	{
 		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	}*/
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
+	
 	
 	//Send email alert to delivery team 
-	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="IP ".$AssignIP[0]['IP']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
@@ -202,17 +207,17 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<b>URL:</b> http://52.44.195.201/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
 
 }
 else
 {
 	//Send email alert to delivery team 
 	$to="shripad.kulkarni@nichelive.com";
-	$subject="Central ATM API] Email Alert for IP Blacklist ";
+	$subject="[Central ATM API] Email Alert for IP Blacklist ";
 	$message="Blank JSON Input";
 	$obj->sendEmailAlert($to,$subject,$message);
 
