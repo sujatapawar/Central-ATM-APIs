@@ -162,7 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to = array("support@juvlon.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -183,7 +183,7 @@ if(isset($jsonString) and $jsonString!="")
 	}
 	
 	//Send email alert to delivery team 
-	$to=array("delivery@nichelive.com","techsupport@nichelive.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="IP ".$AssignIP[0]['IP']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
@@ -199,7 +199,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 	$message .= "<p>Please find the log(s) on below URL that clearly show the blacklisting has occurred during the mailing.</p>";
-	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
+	$message .= "<b>URL:</b> http://52.44.195.201/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	foreach($to as $t)
