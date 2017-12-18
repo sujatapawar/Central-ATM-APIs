@@ -162,7 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 
 
 	//Send email alert to client
-	$to = array($Client_Details[0]['cl_email'],"support@juvlon.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$to = array("support@juvlon.com","shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
