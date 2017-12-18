@@ -24,7 +24,18 @@ if(isset($jsonString) and $jsonString!="")
 
     $logsArray["Date/Time"]=date("Y-m-d H:i:s");
     $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-    
+	
+    $jsonData = json_decode($jsonString,true);	
+    $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+    $PMTAList = array();
+    $obj->connection_atm(); 
+	 foreach($IP_IDs as $IP_ID)
+	 {
+		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
+		$PMTAName = $obj->_dbHandlepdo->sql_Select("Domain_MTA_mapping", "mta_name", " where domain_id=?", array($Domain[0]['domain_id']));
+		$PMTAList[] = $PMTAName[0]['mta_name'];
+	 }	
+
     $AccountBlockStatus=0;
      $logsArray["Request Type"]=$obj->get_request_type();		
     // update Req1
@@ -130,7 +141,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
     $message .= "<tr><td><b>Total spam complaints: </b></td><td>".$json['spam_count']." </td></tr>";
     $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
-    $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+    $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
     $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
     $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
     $message .= "<p>Please see the log(s) using below link, that clearly show the spam complaints that have occurred during the mailing.</p>";
