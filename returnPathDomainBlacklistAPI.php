@@ -9,8 +9,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":79,"domain":"sendm.net","ip_wise_counts":{"342":3000,"352":2000}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":294,"domain":"sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
@@ -102,7 +102,7 @@ if(isset($jsonString) and $jsonString!="")
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
-		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,pool_id", " where cl_id=?", $array);
+		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,pool_id,cl_email", " where cl_id=?", $array);
 
 		$Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail'];
 		$array=array(22,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -151,16 +151,16 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Return Path Domain: </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
-	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
+	//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
 	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 
 	$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
 	$subject="Return Path domain ".$obj->inputJsonArray['domain']." blacklisted while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
@@ -179,7 +179,8 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed: </b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked? </b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "<p>Please find below the changes made to replace the blacklisted return path domain:</p>";
 	$message .= "<p>Blacklisted return path domain moved to: Freezer</p>";
 	$message .= "<p>Pool IDs from where the return path domain was removed: <list of all pool ids where the blacklisted return path domain belonged></p>";
@@ -187,10 +188,11 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<p>Pool IDs where the new return path domain is added: <list of all pool ids> / None (if no return path domain was found from the warm-up pool)</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
+
 }
 else
 {
