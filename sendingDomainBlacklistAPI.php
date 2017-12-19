@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":249,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":294,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
@@ -20,6 +20,28 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Date/Time"]=date("Y-m-d H:i:s");
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	$logsArray["Request Type"]=$obj->get_request_type();
+	
+	$jsonData = json_decode($jsonString,true);
+	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+	 $PMTAList = array();
+	 $obj->connection_atm(); 
+	 foreach($IP_IDs as $IP_ID)
+	 {
+		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
+		$PMTAName = $obj->_dbHandlepdo->sql_Select("Domain_MTA_mapping", "mta_name", " where domain_id=?", array($Domain[0]['domain_id']));
+		$PMTAList[] = $PMTAName[0]['mta_name'];
+	 }
+	
+	$Conn = $obj->_dbHandlepdo->get_connection_variable();
+	 $Env_ID = $Conn->prepare(
+								"select env_name 
+								from enviornment_master
+								join IP_master on enviornment_master.env_id = IP_master.env_id
+								where IP_master.IP_id = ?
+								"
+							);
+	 $Env_ID->execute(array($IP_IDs[0]));
+	 $Env_Name = $Env_ID->fetch();
 	
 	// update Req1
           $obj->updateReq1Status("Stopped");	
@@ -100,7 +122,7 @@ if(isset($jsonString) and $jsonString!="")
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
-		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company", " where cl_id=?", $array);
+		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email", " where cl_id=?", $array);
 
 		$Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail'];
 		$array=array(22,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -139,7 +161,7 @@ if(isset($jsonString) and $jsonString!="")
 	//Finally, close the file pointer.
 	fclose($fp);
 	//Send email alert to client
-	$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending domain to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -147,16 +169,16 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sending Domain:  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
-	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
+	//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
 	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 
 	//Send email alert to delivery team 
 	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
@@ -170,26 +192,27 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
-	$message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
-	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>-</td></tr>";
+	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name."</td></tr>";
+	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "<p>Please find below the changes made to replace the blacklisted Sending domain</p>";
 	$message .= "<p>Inactivated Pools: <list of pool names and ids which do not have any IPs left as a result of this blacklisting></p>";
 	$message .= "<p>Blacklisted sending domain moved to: Freezer</p>";
-	$message .= "<p>All host names deleted: Yes</p>";
+	//$message .= "<p>All host names deleted: Yes</p>";
 	$message .= "<p>Associated IPs moved to: Available Assets</p>";
-	$message .= "<p>Pool IDs from where the Sending domain was removed: <list of all pool ids where the blacklisted Sending domain belonged></p>";
-	$message .= "<p>New Sending domain picked from warm-up: <domain name> (id: <id>) / None (no appropriate Sending domains available in warm-up pool)</p>";
-	$message .= "<p>Pool IDs where the new Sending domain is added: <list of all pool ids> / None (if no Sending domain was found from the warm-up pool)</p>";
-	$message .= "<p>PMTAs where the config files will be updated: </p>";
+	//$message .= "<p>Pool IDs from where the Sending domain was removed: <list of all pool ids where the blacklisted Sending domain belonged></p>";
+	//$message .= "<p>New Sending domain picked from warm-up: <domain name> (id: <id>) / None (no appropriate Sending domains available in warm-up pool)</p>";
+	//$message .= "<p>Pool IDs where the new Sending domain is added: <list of all pool ids> / None (if no Sending domain was found from the warm-up pool)</p>";
+	//$message .= "<p>PMTAs where the config files will be updated: </p>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
 }
 else
 {
