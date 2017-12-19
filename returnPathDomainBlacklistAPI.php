@@ -9,8 +9,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":294,"domain":"sendm.net","ip_wise_counts":{"342":0,"352":0}}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":294,"domain":"sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
