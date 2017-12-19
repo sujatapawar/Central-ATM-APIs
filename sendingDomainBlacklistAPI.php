@@ -122,7 +122,7 @@ if(isset($jsonString) and $jsonString!="")
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
-		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email", " where cl_id=?", $array);
+		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email,pool_id", " where cl_id=?", $array);
 
 		$Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail'];
 		$array=array(22,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -181,8 +181,10 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 
 	//Send email alert to delivery team 
-	$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
-	$subject="The entire Pool <pool name> (id: <pool id>) inactivated while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
+	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	$obj->connection_atm();
+	$poolName = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Client_Details[0]['pool_id']));
+	$subject="The entire Pool ".$poolName[0]['pool_name']." (id: ".$Client_Details[0]['pool_id'].") inactivated while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
 	$message .= "<p>The Juvlon delivery system has detected a Sending domain blacklisting during the sending activity of a client. As a result, the client's sending has been stopped and, some changes have been made in certain pools to ensure that the Sending domain does not get used for another sending.</p>";
@@ -192,7 +194,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
-	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name."</td></tr>";
+	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
