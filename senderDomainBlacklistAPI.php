@@ -10,8 +10,8 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":158,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"7","861":"3"}}';
-$jsonString = file_get_contents('php://input');
+ $jsonString = '{"req1":294,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"0","861":"0"}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!=""){
@@ -63,7 +63,7 @@ if($obj->get_request_type()=="PostORPrep")
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
-		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company", " where cl_id=?", $array);
+		$Client_Details = $obj->_dbHandlepdo->sql_Select("client_master", "cl_name,cl_company,cl_email", " where cl_id=?", $array);
 
 		$Client_Data = "ClientName: ".$Client_Details[0]['cl_name']."\n Company Name:".$Client_Details[0]['cl_company']."\n Mailer-ID:".$Req1_Details[0]['mailer_id']."\n Sent Date:".$Req1_Details[0]['created_time']."\n Total Sent:".$Req1_Details[0]['total_unique_mail'];
 		$array=array(22,$Req1_Details[0]['cl_id'],$Req1_Details[0]['mailer_id'],date('Y-m-d H:i:s'),$Req1_Details[0]['created_time'],$Client_Data,'open');
@@ -106,7 +106,7 @@ fclose($fp);
 
 //Send email alert to client
 //Send email alert to client
-	$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
+	//$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your sender domain has been blacklisted. In order to protect any degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -115,18 +115,18 @@ fclose($fp);
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sender Domain: </b></td><td>".$JSON_Data['Domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
+	//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
 	$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 	
 	//Send email alert to delivery team 
-	$to=array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
+	//$to=array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
 	$subject="Sender domain ".$JSON_Data['Domain']." blacklisted while sending out $obj->req1 for $Client_Details[0]['cl_name'] ($Req1_Details[0]['cl_id'])";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
@@ -142,13 +142,15 @@ fclose($fp);
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
+
 
 
 }
