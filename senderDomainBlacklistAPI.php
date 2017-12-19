@@ -51,7 +51,8 @@ if($obj->get_request_type()=="PostORPrep")
 	   $obj->connection_atm();
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail", " where req1_id=?", $array);
-		   $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+	   $jsonData = json_decode($jsonString,true);	  
+	   $IP_IDs = array_keys($jsonData['ip_wise_counts']);
 			$PMTAList = array();
 			foreach($IP_IDs as $IP_ID)
 			{
@@ -114,7 +115,7 @@ fclose($fp);
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sender Domain: </b></td><td>".$JSON_Data['Domain']."</td></tr>";
-	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
 	//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
 	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
 	$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
@@ -127,7 +128,7 @@ fclose($fp);
 	
 	//Send email alert to delivery team 
 	//$to=array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
-	$subject="Sender domain ".$JSON_Data['Domain']." blacklisted while sending out $obj->req1 for $Client_Details[0]['cl_name'] ($Req1_Details[0]['cl_id'])";
+	$subject="Sender domain ".$JSON_Data['Domain']." blacklisted while sending out".$obj->req1."for".$Client_Details[0]['cl_name']."(".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
 	$message .= "<p>The Juvlon delivery system has detected a sender domain blacklisting during the sending activity of a client. As a result, the client's sending has been stopped.</p>";
