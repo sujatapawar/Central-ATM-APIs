@@ -64,6 +64,8 @@ if(isset($jsonString) and $jsonString!="")
     	  }
 	//die;    
         $logsArray["Action2"]="Domain Replanied with Warmedup Domain - $warmedUpDomain";
+	    
+	$DomainName = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_name", " where domain_id=?", array($warmedUpDomain));    
     }
     else
     {
@@ -183,9 +185,12 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "<p>Please find below the changes made to replace the blacklisted return path domain:</p>";
 	$message .= "<p>Blacklisted return path domain moved to: Freezer</p>";
-	$message .= "<p>Pool IDs from where the return path domain was removed: <list of all pool ids where the blacklisted return path domain belonged></p>";
-	$message .= "<p>New return path domain picked from warm-up: ".$obj->inputJsonArray['domain']." (id: ".$blacklistedDomainId.") / None (no appropriate return path domains available in warm-up pool)</p>";
-	$message .= "<p>Pool IDs where the new return path domain is added: <list of all pool ids> / None (if no return path domain was found from the warm-up pool)</p>";
+	//$message .= "<p>Pool IDs from where the return path domain was removed: <list of all pool ids where the blacklisted return path domain belonged></p>";
+	if($DomainName[0]['domain_name']!='')
+	  $message .= "<p>New return path domain picked from warm-up: ".$DomainName[0]['domain_name']." (id: ".$warmedUpDomain.") ";
+	else 
+	 $message .= "<p>New return path domain picked from warm-up: None (no appropriate return path domains available in warm-up pool)</p>";
+	//$message .= "<p>Pool IDs where the new return path domain is added: <list of all pool ids> / None (if no return path domain was found from the warm-up pool)</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
