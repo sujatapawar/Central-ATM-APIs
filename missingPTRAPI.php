@@ -1,6 +1,6 @@
 <?php
 /*
-1. Remove IP from Pool (childPool_IPs) and put into warm-up (pool id 1)
+1. Remove IP from Pool (childPool_IPs) and put into Available Assets Pool
 2. Replace with warm-up IP (pool id 1) with same environment and same grade, with the last stage.
 3. Release IP, and update counts
 4. Add new entry into client_IP_detail with new IP assignment
@@ -10,8 +10,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":79,"ip_id":342,"ip_wise_counts":{"342":3000,"352":2000}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":294,"ip_id":342,"ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
@@ -100,8 +100,8 @@ if(isset($jsonString) and $jsonString!="")
  
     }
 
-    //Insert bad ip id into warmup
-    $obj->putIPInWarmup($missedPTRIP);
+    //Insert bad ip id into Available pool
+    $obj->putAssetIntoAvailablePool($missedPTRIP);
     $logsArray["Action3"]="IP put into Warmup";
 	
 	//Releasing IP
@@ -140,7 +140,7 @@ if(isset($jsonString) and $jsonString!="")
 
 	//Send email alert to client
 	$warmedUpIP = ($warmedUpIP!="")?"<IP address> (id: ".$warmedUpIP.")":"None";
-	$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
+	//$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
 	$subject="IP ".$AssignIP[0]['IP']." with missing PTRs while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$message  = "Hi,<br/>";
 	$message .= "<p>The Juvlon delivery system has detected an IP with missing PTRs during the sending activity of a client. As a result, the client's sending was paused and resumed using another IP, and some changes were made in certain pools to ensure that the IP with missing PTRs does not get used for another sending.</p>";
@@ -154,18 +154,19 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Environment: </b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed: </b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",$IPRelease[0])."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the IP has missing PTRs.</p>";
+	$message .= "<p>Please see the log(s) using below URL, that clearly show the IP has missing PTRs.</p>";
+	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "<p>Please find below the changes made to replace the IP with missing PTRs:</p>";
 	$message .= "<p>IP with missng PTR moved to:Available Assets</p>";
-	$message .= "<p>Pool IDs from where the IP was removed: <list of all pool ids where the IP with missing PTRs belonged></p>";
+	//$message .= "<p>Pool IDs from where the IP was removed: <list of all pool ids where the IP with missing PTRs belonged></p>";
 	$message .= "<p>New IP picked from warm-up: ".$warmedUpIP."</p>";
-	$message .= "<p>Pool IDs where the new IP is added: <list of all pool ids> / None (if no IP was found from the warm-up pool)</p>";
+	//$message .= "<p>Pool IDs where the new IP is added: <list of all pool ids> / None (if no IP was found from the warm-up pool)</p>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
-	foreach($to as $t)
-	{
-		$obj->sendEmailAlert($t,$subject,$message);
-	}
+	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
 
 	
 }
