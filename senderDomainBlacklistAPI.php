@@ -34,6 +34,8 @@ $AccountBlockStatus = 0;
 $IPID = $obj->releaseIP();
 $IPRelease = array();
 $obj->connection_atm();
+// Total Sent Count
+$SentCount = $obj->getSentCount($obj->req1);
 foreach($IPID as $I)
 {
 $IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
@@ -116,7 +118,7 @@ fclose($fp);
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sender Domain: </b></td><td>".$JSON_Data['Domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
-	//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr></table>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
 	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
 	$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
@@ -138,7 +140,7 @@ fclose($fp);
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Blacklisted sender domain: </b></td><td>".$JSON_Data['Domain']." (id: -)</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount." </td></tr>";
 	$message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";

@@ -29,6 +29,8 @@ if(isset($jsonString) and $jsonString!="")
 
     $missedPTRIP = $obj->inputJsonArray['ip_id'];
 	$obj->connection_atm();
+	// Total Sent Count
+	$SentCount = $obj->getSentCount($obj->req1);
 	$AssignIP = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($missedPTRIP));
 	$Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", array($obj->req1));
 	$IP_IDs = array_keys($jsonData['ip_wise_counts']);
@@ -151,6 +153,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Client's Pool ID: </b></td><td>".$Client_Details[0]['pool_id']."</td></tr>";
 	$message .= "<tr><td><b>IP with missing PTR: </b></td><td>".$AssignIP[0]['IP']." (id: ".$missedPTRIP.")</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
+	$message .= "<tr><td><b>Total Sent: </b></td><td>".$SentCount."</td></tr>";
 	$message .= "<tr><td><b>Environment: </b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed: </b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",$IPRelease[0])."</td></tr></table>";
