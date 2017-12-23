@@ -68,7 +68,14 @@ class commonFunctions {
         $this->_dbHandlepdo->connection_disconnect();
     }
        
-    
+    function getSentCount($req1Id)
+    {
+        $this->connection_atm();
+        $array = array($req1Id);
+        $RecordExist = $this->_dbHandlepdo->sql_Select("client_ip_detail", "sum(sent) as SentCount", " where req1_id=?", $array);
+        $this->connection_disconnect();
+        return $RecordExist[0]['SentCount'];
+    }
     
     function sendEmailAlert($to,$subject,$message)
     {

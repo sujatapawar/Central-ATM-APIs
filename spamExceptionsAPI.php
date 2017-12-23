@@ -28,7 +28,9 @@ if(isset($jsonString) and $jsonString!="")
     $jsonData = json_decode($jsonString,true);	
     $IP_IDs = array_keys($jsonData['ip_wise_counts']);
     $PMTAList = array();
-    $obj->connection_atm(); 
+    $obj->connection_atm();
+    // Total Sent Count
+	  $SentCount = $obj->getSentCount($obj->req1);
 	 foreach($IP_IDs as $IP_ID)
 	 {
 		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
@@ -115,7 +117,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
     $message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
     $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-   // $message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr>";
+    $message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr>";
     $message .= "<tr><td><b>Total Spam Complaints:</b></td><td>".$json['spam_count']."</td></tr></table>";
     $message .= "<p>Please see the log(s) using below URL which clearly show the spam complaints that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
     $message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt<br/>";
@@ -138,7 +140,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
     $message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
     $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-    $message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+    $message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount."</td></tr>";
     $message .= "<tr><td><b>Total spam complaints: </b></td><td>".$json['spam_count']." </td></tr>";
     $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
     $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
