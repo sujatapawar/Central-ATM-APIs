@@ -73,11 +73,11 @@ if(isset($jsonString) and $jsonString!="")
 	$mainDomainId=$obj->getDomainId($main_domain);
 
       // Deactivate the mail domain
-	$obj->deactivateDomain($mainDomainId);     
+	$obj->deactivateDomain($mainDomainId[0]['domain_id']);     
         $logsArray["Action1"]="Domain deactivated";
   
 	//Insert main domain id into frezzer
-	$obj->putDomainInFreezer($mainDomainId,"childPool_SendingDomains");
+	$obj->putDomainInFreezer($mainDomainId[0]['domain_id'],"childPool_SendingDomains");
 	$logsArray["Action3"]="Domain put into Freezer";
 	
 	//Releasing IP
