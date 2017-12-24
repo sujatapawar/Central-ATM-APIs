@@ -65,7 +65,7 @@ if(isset($jsonString) and $jsonString!="")
 	//put Ip in available_assets pool
 	$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
 	
-	// remove domain from domain_master
+	// remove domain from domain_master and domain_mta_mapping table
 	$obj->removeDomain($domain['domain_id']);	
 		
 	
