@@ -46,54 +46,38 @@ if(isset($jsonString) and $jsonString!="")
 	// update Req1
           $obj->updateReq1Status("Stopped");	
 	
-        $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
-	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
+	// get main domain of listed domain
+	$main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	
-	//fetch IP belongs to domain
-	
-	 $ipIds = $obj->getDomainIpId($obj->inputJsonArray['domain']);
-	//echo $obj->inputJsonArray['domain']; die;
-	
-	// Deactivate the domain
-	$obj->deactivateDomain($blacklistedDomainId);     
-        $logsArray["Action1"]="Domain deactivated";
-	
-       
-	
-	//Retain 'childPool_id' of all pools with given IP_Id in an array 
-        $childPoolIdsArray = $obj->getAllChildPoolIds($ipIds[0]['IP_id']);
+	// get all hosts (varients of main domain)
+	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like %? and type=?  ");
 	 
+	 $sqlDomain->execute(array($main_domain,"sending"));
+	 $domainsArray = $sqlDomain->fetch();
+	foreach($domainsArray as $domain){ // start of loop for all hosts
 	
-	
-        //delete all entries of the IP_Id from all pools to setup with new
-	$obj->removeIP($ipIds[0]['IP_id']);
-	  
-        // get new IP from warm up
-        $warmedUpIP = $obj->getIPFromWarmUp($ipIds[0]['IP_id']); 
-       if($warmedUpIP !='')
-	{
-		 //replanish all the pools with new warmed-up IP 
-		  foreach($childPoolIdsArray as $childPoolId)
-		  {
-			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
-			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-		  }
-		//die;    
-		$logsArray["Action2"]=$ipIds[0]['IP_id']." IP Replanied with Warmedup IP- $warmedUpIP";
-	 }
-	else
-	 {
-		$logsArray["Action2"]="Warmedup IP not available";
-
-	 }
+        //fetch IP belongs to domain	
+	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
 		
-	
+        //delete all entries of the IP_Id from all pools 
+	$obj->removeIP($ipIds[0]['IP_id']);	  
+        	
 	//put Ip in available_assets pool
 	$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
 	
+	// remove domain from domain_master
+	$obj->removeDomain($domain['domain_id']);	
+		
+	
+    }// end of loop for all hosts
+	$mainDomainId=$obj->getDomainId($main_domain);
+
+      // Deactivate the mail domain
+	$obj->deactivateDomain($mainDomainId);     
+        $logsArray["Action1"]="Domain deactivated";
   
-	//Insert bad domain id into frezzer
-	$obj->putDomainInFreezer($blacklistedDomainId,"childPool_SendingDomains");
+	//Insert main domain id into frezzer
+	$obj->putDomainInFreezer($mainDomainId,"childPool_SendingDomains");
 	$logsArray["Action3"]="Domain put into Freezer";
 	
 	//Releasing IP
