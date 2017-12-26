@@ -110,7 +110,7 @@ if(isset($jsonString) and $jsonString!="")
     // Total Sent Count
     $SentCount = $obj->getSentCount($obj->req1);
     $obj->connection_disconnect();
-
+    sleep(30);
     $SpamComplaintsLog = $obj->get_log($obj->req1."_spam_complaints.txt","Spam");
     //Send email alert to client
    // $to = array("mahesh.jagdale@nichelive.com");

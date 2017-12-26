@@ -113,6 +113,7 @@ $obj->connection_atm();
 $SentCount = $obj->getSentCount($obj->req1);
 $obj->connection_disconnect();
 
+sleep(30);
 $BounceLog = $obj->get_log($obj->req1."_hard_bounces.txt","Bounce");
 
 //Send email alert to client
