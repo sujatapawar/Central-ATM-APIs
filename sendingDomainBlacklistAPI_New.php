@@ -47,7 +47,7 @@ if(isset($jsonString) and $jsonString!="")
           $obj->updateReq1Status("Stopped");	
 	
 	// get main domain of listed domain
-	echo $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);die;
+	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	
 	// get all hosts (varients of main domain)
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like %? and type=?  ");
@@ -55,8 +55,8 @@ if(isset($jsonString) and $jsonString!="")
 	 $sqlDomain->execute(array($main_domain,"sending"));
 	 $domainsArray = $sqlDomain->fetch();
 	foreach($domainsArray as $domain){ // start of loop for all hosts
-	
-        //fetch IP belongs to domain	
+	echo $domain['domain_name'];
+        /*/fetch IP belongs to domain	
 	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
 		
         //delete all entries of the IP_Id from all pools 
@@ -70,10 +70,11 @@ if(isset($jsonString) and $jsonString!="")
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
 	$obj->_dbHandlepdo->sql_delete("domain_mta_mapping", " where domain_id=?", array($domain['domain_id']));
-       
+       */
 		
 	
     }// end of loop for all hosts
+	die;
 	$mainDomainId=$obj->getDomainId($main_domain);
 
       // Deactivate the mail domain
