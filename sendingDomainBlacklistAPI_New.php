@@ -54,10 +54,10 @@ if(isset($jsonString) and $jsonString!="")
 	 
 	 $sqlDomain->execute(array("%".$main_domain,"sending"));
 	 $domainsArray = $sqlDomain->fetchAll();
-	print_r($domainsArray);
+	//print_r($domainsArray);
 	foreach($domainsArray as $domain){ // start of loop for all hosts
-	echo $domain['domain_name'];
-        /*/fetch IP belongs to domain	
+	//echo $domain['domain_name'];
+        //fetch IP belongs to domain	
 	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
 		
         //delete all entries of the IP_Id from all pools 
@@ -71,11 +71,11 @@ if(isset($jsonString) and $jsonString!="")
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
 	$obj->_dbHandlepdo->sql_delete("domain_mta_mapping", " where domain_id=?", array($domain['domain_id']));
-       */
+       
 		
 	
     }// end of loop for all hosts
-	die;
+	
 	$mainDomainId=$obj->getDomainId($main_domain);
 
       // Deactivate the mail domain
