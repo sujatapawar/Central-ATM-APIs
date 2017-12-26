@@ -10,7 +10,7 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":294,"spam_count":10,"ip_wise_counts":{"342":0,"352":"0"}}';
+//$jsonString = '{"req1":38443,"spam_count":10,"ip_wise_counts":{"342":0,"352":"0"}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -24,7 +24,7 @@ if(isset($jsonString) and $jsonString!="")
 
     $logsArray["Date/Time"]=date("Y-m-d H:i:s");
     $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
-	
+    
     $jsonData = json_decode($jsonString,true);	
     $IP_IDs = array_keys($jsonData['ip_wise_counts']);
     $PMTAList = array();
@@ -111,6 +111,7 @@ if(isset($jsonString) and $jsonString!="")
     $SentCount = $obj->getSentCount($obj->req1);
     $obj->connection_disconnect();
 
+    $SpamComplaintsLog = $obj->get_log($obj->req1."_spam_complaints.txt","Spam");
     //Send email alert to client
    // $to = array("mahesh.jagdale@nichelive.com");
     $subject="Your mailing ".$obj->req1." has been discontinued";
@@ -123,6 +124,8 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr>";
     $message .= "<tr><td><b>Total Spam Complaints:</b></td><td>".$json['spam_count']."</td></tr></table>";
     $message .= "<p>Please see the log(s) using below URL which clearly show the spam complaints that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+    $message .= "<p><b>Log:</b></p>";
+    $message .= "<p>".$SpamComplaintsLog."</p>";
     $message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt<br/>";
     $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
     $message .= "Sincerely<br/>";
@@ -150,6 +153,8 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
     $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
     $message .= "<p>Please see the log(s) using below link, that clearly show the spam complaints that have occurred during the mailing.</p>";
+    $message .= "<p><b>Log:</b></p>";
+    $message .= "<p>".$SpamComplaintsLog."</p>";
     $message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt<br/>";
     $message .= "Regards<br/>";
     $message .= "Juvlon Delivery System";
