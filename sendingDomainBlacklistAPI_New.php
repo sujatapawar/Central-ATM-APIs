@@ -53,7 +53,8 @@ if(isset($jsonString) and $jsonString!="")
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like ? and type=?  ");
 	 
 	 $sqlDomain->execute(array("%".$main_domain,"sending"));
-	 $domainsArray = $sqlDomain->fetch();
+	 $domainsArray = $sqlDomain->fetchAll();
+	print_r($domainsArray);
 	foreach($domainsArray as $domain){ // start of loop for all hosts
 	echo $domain[0]['domain_name'];
         /*/fetch IP belongs to domain	
