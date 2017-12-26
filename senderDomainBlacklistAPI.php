@@ -34,8 +34,6 @@ $AccountBlockStatus = 0;
 $IPID = $obj->releaseIP();
 $IPRelease = array();
 $obj->connection_atm();
-// Total Sent Count
-$SentCount = $obj->getSentCount($obj->req1);
 foreach($IPID as $I)
 {
 $IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
@@ -105,7 +103,10 @@ $fp = fopen($csvFileName, 'w');
 fputcsv($fp, $logsArray);
 //Finally, close the file pointer.
 fclose($fp);
-
+$obj->connection_atm();
+// Total Sent Count
+$SentCount = $obj->getSentCount($obj->req1);
+$obj->connection_disconnect();
 
 //Send email alert to client
 //Send email alert to client

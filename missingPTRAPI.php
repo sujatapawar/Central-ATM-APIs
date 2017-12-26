@@ -29,8 +29,6 @@ if(isset($jsonString) and $jsonString!="")
 
     $missedPTRIP = $obj->inputJsonArray['ip_id'];
 	$obj->connection_atm();
-	// Total Sent Count
-	$SentCount = $obj->getSentCount($obj->req1);
 	$AssignIP = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($missedPTRIP));
 	$Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", array($obj->req1));
 	$IP_IDs = array_keys($jsonData['ip_wise_counts']);
@@ -139,6 +137,10 @@ if(isset($jsonString) and $jsonString!="")
 	//Finally, close the file pointer.
 	fclose($fp);
 
+	$obj->connection_atm();
+	// Total Sent Count
+	$SentCount = $obj->getSentCount($obj->req1);
+	$obj->connection_disconnect();
 
 	//Send email alert to client
 	$warmedUpIP = ($warmedUpIP!="")?"<IP address> (id: ".$warmedUpIP.")":"None";
