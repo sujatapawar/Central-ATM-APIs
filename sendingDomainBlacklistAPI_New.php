@@ -50,9 +50,9 @@ if(isset($jsonString) and $jsonString!="")
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	
 	// get all hosts (varients of main domain)
-	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like %? and type=?  ");
+	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like ? and type=?  ");
 	 
-	 $sqlDomain->execute(array($main_domain,"sending"));
+	 $sqlDomain->execute(array("%".$main_domain,"sending"));
 	 $domainsArray = $sqlDomain->fetch();
 	foreach($domainsArray as $domain){ // start of loop for all hosts
 	echo $domain['domain_name'];
