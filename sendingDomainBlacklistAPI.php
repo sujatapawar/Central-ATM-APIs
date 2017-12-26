@@ -25,8 +25,6 @@ if(isset($jsonString) and $jsonString!="")
 	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
 	 $PMTAList = array();
 	 $obj->connection_atm(); 
-	 // Total Sent Count
-	 $SentCount = $obj->getSentCount($obj->req1);
 	 foreach($IP_IDs as $IP_ID)
 	 {
 		$Domain = $obj->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=?", array($IP_ID));
@@ -162,6 +160,10 @@ if(isset($jsonString) and $jsonString!="")
 	fputcsv($fp, $logsArray);
 	//Finally, close the file pointer.
 	fclose($fp);
+	$obj->connection_atm();
+	// Total Sent Count
+	$SentCount = $obj->getSentCount($obj->req1);
+	$obj->connection_disconnect();
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";

@@ -108,6 +108,11 @@ fputcsv($fp, $logsArray);
 //Finally, close the file pointer.
 fclose($fp);
 
+$obj->connection_atm();
+// Total Sent Count
+$SentCount = $obj->getSentCount($obj->req1);
+$obj->connection_disconnect();
+
 //Send email alert to client
 //$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 $subject="Your mailing ".$obj->req1." has been discontinued";
@@ -117,7 +122,7 @@ $message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_nam
 $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 $message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-//$message .= "<tr><td><b>Total Sent:</b></td><td>-</td></tr>";
+$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr>";
 $message .= "<tr><td><b>Total hard bounces:</b></td><td>".$json['bounce_count']."</td></tr></table>";
 $message .= "<p>Please see the log(s) on below URL that clearly show the hard bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
 $message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt<br/>";
@@ -140,7 +145,7 @@ $message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_nam
 $message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 $message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-$message .= "<tr><td><b>Total Sent:</b> </td><td>- </td></tr>";
+$message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount."</td></tr>";
 $message .= "<tr><td><b>Total hard bounces: </b></td><td>".$json['bounce_count']." </td></tr>";
 $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
 $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
