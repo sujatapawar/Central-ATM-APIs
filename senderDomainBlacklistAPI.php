@@ -10,7 +10,7 @@ include("commonFunctions.php");
 
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-// $jsonString = '{"req1":294,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"0","861":"0"}}';
+// $jsonString = '{"req1":38443,"Domain":"cgfhkl.website","ip_wise_counts":{"342":"0","861":"0"}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -25,7 +25,6 @@ $csvFileName = 'logs/sender_domain_listed/'.$today_date.'.csv';
 $logsArray["Date/Time"]=date("Y-m-d H:i:s");
 $logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 $AccountBlockStatus = 0;	
-
 
  $logsArray["Request Type"]=$obj->get_request_type();
 // update Req1
@@ -107,7 +106,7 @@ $obj->connection_atm();
 // Total Sent Count
 $SentCount = $obj->getSentCount($obj->req1);
 $obj->connection_disconnect();
-
+$BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDomain");
 //Send email alert to client
 //Send email alert to client
 	//$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
@@ -120,7 +119,9 @@ $obj->connection_disconnect();
 	$message .= "<tr><td><b>Sender Domain: </b></td><td>".$JSON_Data['Domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
 	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
-	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
+	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
+	$message .= "<p><b>Log:</b></p>";
+	$message .= "<p>".$BlacklistDomainLog."</p>";
 	$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
@@ -147,6 +148,8 @@ $obj->connection_disconnect();
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p><b>Log:</b></p>";
+	$message .= "<p>".$BlacklistDomainLog."</p>";
 	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
