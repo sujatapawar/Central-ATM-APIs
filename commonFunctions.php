@@ -426,7 +426,23 @@ class commonFunctions {
     }
   
     
-        
+    function get_log($filename,$handler)
+    {
+        $curl_handle=curl_init();
+        curl_setopt($curl_handle,CURLOPT_URL,'http://'.BOUNCE_SERVER.'/juvlon_bounce_process/bounce_processor/log_api.php');
+        $data = array('filename' => $filename,'handler'=>$handler);
+        curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
+        curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
+        $buffer = curl_exec($curl_handle);
+        curl_close($curl_handle);
+        if (empty($buffer)){
+            return  "Nothing returned from url.<p>";
+        }
+        else{
+            return $buffer;
+        }
+    }    
     
 
 }// end of class

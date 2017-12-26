@@ -11,7 +11,7 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":294,"ip_id":342,"ip_wise_counts":{"342":0, "861":0}}';
+//$jsonString = '{"req1":38443,"ip_id":342,"ip_wise_counts":{"342":0, "861":0}}';
 $jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +28,8 @@ if(isset($jsonString) and $jsonString!="")
 	
        
       $logsArray["Request Type"]="PostORPrep";
-
-     $blacklistedIPId = $obj->inputJsonArray['ip_id'];
+	 
+	 $blacklistedIPId = $obj->inputJsonArray['ip_id'];
 	 $jsonData = json_decode($jsonString,true);
 	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
 	 $PMTAList = array();
@@ -162,6 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 	// Total Sent Count
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
+	$BlacklistLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistIP");
 
 
 	//Send email alert to client
@@ -175,7 +176,8 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Assigned IP: </b></td><td>".$AssignIP[0]['IP']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
-	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<p>".$BlacklistLog."</p>";
 	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
@@ -206,6 +208,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
 	$message .= "<p>Please find the log(s) on below URL that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>".$BlacklistLog."</p>";
 	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
