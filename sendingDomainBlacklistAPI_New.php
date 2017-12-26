@@ -56,7 +56,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $domainsArray = $sqlDomain->fetchAll();
 	print_r($domainsArray);
 	foreach($domainsArray as $domain){ // start of loop for all hosts
-	echo $domain[0]['domain_name'];
+	echo $domain['domain_name'];
         /*/fetch IP belongs to domain	
 	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
 		
