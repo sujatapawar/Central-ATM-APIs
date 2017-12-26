@@ -147,6 +147,7 @@ if(isset($jsonString) and $jsonString!="")
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
 
+	sleep(30);
 	$BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDomain");
 	//Send email alert to client
 	$to = array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");

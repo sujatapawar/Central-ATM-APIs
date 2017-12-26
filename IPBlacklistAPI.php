@@ -162,6 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 	// Total Sent Count
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
+	sleep(30);
 	$BlacklistLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistIP");
 
 

@@ -149,7 +149,7 @@ if(isset($jsonString) and $jsonString!="")
 	// Total Sent Count
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
-
+	sleep(30);
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
