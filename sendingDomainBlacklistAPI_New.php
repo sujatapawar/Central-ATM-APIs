@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":294,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":294,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
@@ -66,7 +66,11 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
 	
 	// remove domain from domain_master and domain_mta_mapping table
-	$obj->removeDomain($domain['domain_id']);	
+	//$obj->removeDomain($domain['domain_id']);		
+        $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
+	
+	$obj->_dbHandlepdo->sql_delete("domain_mta_mapping", " where domain_id=?", array($domain['domain_id']));
+       
 		
 	
     }// end of loop for all hosts
@@ -166,9 +170,9 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
-	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	/*$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
-	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);*/
 
 	//Send email alert to delivery team 
 	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
@@ -202,9 +206,9 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
-	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	/*$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
-	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);*/
 }
 else
 {
