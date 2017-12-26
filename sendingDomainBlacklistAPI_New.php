@@ -47,7 +47,7 @@ if(isset($jsonString) and $jsonString!="")
           $obj->updateReq1Status("Stopped");	
 	
 	// get main domain of listed domain
-	$main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
+	echo $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);die;
 	
 	// get all hosts (varients of main domain)
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like %? and type=?  ");
