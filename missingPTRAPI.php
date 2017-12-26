@@ -10,7 +10,7 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":294,"ip_id":342,"ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = '{"req1":38443,"ip_id":342,"ip_wise_counts":{"342":0,"352":0}}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
@@ -25,7 +25,7 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Input JSON "]=str_replace(","," ",$jsonString);
 	
    	$jsonData = json_decode($jsonString,true);
-   
+	
 
     $missedPTRIP = $obj->inputJsonArray['ip_id'];
 	$obj->connection_atm();
@@ -141,6 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 	// Total Sent Count
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
+	$MissingPTR = $obj->get_log($obj->req1."_soft_bounces.txt","MissingPTR");
 
 	//Send email alert to client
 	$warmedUpIP = ($warmedUpIP!="")?"<IP address> (id: ".$warmedUpIP.")":"None";
@@ -160,6 +161,8 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed: </b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",$IPRelease[0])."</td></tr></table>";
 	$message .= "<p>Please see the log(s) using below URL, that clearly show the IP has missing PTRs.</p>";
+	$message .= "<p><b>Log:</b></p>";
+	$message .= "<p>".$MissingPTR."</p>";
 	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "<p>Please find below the changes made to replace the IP with missing PTRs:</p>";
 	$message .= "<p>IP with missng PTR moved to:Available Assets</p>";
