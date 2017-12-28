@@ -212,7 +212,6 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<p>Please find the log(s) on below URL that clearly show the blacklisting has occurred during the mailing.</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$BlacklistLog."</p>";
-	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
