@@ -437,7 +437,7 @@ class commonFunctions {
         $buffer = curl_exec($curl_handle);
         curl_close($curl_handle);
         if (empty($buffer)){
-            return  "Nothing returned from url.<p>";
+            return  "-";
         }
         else{
             return $buffer;
