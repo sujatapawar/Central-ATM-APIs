@@ -106,7 +106,7 @@ $obj->connection_atm();
 // Total Sent Count
 $SentCount = $obj->getSentCount($obj->req1);
 $obj->connection_disconnect();
-sleep(30);
+sleep(90);
 $BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDomain");
 //Send email alert to client
 //Send email alert to client
@@ -120,7 +120,7 @@ $BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDom
 	$message .= "<tr><td><b>Sender Domain: </b></td><td>".$JSON_Data['Domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
 	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
-	$message .= "<p>Please see the log(s) attached that clearly show the blacklisting of your sender domain.</p>";
+	$message .= "<p>Please see the below log which clearly shows the Sender Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$BlacklistDomainLog."</p>";
 	$message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
@@ -146,12 +146,11 @@ $BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDom
 	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount." </td></tr>";
 	$message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
-	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
+	$message .= "<p>Please see the below log which clearly shows the Sender Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$BlacklistDomainLog."</p>";
-	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
