@@ -113,7 +113,7 @@ $obj->connection_atm();
 $SentCount = $obj->getSentCount($obj->req1);
 $obj->connection_disconnect();
 
-sleep(30);
+sleep(90);
 $BounceLog = $obj->get_log($obj->req1."_hard_bounces.txt","Bounce");
 
 //Send email alert to client
@@ -127,8 +127,9 @@ $message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr
 $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 $message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr>";
 $message .= "<tr><td><b>Total hard bounces:</b></td><td>".$json['bounce_count']."</td></tr></table>";
-$message .= "<p>Please see the log(s) on below URL that clearly show the hard bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
-$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt<br/>";
+$message .= "<p>Please see the below log which clearly shows the bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
+$message .= "<p><b>Log:</b></p>";
+$message .= "<p>".$BounceLog."</p>";
 $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.<p/>";
 $message .= "Sincerely<br/>";
 $message .= "Juvlon Support";
@@ -152,10 +153,10 @@ $message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount."</td></tr>";
 $message .= "<tr><td><b>Total hard bounces: </b></td><td>".$json['bounce_count']." </td></tr>";
 $message .= "<tr><td><b>Environment:</b></td><td>-</td></tr>";
 $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
-$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
 $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-$message .= "<p>Please see the log(s) using below URL, that clearly show the hard bounces that have occurred during the mailing.</p>";
-$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt<br/>";	
+$message .= "<p>Please see the below log which clearly shows the bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
+$message .= "<b>Logs: </b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt'>Bounce Logs</a><br/>";	
 $message .= "Regards<br/>";
 $message .= "Juvlon Delivery System";
 $obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
