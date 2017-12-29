@@ -110,7 +110,7 @@ if(isset($jsonString) and $jsonString!="")
     // Total Sent Count
     $SentCount = $obj->getSentCount($obj->req1);
     $obj->connection_disconnect();
-    sleep(30);
+    sleep(90);
     $SpamComplaintsLog = $obj->get_log($obj->req1."_spam_complaints.txt","Spam");
     //Send email alert to client
    // $to = array("mahesh.jagdale@nichelive.com");
@@ -152,10 +152,8 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
     $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
     $message .= "<p>Please see the below log which clearly shows the spam complaints that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
-    $message .= "<p><b>Log:</b></p>";
- +  $message .= "<p>".$SpamComplaintsLog."</p>";
-    $message .= "<b>URL:</b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt'>Spam Logs</a><br/>";
-    $message .= "Regards<br/>";
+    $message .= "<p><b>Logs:</b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt'>Spam Logs</a></p>";
+ +  $message .= "Regards<br/>";
     $message .= "Juvlon Delivery System";
     $obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
     $obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
