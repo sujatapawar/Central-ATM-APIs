@@ -282,10 +282,10 @@ class commonFunctions {
    }// end of putIPInWarmup
     
     
-   function getDomainId($domain)
+   function getDomainId($domain,$type)
    {
      $this->connection_atm();
-     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where domain_name=? ", array($domain));
+     $arrayOfDomainId = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where domain_name=? and type=?", array($domain,$type));
      $this->connection_disconnect();
      return $arrayOfDomainId;
    
