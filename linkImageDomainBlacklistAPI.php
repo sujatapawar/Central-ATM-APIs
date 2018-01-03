@@ -37,7 +37,7 @@ if(isset($jsonString) and $jsonString!="")
 
     
 
-     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
+     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"link");
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
 
     //Retain 'childPool_id' of all pools with given domain id in an array 
