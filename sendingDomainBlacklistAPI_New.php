@@ -78,7 +78,7 @@ if(isset($jsonString) and $jsonString!="")
 	
     }// end of loop for all hosts
 	
-	$mainDomainId=$obj->getDomainId($main_domain);
+	$mainDomainId=$obj->getDomainId($main_domain,"sending");
 
       // Deactivate the mail domain
 	$obj->deactivateDomain($mainDomainId[0]['domain_id']);     
