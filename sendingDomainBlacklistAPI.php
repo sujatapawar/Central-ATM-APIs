@@ -46,7 +46,7 @@ if(isset($jsonString) and $jsonString!="")
 	// update Req1
           $obj->updateReq1Status("Stopped");	
 	
-        $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
+        $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"sending");
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
 	
 	//fetch IP belongs to domain
