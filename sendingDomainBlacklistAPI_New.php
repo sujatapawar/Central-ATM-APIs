@@ -7,7 +7,7 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":294,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
+$jsonString = '{"req1":312,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"352":0}}';
 //$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
