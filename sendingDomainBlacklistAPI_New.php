@@ -71,7 +71,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $obj->connection_atm(); 	
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
-	$obj->_dbHandlepdo->sql_delete("domain_mta_mapping", " where domain_id=?", array($domain['domain_id']));
+	$obj->_dbHandlepdo->sql_delete("Domain_MTA_mapping", " where domain_id=?", array($domain['domain_id']));
        
 		
 	
