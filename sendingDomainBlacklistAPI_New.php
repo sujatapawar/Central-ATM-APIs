@@ -68,7 +68,8 @@ if(isset($jsonString) and $jsonString!="")
 	
 	// remove domain from domain_master and domain_mta_mapping table
 	//$obj->removeDomain($domain['domain_id']);		
-	 $obj->connection_atm(); 	
+	 $obj->connection_atm(); 
+         $obj->_dbHandlepdo->sql_update("server_master","reload=1", " where server_id=(select mta from Domain_MTA_mapping where domain_id=?)", array($domain['domain_id']));		
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
 	$obj->_dbHandlepdo->sql_delete("Domain_MTA_mapping", " where domain_id=?", array($domain['domain_id']));
@@ -81,11 +82,11 @@ if(isset($jsonString) and $jsonString!="")
 
       // Deactivate the mail domain
 	$obj->deactivateDomain($mainDomainId[0]['domain_id']);     
-        $logsArray["Action1"]="Domain deactivated";
+        $logsArray["Action1"]="Domain $main_domain is deactivated";
   
 	//Insert main domain id into frezzer
 	$obj->putDomainInFreezer($mainDomainId[0]['domain_id'],"childPool_SendingDomains");
-	$logsArray["Action3"]="Domain put into Freezer";
+	$logsArray["Action2"]="Domain $main_domain put into Freezer";
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
@@ -96,11 +97,11 @@ if(isset($jsonString) and $jsonString!="")
 	$IPRelease = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($I['IP_id']));
 	}
 	$obj->connection_disconnect();
-	$logsArray["Action4"]=$json = "IPs are released";
+	$logsArray["Action3"]=$json = "IPs are released";
 	    
 	//update IP wise count
 	$obj->UpdateIPWiseCounts();
-	$logsArray["Action5"]="IP wise counts are updated";
+	$logsArray["Action4"]="IP wise counts are updated";
 	
 	if($obj->get_request_type()=="PostORPrep") 
        {
@@ -132,7 +133,7 @@ if(isset($jsonString) and $jsonString!="")
 		}
 	    $obj->connection_disconnect();	
 	
-	 $logsArray["Action6"]="Sending functions are blocked";
+	 $logsArray["Action5"]="Sending functions are blocked";
 	////////////////////////////////////////////////////////////////////////////////////
 		
 	} // if close for request type	
