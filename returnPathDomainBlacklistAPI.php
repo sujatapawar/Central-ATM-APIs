@@ -40,7 +40,7 @@ if(isset($jsonString) and $jsonString!="")
       // update Req1
      $obj->updateReq1Status("Stopped");		     
 
-     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain']);
+     $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"return_path");
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
 	
     //Retain 'childPool_id' of all pools with given domain id in an array 
