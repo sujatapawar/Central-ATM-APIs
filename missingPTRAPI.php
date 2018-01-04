@@ -10,13 +10,13 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":38443,"ip_id":342,"ip_wise_counts":{"342":0,"352":0}}';
+//$jsonString = '{"req1":38443,"ip_id":342,"ip_wise_counts":{"342":0,"352":0},"log":"b,2017-09-22 16:31:06+0530,2017-09-22 16:30:42+0530,heather_morrison@edwards.com,failed,5.3.2 (system not accepting network messages),Smtp;550 5.7.1 spam URL , Barracuda, www.niche.com,spam-related,10.136.27.30,ml93patrafinnet,722#1282788#74793#2017-09-22 16:49:14#192276#1218#o#P209#15991#APP64235581#189#229,,15991"}';
 $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
 {
-
+	
 	//log file a name.
 	$today_date = date("Y-m-d");
 	$csvFileName = 'logs/Missing_PTR/'.$today_date.'.csv';
@@ -141,8 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 	// Total Sent Count
 	$SentCount = $obj->getSentCount($obj->req1);
 	$obj->connection_disconnect();
-	sleep(30);
-	$MissingPTR = $obj->get_log($obj->req1."_soft_bounces.txt","MissingPTR");
+	//$MissingPTR = $obj->get_log($obj->req1."_soft_bounces.txt","MissingPTR");
 
 	//Send email alert to client
 	$warmedUpIP = ($warmedUpIP!="")?"<IP address> (id: ".$warmedUpIP.")":"None";
@@ -163,7 +162,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr></table>";
 	$message .= "<p>Please see the below log which clearly shows the Missing PTR that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
 	$message .= "<p><b>Log:</b></p>";
-	$message .= "<p>".$MissingPTR."</p>";
+	$message .= "<p>".$jsonData['log']."</p>";
 	$message .= "<p>Please find below the changes made to replace the IP with missing PTRs:</p>";
 	$message .= "<p>IP with missng PTR moved to:Available Assets</p>";
 	//$message .= "<p>Pool IDs from where the IP was removed: <list of all pool ids where the IP with missing PTRs belonged></p>";
