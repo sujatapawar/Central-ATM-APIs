@@ -40,7 +40,7 @@ if(isset($jsonString) and $jsonString!="")
     $AccountBlockStatus=0;
      $logsArray["Request Type"]=$obj->get_request_type();		
     // update Req1
-     $obj->updateReq1Status("Stopped");	
+     $obj->updateReq1Status("Stopped",8);	
     $json = $obj->inputJsonArray;
     if($obj->get_request_type()=="PostORPrep") 
    {	
