@@ -128,8 +128,7 @@ $message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total
 $message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr>";
 $message .= "<tr><td><b>Total hard bounces:</b></td><td>".$json['bounce_count']."</td></tr></table>";
 $message .= "<p>Please see the below log which clearly shows the bounces that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
-$message .= "<p><b>Log:</b></p>";
-$message .= "<p>".$BounceLog."</p>";
+$message .= "<b>Logs: </b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_hard_bounces.txt'> Bounce Logs</a><br/>";
 $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.<p/>";
 $message .= "Sincerely<br/>";
 $message .= "Juvlon Support";
