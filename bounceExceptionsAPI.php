@@ -33,7 +33,7 @@ $AccountBlockStatus = 0;
 	 }
    
   // update Req1
-   $obj->updateReq1Status("Stopped");		
+   $obj->updateReq1Status("Stopped",9);		
 	
    $logsArray["Request Type"]=$obj->get_request_type();	
     
