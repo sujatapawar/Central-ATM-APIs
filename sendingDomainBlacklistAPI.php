@@ -44,7 +44,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $Env_Name = $Env_ID->fetch();
 	
 	// update Req1
-          $obj->updateReq1Status("Stopped");	
+          $obj->updateReq1Status("Stopped",4);	
 	
         $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"sending");
 	$blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id'];
