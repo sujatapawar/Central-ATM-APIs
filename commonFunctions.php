@@ -168,12 +168,12 @@ class commonFunctions {
         
     }// end of releaseIP
     
-  function updateReq1Status($status)
+  function updateReq1Status($status,$flag=1)
     {
         $this->connection_atm();
             $json = $this->inputJsonArray;
-            $array = array("Paused",$json['req1']);
-            $this->_dbHandlepdo->sql_Update("Req1"," status=? ", " where req1_id=?",$array);
+            $array = array("Paused",$flag,$json['req1']);
+            $this->_dbHandlepdo->sql_Update("Req1"," status=? and controlled_sending=?", " where req1_id=?",$array);
         $this->connection_disconnect();        
         
     }// end of releaseIP    
