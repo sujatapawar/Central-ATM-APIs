@@ -44,7 +44,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $Env_Name = $Env_ID->fetch();
 	
 	// update Req1
-          $obj->updateReq1Status("Stopped");	
+          $obj->updateReq1Status("Stopped",4);	
 	
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
