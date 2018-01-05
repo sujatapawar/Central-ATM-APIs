@@ -411,6 +411,10 @@ class commonFunctions {
       $this->connection_atm();
      if($asset_type=='IP')
      {
+         //check if IP is listed 
+          $arrayOfIPResult = $this->_dbHandlepdo->sql_Select("IP_master", "status", " where  IP_id=? ", array($asset_id));
+         if($arrayOfIPResult[0]['status']!='listed')
+         {
             $Conn = $this->_dbHandlepdo->get_connection_variable();
             $SQL_ChildPoolId = $Conn->prepare(
                                             "select cm.childPool_id from childPool_master as cm, pool_master pm where cm.pool_id=pm.pool_id and pm.pool_name=? and cm.childPool_type_id=?"
@@ -419,8 +423,9 @@ class commonFunctions {
             $arrayOfResult = $SQL_ChildPoolId->fetchAll();
             $childPool_id = $arrayOfResult[0]['childPool_id'];
 
-       $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPool_id,$asset_id,'1',1));
-       $this->connection_disconnect();
+            $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array($childPool_id,$asset_id,'1',1));
+         }
+          $this->connection_disconnect();
      
      }
     
