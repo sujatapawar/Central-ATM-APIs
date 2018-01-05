@@ -271,6 +271,7 @@ class commonFunctions {
    {
     $this->connection_atm();
     $this->_dbHandlepdo->sql_insert("childPool_IPs", "childPool_id,IP_id,web,childStage_id", array(10344,$badIPId,'1',1));
+    $this->_dbHandlepdo->sql_Update("IP_master"," status=? ", " where IP_id=?",array('listed',$badIPId));   
     $this->connection_disconnect();
    }// end of putIPInFreezer
 
