@@ -257,7 +257,9 @@ class commonFunctions {
       
      $this->connection_atm();
      $this->_dbHandlepdo->sql_delete("childPool_IPs", " where IP_id=?", array($badIPId));
+     $this->_dbHandlepdo->sql_delete("childPool_TestIPs", " where IP_id=?", array($badIPId));  
      $this->connection_disconnect();
+       
    }// end of removeIP
     
    function replanishIP($warmedUpIP,$childPoolId)
