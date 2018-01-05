@@ -137,10 +137,10 @@ if(isset($jsonString) and $jsonString!="")
 	//Finally, close the file pointer.
 	fclose($fp);
 
-	$obj->connection_atm();
+	//$obj->connection_atm();
 	// Total Sent Count
-	$SentCount = $obj->getSentCount($obj->req1);
-	$obj->connection_disconnect();
+	//$SentCount = $obj->getSentCount($obj->req1);
+	//$obj->connection_disconnect();
 	//$MissingPTR = $obj->get_log($obj->req1."_soft_bounces.txt","MissingPTR");
 
 	//Send email alert to client
@@ -156,7 +156,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Client's Pool ID: </b></td><td>".$Client_Details[0]['pool_id']."</td></tr>";
 	$message .= "<tr><td><b>IP with missing PTR: </b></td><td>".$AssignIP[0]['IP']." (id: ".$missedPTRIP.")</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent: </b></td><td>".$SentCount."</td></tr>";
+	$message .= "<tr><td><b>Total Sent: </b></td><td>".$jsonData['TotalSentCount']."</td></tr>";
 	$message .= "<tr><td><b>Environment: </b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed: </b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released: </b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr></table>";
