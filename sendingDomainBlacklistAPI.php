@@ -160,10 +160,10 @@ if(isset($jsonString) and $jsonString!="")
 	fputcsv($fp, $logsArray);
 	//Finally, close the file pointer.
 	fclose($fp);
-	$obj->connection_atm();
+	//$obj->connection_atm();
 	// Total Sent Count
-	$SentCount = $obj->getSentCount($obj->req1);
-	$obj->connection_disconnect();
+	//$SentCount = $obj->getSentCount($obj->req1);
+	//$obj->connection_disconnect();
 	//$BlacklistDomainLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistDomain");
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
@@ -175,7 +175,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sending Domain:  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>".$jsonData['TotalSentCount']."</td></tr></table>";
 	$message .= "<p>Please see the below log which clearly shows the Sending Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$jsonData['log']."</p>";
@@ -200,7 +200,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$jsonData['TotalSentCount']."</td></tr>";
 	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";

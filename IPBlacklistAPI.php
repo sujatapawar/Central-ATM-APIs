@@ -158,10 +158,10 @@ if(isset($jsonString) and $jsonString!="")
 	fclose($fp);
 	
 	
-	$obj->connection_atm();
+	//$obj->connection_atm();
 	// Total Sent Count
-	$SentCount = $obj->getSentCount($obj->req1);
-	$obj->connection_disconnect();
+	//$SentCount = $obj->getSentCount($obj->req1);
+	//$obj->connection_disconnect();
 	//$BlacklistLog = $obj->get_log($obj->req1."_soft_bounces.txt","BlacklistIP");
 
 
@@ -175,7 +175,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Assigned IP: </b></td><td>".$AssignIP[0]['IP']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>".$jsonData['TotalSentCount']."</td></tr></table>";
 	$message .= "<p>Please see the below log which clearly shows the IP blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$jsonData['log']."</p>";
