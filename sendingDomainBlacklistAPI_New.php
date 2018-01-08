@@ -12,7 +12,11 @@ $jsonString = '{"req1":312,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"3
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
-$obj->updateReq1Status("Stopped",4);	die;
+//$obj->updateReq1Status("Stopped",4);	die;
+$Conn = $obj->_dbHandlepdo->get_connection_variable();
+$SQL_Update_Req1 = $Conn->prepare( "update Req1 set status=? and controlled_sending=? where req1_id=?");
+$SQL_Update_Req1->execute(array('Paused',4,$obj->inputJsonArray['req1']));
+die("done");
 if(isset($jsonString) and $jsonString!="")
 {
 	//log file a name.
