@@ -38,7 +38,7 @@ if(isset($jsonString) and $jsonString!="")
 	
       $logsArray["Request Type"]=$obj->get_request_type();
       // update Req1
-     $obj->updateReq1Status("Stopped",6);		     
+     $obj->updateReq1Status("Stopped",'6');		     
 
      $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"return_path");
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
