@@ -53,7 +53,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $obj->connection_disconnect();
 	 $AccountBlockStatus = 0;
      // update Req1
-     $obj->updateReq1Status("Stopped",1);		
+     $obj->updateReq1Status("Stopped",'1');		
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
