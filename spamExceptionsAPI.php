@@ -40,7 +40,7 @@ if(isset($jsonString) and $jsonString!="")
     $AccountBlockStatus=0;
      $logsArray["Request Type"]=$obj->get_request_type();		
     // update Req1
-     $obj->updateReq1Status("Stopped",8);	
+     $obj->updateReq1Status("Stopped",'8');	
     $json = $obj->inputJsonArray;
     if($obj->get_request_type()=="PostORPrep") 
    {	
@@ -59,7 +59,7 @@ if(isset($jsonString) and $jsonString!="")
         
         $Exception_ID = $obj->_dbHandlepdo->sql_insert("client_exceptions", " exception_type_id,exception_client_id,exception_object_id,exception_open_date_time,exception_closed_date_time,exception_data,exception_status", $array);
        $obj->_dbHandlepdo->sql_insert("exception_process_log", " exception_id,datetime,initiated_by,account_exception_id", array($Exception_ID,date('Y-m-d H:i:s'),'Client',$Exception_ID));
-	$Exception_Details = $obj->_dbHandlepdo->sql_Select("client_exceptions", "count(exception_id) as cnt", " where exception_type_id=? and exception_client_id=? and exception_object_id=? and exception_status=?", array($array[0],$array[1],$array[2],$array[6])); 
+	$Exception_Details = $obj->_dbHandlepdo->sql_Select("client_exceptions", "count(exception_id) as cnt", " where exception_type_id=? and exception_client_id=? and exception_status=?", array($array[0],$array[1],$array[6])); 
        if($Exception_Details[0]['cnt']>2) // check if more than 2 exceptions already exist
         {	
 	    $array = array(32,$Exception_ID,$Req1_Details[0]['cl_id']);
