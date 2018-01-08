@@ -28,7 +28,7 @@ $AccountBlockStatus = 0;
 
  $logsArray["Request Type"]=$obj->get_request_type();
 // update Req1
- $obj->updateReq1Status("Stopped",3);		
+ $obj->updateReq1Status("Stopped",'3');		
 //Releasing IP
 $IPID = $obj->releaseIP();
 $IPRelease = array();
