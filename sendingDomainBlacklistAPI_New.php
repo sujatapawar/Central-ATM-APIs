@@ -12,12 +12,7 @@ $jsonString = '{"req1":312,"domain":"nl1.sendm.net","ip_wise_counts":{"342":0,"3
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
-//$obj->updateReq1Status("Stopped",4);	die;
-$obj->connection_atm(); 
-$Conn = $obj->_dbHandlepdo->get_connection_variable(); 
-$SQL_Update_Req1 = $Conn->prepare( "update Req1 set status=?,controlled_sending=? where req1_id=?");
-$SQL_Update_Req1->execute(array('Paused','4',$obj->inputJsonArray['req1']));
-die("done");
+
 if(isset($jsonString) and $jsonString!="")
 {
 	//log file a name.
@@ -50,7 +45,7 @@ if(isset($jsonString) and $jsonString!="")
 	 $Env_Name = $Env_ID->fetch();
 	
 	// update Req1
-          $obj->updateReq1Status("Stopped",4);	
+          $obj->updateReq1Status("Stopped",'4');	
 	
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
