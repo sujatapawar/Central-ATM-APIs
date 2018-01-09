@@ -173,15 +173,17 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
 	$message .= "<tr><td><b>Sending Domain:  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
-	$message .= "<tr><td><b>Total Sent:</b></td><td>".$SentCount."</td></tr></table>";
-	//$message .= "<p>Please see the log(s) attached that clearly show the blacklisting has occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<tr><td><b>Total Sent:</b></td><td>".$jsonData['TotalSentCount']."</td></tr></table>";
+	$message .= "<p>Please see the below log which clearly shows the Sending Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
+	$message .= "<p><b>Log:</b></p>";
+	$message .= "<p>".$jsonData['log']."</p>";
 	$message .= "<p>Your mailing has degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
 	$message .= "Sincerely<br/>";
 	$message .= "Juvlon Support";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
-	/*$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
-	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);*/
+	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
 
 	//Send email alert to delivery team 
 	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
@@ -196,28 +198,25 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
-	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$SentCount."</td></tr>";
+	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$jsonData['TotalSentCount']."</td></tr>";
 	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
-	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",$IPRelease[0])."</td></tr>";
+	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
 	$message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-	$message .= "<p>Please see the log(s) using below URL, that clearly show the blacklisting has occurred during the mailing.</p>";
-	$message .= "<b>URL:</b> http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_soft_bounces.txt<br/>";
+	$message .= "<p>Please see the below log which clearly shows the Sending Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails.</p>";
+	$message .= "<p><b>Log:</b></p>";
+	$message .= "<p>".$jsonData['log']."</p>";
 	$message .= "<p>Please find below the changes made to replace the blacklisted Sending domain</p>";
 	$message .= "<p>Inactivated Pools: <list of pool names and ids which do not have any IPs left as a result of this blacklisting></p>";
 	$message .= "<p>Blacklisted sending domain moved to: Freezer</p>";
-	//$message .= "<p>All host names deleted: Yes</p>";
+	$message .= "<p>All host names deleted: Yes</p>";
 	$message .= "<p>Associated IPs moved to: Available Assets</p>";
-	//$message .= "<p>Pool IDs from where the Sending domain was removed: <list of all pool ids where the blacklisted Sending domain belonged></p>";
-	//$message .= "<p>New Sending domain picked from warm-up: <domain name> (id: <id>) / None (no appropriate Sending domains available in warm-up pool)</p>";
-	//$message .= "<p>Pool IDs where the new Sending domain is added: <list of all pool ids> / None (if no Sending domain was found from the warm-up pool)</p>";
-	//$message .= "<p>PMTAs where the config files will be updated: </p>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
-	/*$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
+	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("techsupport@nichelive.com",$subject,$message);
-	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);*/
+	$obj->sendEmailAlert("delivery@nichelive.com",$subject,$message);
 }
 else
 {
