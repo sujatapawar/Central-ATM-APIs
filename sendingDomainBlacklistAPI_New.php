@@ -12,7 +12,7 @@ $jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
- $obj->updateReq1Status("Stopped",'4'); die;
+// $obj->updateReq1Status("Stopped",'4'); die;
 if(isset($jsonString) and $jsonString!="")
 {
 	//log file a name.
