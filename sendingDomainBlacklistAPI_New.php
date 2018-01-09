@@ -60,7 +60,7 @@ if(isset($jsonString) and $jsonString!="")
 	//echo $domain['domain_name'];
         //fetch IP belongs to domain	
 	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
-		
+	 $obj->connection_atm(); 	
 	$freezerIPArray= $obj->_dbHandlepdo->sql_Select("childPool_IPs", "IP_id", "where childPool_id=? and IP_id=?", array(10344,$ipIds[0]['IP_id']));	
 	if(!isset($freezerIPArray[0]['IP_id'])) // check if IP is in freezer
 	{
@@ -73,7 +73,7 @@ if(isset($jsonString) and $jsonString!="")
 	
 	// remove domain from domain_master and domain_mta_mapping table
 	//$obj->removeDomain($domain['domain_id']);		
-	 $obj->connection_atm(); 
+	
          $obj->_dbHandlepdo->sql_update("server_master"," reload=1", " where server_id=(select mta from Domain_MTA_mapping where domain_id=?)", array($domain['domain_id']));		
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
