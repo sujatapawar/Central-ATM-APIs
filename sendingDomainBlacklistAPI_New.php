@@ -61,8 +61,7 @@ if(isset($jsonString) and $jsonString!="")
         //fetch IP belongs to domain	
 	 $ipIds = $obj->getDomainIpId($domain['domain_name']);
 		
-	$freezerIPArray= 
-		$obj->_dbHandlepdo->sql_Select("childPool_IPs", "IP_id", "where childPool_id=? and IP_id=?", array(10344,$ipIds[0]['IP_id']));	
+	$freezerIPArray= $obj->_dbHandlepdo->sql_Select("childPool_IPs", "IP_id", "where childPool_id=? and IP_id=?", array(10344,$ipIds[0]['IP_id']));	
 	if(!isset($freezerIPArray[0]['IP_id'])) // check if IP is in freezer
 	{
 		//delete all entries of the IP_Id from all pools 
