@@ -111,7 +111,7 @@ if(isset($jsonString) and $jsonString!="")
     $SentCount = $obj->getSentCount($obj->req1);
     $obj->connection_disconnect();
     sleep(90);
-    $SpamComplaintsLog = $obj->get_log($obj->req1."_spam_complaints.txt","Spam");
+    //$SpamComplaintsLog = $obj->get_log($obj->req1."_spam_complaints.txt","Spam");
     //Send email alert to client
    // $to = array("mahesh.jagdale@nichelive.com");
     $subject="Your mailing ".$obj->req1." has been discontinued";
@@ -124,7 +124,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>Total Sent:</b></td><td>".$json['TotalSentCount']."</td></tr>";
     $message .= "<tr><td><b>Total Spam Complaints:</b></td><td>".$json['spam_count']."</td></tr></table>";
     $message .= "<p>Please see the URL below which clearly shows that the spam complaints have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
-    $message .= "<p><b>URL:</b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt'> Spam Logs</a></p>";
+    $message .= "<b>URL: </b><a download='' href='https://s3.amazonaws.com/atm2-logs/Req_".$obj->req1."/".$obj->req1."_spam_complaints.txt'> Spam Logs</a><br/>";
     $message .= "<p>Your mailing may have degraded our infrastructure which will cause delivery problems for other clients using our software. As per Juvlon Terms of Use, credits will not be refunded for emails that were not sent.</p>";
     $message .= "Sincerely<br/>";
     $message .= "Juvlon Support";
@@ -151,7 +151,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
     $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
     $message .= "<p>Please see the URL below which clearly shows that the spam complaints have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
-    $message .= "<p><b>URL:</b><a href='http://".BOUNCE_SERVER."/juvlon_bounce_process/bounce_processor/imported/".$obj->req1."_spam_complaints.txt'>Spam Logs</a></p>";
+    $message .= "<b>URL: </b><a download='' href='https://s3.amazonaws.com/atm2-logs/Req_".$obj->req1."/".$obj->req1."_spam_complaints.txt'> Spam Logs</a><br/>";
  +  $message .= "Regards<br/>";
     $message .= "Juvlon Delivery System";
     $obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
