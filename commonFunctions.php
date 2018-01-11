@@ -174,18 +174,18 @@ class commonFunctions {
             $json = $this->inputJsonArray;
             //$array = array("Paused",$flag,$json['req1']);
            // $this->_dbHandlepdo->sql_Update("Req1"," status=? and controlled_sending=?", " where req1_id=?",$array);
-        $Conn = $this->_dbHandlepdo->get_connection_variable();
-        if($flag!='4')
-        {
+         $Conn = $this->_dbHandlepdo->get_connection_variable();
          $SQL_Update_Req1 = $Conn->prepare( "update Req1 set status='Paused',controlled_sending=? where req1_id=?");
          $SQL_Update_Req1->execute(array($flag,$json['req1']));
-        }
-        else
+        
+        if($flag=='4')
         {
          foreach($json['otherReq1'] as $req_id)   
          {    
            $SQL_Update_Req1 = $Conn->prepare( "update Req1 set status='Paused',controlled_sending=? where req1_id=?");
            $SQL_Update_Req1->execute(array($flag,$req_id));
+           $array = array(0,,$req_id);
+           $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);  
          }    
         }
       
