@@ -184,8 +184,7 @@ class commonFunctions {
          {    
            $SQL_Update_Req1 = $Conn->prepare( "update Req1 set status='Paused',controlled_sending=? where req1_id=?");
            $SQL_Update_Req1->execute(array($flag,$req_id));
-           $array = array(0,,$req_id);
-           $this->_dbHandlepdo->sql_Update("client_ip_detail"," in_use=? ", " where req1_id=?",$array);  
+          
          }    
         }
       
