@@ -150,7 +150,7 @@ if(isset($jsonString) and $jsonString!="")
     $message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
     $message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
     $message .= "<tr><td><b>Client's sending functions blocked?:</b></td><td>".$AccountBlockStatus."</td></tr></table>";
-    $message .= "<p>Please see the URL below which clearly shows that the spam complaints have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
+    $message .= "<p>Please see the URL below which clearly shows that the spam complaints have occurred during the mailing.</p>";
     $message .= "<b>URL: </b><a download='' href='https://s3.amazonaws.com/atm2-logs/Req_".$obj->req1."/".$obj->req1."_spam_complaints.txt'> Spam Logs</a><br/>";
  +  $message .= "Regards<br/>";
     $message .= "Juvlon Delivery System";
