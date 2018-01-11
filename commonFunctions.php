@@ -221,7 +221,17 @@ class commonFunctions {
         return $WarmUpIP;
     }
     /* End Get IP From warm-up */
-    
+    /* Get IP Address from Warm-up IP ID */
+    function getIPAddrWarmUp($IPID)
+    {
+        $this->connection_atm();
+        $Conn = $this->_dbHandlepdo->get_connection_variable();
+        $warmIPAddr = $Conn->prepare("select IP from IP_master where IP_id=?");
+        $warmIPAddr->execute(array($IPID));
+        return $warmIPAddr->fetch();
+        $this->connection_disconnect();
+    }
+    /* End Get IP Address from warm-up IP ID */
     /* Insert IP in client_ip_detail */
     function insert_IP_in_ClientIP_Detail($WarmUp_IP_ID,$badIpId)
     {

@@ -65,7 +65,9 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Action1"]="IP Removed";
 
     // get new IP from warm up
-    $warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
+	$warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
+	$warmedUpIPAddr = $obj->getIPAddrWarmUp($warmedUpIP);
+	$warmedUpIPAddr = ($warmedUpIPAddr['IP']!='')?$warmedUpIPAddr['IP']:"None (no appropriate IP available in warm-up pool)"; 
 	if($warmedUpIP !='')
     {
          //replanish all the pools with new warmed-up IP 
@@ -211,6 +213,8 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<p>Please see the log(s) below which clearly shows that the IP-blacklisting has occurred during the mailing.</p>";
 	$message .= "<p><b>Log:</b></p>";
 	$message .= "<p>".$jsonData['log']."</p>";
+	$message .= "<p>Blacklisted IP moved to: Freezer</p>";
+	$message .= "<p>New IP picked from warm-up: ".$warmedUpIPAddr." (id:".$warmedUpIP.")</p>";
 	$message .= "Regards<br/>";
 	$message .= "Juvlon Delivery System";
 	$obj->sendEmailAlert("shripad.kulkarni@nichelive.com",$subject,$message);
