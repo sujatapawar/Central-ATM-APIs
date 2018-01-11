@@ -132,7 +132,7 @@ fclose($fp);
 	
 	//Send email alert to delivery team 
 	//$to=array("mahesh.jagdale@nichelive.com","shripad.kulkarni@nichelive.com");
-	$subject="Sender domain ".$JSON_Data['Domain']." blacklisted while sending out".$obj->req1."for".$Client_Details[0]['cl_name']."(".$Req1_Details[0]['cl_id'].")";
+	$subject="Sender domain ".$JSON_Data['Domain']." blacklisted while sending out ".$obj->req1." for".$Client_Details[0]['cl_name']."(".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
 	$message .= "<p>The Juvlon delivery system has detected a sender domain blacklisting during the sending activity of a client. As a result, the client's sending has been stopped.</p>";
