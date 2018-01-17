@@ -23,7 +23,9 @@ if(isset($jsonString) and $jsonString!="")
 	$logsArray["Request Type"]=$obj->get_request_type();
 	
 	$jsonData = json_decode($jsonString,true);
+	$domainType = str_replace("_"," ",$jsonData['domain_type']);
 	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
+	
 	 $PMTAList = array();
 	 $obj->connection_atm(); 
 	 foreach($IP_IDs as $IP_ID)
@@ -167,11 +169,11 @@ if(isset($jsonString) and $jsonString!="")
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
-	$message .= "<p>Your mailing (details below) has caused our sending domain to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
+	$message .= "<p>Your mailing (details below) has caused our ".$domainType." to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
 	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Sending Request ID: </b></td><td>".$obj->req1."</td></tr>";
-	$message .= "<tr><td><b>Sending Domain:  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
+	$message .= "<tr><td><b>".$domainType.":  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr></table>";
 	$message .= "<tr><td><b>Total Sent:</b></td><td>".$jsonData['TotalSentCount']."</td></tr></table>";
 	$message .= "<p>Please see the below log which clearly shows the Sending Domain Blacklisted that have occurred during the mailing. This shows that your list has people that may not have subscribed to receive your emails</p>";
@@ -192,13 +194,14 @@ if(isset($jsonString) and $jsonString!="")
 	$subject="The entire Pool ".$poolName[0]['pool_name']." (id: ".$Client_Details[0]['pool_id'].") inactivated while sending out ".$obj->req1." for ".$Client_Details[0]['cl_name']." (".$Req1_Details[0]['cl_id'].")";
 	$AccountBlockStatus = ($AccountBlockStatus==1)?"Yes":"No";
 	$message  = "Hi,<br/>";
-	$message .= "<p>The Juvlon delivery system has detected a Sending domain blacklisting during the sending activity of a client. As a result, the client's sending has been stopped and, some changes have been made in certain pools to ensure that the Sending domain does not get used for another sending.</p>";
-	$message .= "<p>Please find below the details of the blacklisted Sending domain and the sending that caused the blacklisting:</p>";
+	$message .= "<p>The Juvlon delivery system has detected a ".$domainType." blacklisting during the sending activity of a client. As a result, the client's sending has been stopped and, some changes have been made in certain pools to ensure that the Sending domain does not get used for another sending.</p>";
+	$message .= "<p>Please find below the details of the blacklisted ".$domainType." and the sending that caused the blacklisting:</p>";
 	$message .= "<table><tr><td><b>Client: </b></td><td>".$Client_Details[0]['cl_name']." (ID: ".$Req1_Details[0]['cl_id'].")</td></tr>";
 	$message .= "<tr><td><b>Email: </b></td><td>(ID: ".$Req1_Details[0]['mailer_id'].")</td></tr>";
 	$message .= "<tr><td><b>Req1_id: </b></td><td>".$obj->req1."</td></tr> ";
 	$message .= "<tr><td><b>Total Recipients: </b></td><td>".$Req1_Details[0]['total_unique_mail']."</td></tr>";
 	$message .= "<tr><td><b>Total Sent:</b> </td><td>".$jsonData['TotalSentCount']."</td></tr>";
+	$message .= "<tr><td><b>".$domainType.":  </b></td><td>".$obj->inputJsonArray['domain']."</td></tr>";
 	$message .= "<tr><td><b>Environment:</b></td><td>".$Env_Name['env_name']."</td></tr>";
 	$message .= "<tr><td><b>List of PMTAs where this job ID was killed :</b></td><td>".implode(',',array_unique($PMTAList))."</td></tr>";
 	$message .= "<tr><td><b>IPs released:</b></td><td>".implode(",",array_unique($IPRelease[0]))."</td></tr>";
@@ -208,7 +211,7 @@ if(isset($jsonString) and $jsonString!="")
 	$message .= "<p>".$jsonData['log']."</p>";
 	$message .= "<p>Please find below the changes made to replace the blacklisted Sending domain</p>";
 	$message .= "<p>Inactivated Pools: <list of pool names and ids which do not have any IPs left as a result of this blacklisting></p>";
-	$message .= "<p>Blacklisted sending domain moved to: Freezer</p>";
+	$message .= "<p>Blacklisted sending domain and return-path domain moved to: Freezer</p>";
 	$message .= "<p>All host names deleted: Yes</p>";
 	$message .= "<p>Associated IPs moved to: Available Assets</p>";
 	$message .= "Regards<br/>";
