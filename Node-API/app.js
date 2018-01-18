@@ -17,6 +17,10 @@ var Host = config.Host;
 var Type = config.Type;
 var ServerAPIKey = config.APIKey;
 
+app.get('/test',function(req,res){
+  res.send("test");
+});
+
 app.post('/AddPTR',function(req,res){
   var keyIP = req.connection.remoteAddress;
   var ClientAPIKey = req.body.APIKey;
