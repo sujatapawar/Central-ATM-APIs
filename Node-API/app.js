@@ -22,6 +22,7 @@ var Type = config.Type;
 var ServerAPIKey = config.APIKey;
 
 app.get('/test',function(req,res){
+  consol.log("Test Call");
   res.send("test");
 });
 
