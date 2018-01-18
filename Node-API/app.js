@@ -8,7 +8,7 @@ var con = config.con;
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-var server = app.listen(3000, function () {
+var server = app.listen(3000,"52.44.195.201" ,function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('running at http://' + host + ':' + port)
