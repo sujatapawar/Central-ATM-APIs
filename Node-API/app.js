@@ -123,7 +123,7 @@ app.post('/DeletePTR',(req,res)=>{
 
 //===For Namecheap
 
- app.post('/setDNSHost', function (req, res)=>
+ app.post('/setDNSHost', (req, res)=>
   {
 	
 	var domain_name=req.body.domain_name; 
@@ -146,13 +146,9 @@ app.post('/DeletePTR',(req,res)=>{
 	namecheap.domains.dns.setHosts(domain_name, param1, function(err, res1) 
 	{
 		res.send(res1)
-	});	
-    
-  
+	});	  
 });
-	  
-  
-})
+});
 
 
 function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
