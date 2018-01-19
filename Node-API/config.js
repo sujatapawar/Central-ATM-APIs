@@ -12,5 +12,9 @@ module.exports = {
     AuthPassword:"n2ch3*2123",
     ZoneDomainName:"in-addr.arpa",
     Host:"127",
-    Type:"PTR"
+    Type:"PTR",
+    NCAPIKey:"1d62913c7d12472f9bc2c4e68a17faec",
+    NCAPIUser:"nichesoftware",
+    NCClientIP:"52.44.195.201"
+    
   };
