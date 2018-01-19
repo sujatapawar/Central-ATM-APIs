@@ -21,9 +21,8 @@ var Host = config.Host;
 var Type = config.Type;
 var ServerAPIKey = config.APIKey;
 
-app.get('/test',function(req,res){
-  consol.log("Test Call");
-  res.send("test");
+app.get('/',function(req,res){
+  res.json({"status":"Error","statusDescription":"Invalid Request."});
 });
 
 app.post('/AddPTR',function(req,res){
@@ -57,7 +56,7 @@ app.post('/AddPTR',function(req,res){
     }
     else
     {
-      res.send('"status":"Error","statusDescription":"Invalid Request."');
+      res.json({"status":"Error","statusDescription":"Invalid Request."});
     }
   });
 });
@@ -77,7 +76,7 @@ app.post('/DeletePTR',function(req,res){
       func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,function(ID){
         if(ID=='')
         {
-          res.send('"status":"Error","statusDescription":"Please enter valid record."');
+          res.json({"status":"Error","statusDescription":"Please enter valid record."});
         }
         else
         {
@@ -88,7 +87,7 @@ app.post('/DeletePTR',function(req,res){
       });
     }
     else{
-      res.send('"status":"Error","statusDescription":"Invalid Request."');
+      res.json({"status":"Error","statusDescription":"Invalid Request."});
     }
   });
 });
