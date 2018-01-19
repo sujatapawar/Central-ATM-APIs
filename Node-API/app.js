@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const json = require('xml2json');
 const config  = require('./config.js');
 const func = require('./functions');
-
-const Namecheap = require('namecheap');
+var qs = require('querystring');
 
 const con = config.con;
 const app = express();
@@ -28,6 +28,44 @@ const NCAPIKey = config.NCAPIKey;
 const NCAPIUser = config.NCAPIUser;
 const NCClientIP = config.NCClientIP;
 
+app.post('/setDNSHost',(req,res)=>{
+  const domain_name=req.body.domain_name;
+  const host_name=req.body.host_name; 
+  const record_type=req.body.record_type; 
+  const addr_url=req.body.addr_url; 
+  const mx_pref=req.body.mx_pref; 
+  const obj= {};
+  obj["HostName1"] = host_name;
+  obj["RecordType1"] = record_type;
+  obj["Address1"] = addr_url;
+  obj["TTL1"] = mx_pref;
+  func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+    result = json.toJson(data,{ object: true });
+    result = result.ApiResponse.CommandResponse.DomainDNSGetHostsResult.host;
+    if(result.length>0)
+    {
+      var cnt=1;
+      for (var i=0;i<result.length;i++)
+      {
+        ++cnt;
+        obj["HostName"+cnt] = result[i]['Name'];
+        obj["RecordType"+cnt] = result[i]['Type'];
+        obj["Address"+cnt] = result[i]['Address'];
+        obj["TTL"+cnt] = result[i]['TTL'];
+      }
+    }
+    else
+    {
+      obj["HostName"] = result['Name'];
+      obj["RecordType"] = result['Type'];
+      obj["Address"] = result['Address'];
+      obj["TTL"] = result['TTL'];
+    }
+    func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+      res.send(data);
+    });
+  });
+});
 
 app.get('/',(req,res)=>{
   res.json({"status":"Error","statusDescription":"Invalid Request."});
@@ -125,7 +163,7 @@ app.post('/DeletePTR',(req,res)=>{
 
 //===For Namecheap
 
- app.post('/setDNSHost', (req, res)=>
+ /* app.post('/setDNSHost', (req, res)=>
   {
 	
 	var domain_name=req.body.domain_name; 
@@ -175,7 +213,7 @@ function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
 	 return param1;
 	
 	
-}
+} */
 
 
 
