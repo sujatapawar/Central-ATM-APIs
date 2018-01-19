@@ -125,7 +125,7 @@ app.post('/DeletePTR',(req,res)=>{
 
 //===For Namecheap
 
- app.post('/setDNSHost', (req, res)=>
+ app.post('/setDNSHost', function(req, res)
   {
 	
 	var domain_name=req.body.domain_name; 
@@ -137,20 +137,23 @@ app.post('/DeletePTR',(req,res)=>{
 	res_arr2=[{HostName:host_name, RecordType: record_type, Address: addr_url, MXPref: mx_pref}];
 	
 	//namecheap = new Namecheap('nichesoftware', '1d62913c7d12472f9bc2c4e68a17faec', '52.44.195.201');
-	namecheap = new Namecheap(NCAPIUser, NCAPIKey, NCClientIP);
-	namecheap.domains.dns.getHosts(domain_name, function(err, result) 
+	
+	
+	//--
+	request("https://api.namecheap.com/xml.response?ApiUser=nichesoftware&ApiKey=1d62913c7d12472f9bc2c4e68a17faec&UserName=nichesoftware&ClientIP=52.44.195.201&Command=namecheap.domains.dns.getHosts&TLD=in&SLD=juvapp6cl204454085", function (err, result,body) 
 	{
+	//res1= getDNSInfo(result);  
+	//  if (!err) 
+	  //{
+    	//res1= getDNSInfo(result);  
 	
-	res1= getDNSInfo(result);  
-	
-	param1=res1.concat(res_arr2);
-	
-	namecheap.domains.dns.setHosts(domain_name, param1, function(err, res1) 
-	{
-		res.send(res1)
-	});	  
+		//param1=res1.concat(res_arr2);
+		res.send(body);
+		  
+//	}
+	});
 });
-});
+
 
 
 function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
