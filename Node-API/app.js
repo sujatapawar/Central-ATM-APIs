@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const json = require('xml2json');
 const config  = require('./config.js');
 const func = require('./functions');
-
-const Namecheap = require('namecheap');
+var qs = require('querystring');
 
 const con = config.con;
 const app = express();
@@ -15,7 +15,6 @@ const server = app.listen(3000,"0.0.0.0" ,() => {
   const port = server.address().port;
   console.log('running at http://' + host + ':' + port)
 });
-
 
 const AuthID = config.AuthID;
 const AuthPassword = config.AuthPassword;
@@ -29,6 +28,44 @@ const NCAPIKey = config.NCAPIKey;
 const NCAPIUser = config.NCAPIUser;
 const NCClientIP = config.NCClientIP;
 
+app.post('/setDNSHost',(req,res)=>{
+  const domain_name=req.body.domain_name;
+  const host_name=req.body.host_name; 
+  const record_type=req.body.record_type; 
+  const addr_url=req.body.addr_url; 
+  const mx_pref=req.body.mx_pref; 
+  const obj= {};
+  obj["HostName1"] = host_name;
+  obj["RecordType1"] = record_type;
+  obj["Address1"] = addr_url;
+  obj["TTL1"] = mx_pref;
+  func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+    result = json.toJson(data,{ object: true });
+    result = result.ApiResponse.CommandResponse.DomainDNSGetHostsResult.host;
+    if(result.length>0)
+    {
+      var cnt=1;
+      for (var i=0;i<result.length;i++)
+      {
+        ++cnt;
+        obj["HostName"+cnt] = result[i]['Name'];
+        obj["RecordType"+cnt] = result[i]['Type'];
+        obj["Address"+cnt] = result[i]['Address'];
+        obj["TTL"+cnt] = result[i]['TTL'];
+      }
+    }
+    else
+    {
+      obj["HostName"] = result['Name'];
+      obj["RecordType"] = result['Type'];
+      obj["Address"] = result['Address'];
+      obj["TTL"] = result['TTL'];
+    }
+    func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+      res.send(data);
+    });
+  });
+});
 
 app.get('/',(req,res)=>{
   res.json({"status":"Error","statusDescription":"Invalid Request."});
@@ -126,7 +163,7 @@ app.post('/DeletePTR',(req,res)=>{
 
 //===For Namecheap
 
- app.post('/setDNSHost', function(req, res)
+ /* app.post('/setDNSHost', (req, res)=>
   {
 	
 	var domain_name=req.body.domain_name; 
@@ -138,23 +175,20 @@ app.post('/DeletePTR',(req,res)=>{
 	res_arr2=[{HostName:host_name, RecordType: record_type, Address: addr_url, MXPref: mx_pref}];
 	
 	//namecheap = new Namecheap('nichesoftware', '1d62913c7d12472f9bc2c4e68a17faec', '52.44.195.201');
-	
-	
-	//--
-	request("https://api.namecheap.com/xml.response?ApiUser=nichesoftware&ApiKey=1d62913c7d12472f9bc2c4e68a17faec&UserName=nichesoftware&ClientIP=52.44.195.201&Command=namecheap.domains.dns.getHosts&TLD=in&SLD=juvapp6cl204454085", function (err, result,body) 
+	namecheap = new Namecheap(NCAPIUser, NCAPIKey, NCClientIP);
+	namecheap.domains.dns.getHosts(domain_name, function(err, result) 
 	{
-	//res1= getDNSInfo(result);  
-	//  if (!err) 
-	  //{
-    	//res1= getDNSInfo(result);  
 	
-		//param1=res1.concat(res_arr2);
-		res.send(body);
-		  
-//	}
-	});
+	res1= getDNSInfo(result);  
+	
+	param1=res1.concat(res_arr2);
+	
+	namecheap.domains.dns.setHosts(domain_name, param1, function(err, res1) 
+	{
+		res.send(res1)
+	});	  
 });
-
+});
 
 
 function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
@@ -179,7 +213,7 @@ function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
 	 return param1;
 	
 	
-}
+} */
 
 
 
