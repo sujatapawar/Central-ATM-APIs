@@ -2,9 +2,9 @@ var mysql = require('mysql');
 
 module.exports = {
     con: connection = mysql.createPool({ 
-        host     : 'localhost', 
-        user     : 'root', 
-        password : '', 
+        host     : '172.16.8.115', 
+        user     : 'juvlonui', 
+        password : '#u2dwfbeZlJO', 
         database : 'ATM' 
     }),
     APIKey:"Niche-User",
