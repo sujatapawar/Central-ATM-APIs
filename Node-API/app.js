@@ -4,6 +4,8 @@ const request = require('request');
 const config  = require('./config.js');
 const func = require('./functions');
 
+const Namecheap = require('namecheap');
+
 const con = config.con;
 const app = express();
 app.use(bodyParser.json());
