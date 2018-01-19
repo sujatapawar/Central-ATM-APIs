@@ -1,5 +1,31 @@
 var request = require('request');
 
+exports.PTRCheck = (AuthID,AuthPassword,NewZone,ZoneDomainName,Domain,Host,Type,callback) =>
+{
+  request("https://api.cloudns.net/dns/records.json?auth-id="+AuthID+"&auth-password="+AuthPassword+"&domain-name="+NewZone+"."+ZoneDomainName+"&host="+Host+"&type="+Type, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      if(body=="[]")
+      {
+        callback(false);
+      }
+      else
+      {
+        body = JSON.parse(body);
+        for (var key in body) {
+          if(Domain==body[key]['record'])
+          {
+            callback(true);
+          }
+          else
+          {
+            callback(false);
+          }
+        }
+      }
+    }
+  });
+}
+
 exports.is_valid_IP = (KeyIP,ClientAPIKey,ServerAPIKey,con,callback) => {
   con.query("SELECT server_id FROM server_master where host_name='"+KeyIP+"'", function (err, result, fields) {
     if(result=="" || ClientAPIKey!=ServerAPIKey)
