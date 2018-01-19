@@ -21,6 +21,12 @@ const Host = config.Host;
 const Type = config.Type;
 const ServerAPIKey = config.APIKey;
 
+
+const NCAPIKey = config.NCAPIKey;
+const NCAPIUser = config.NCAPIUser;
+const NCClientIP = config.NCClientIP;
+
+
 app.get('/',(req,res)=>{
   res.json({"status":"Error","statusDescription":"Invalid Request."});
 });
@@ -112,6 +118,70 @@ app.post('/DeletePTR',(req,res)=>{
     }
   });
 });
+
+
+
+//===For Namecheap
+
+ app.post('/setDNSHost', function (req, res)=>
+  {
+	
+	var domain_name=req.body.domain_name; 
+	var host_name=req.body.host_name; 
+	var record_type=req.body.record_type; 
+	var addr_url=req.body.addr_url; 
+	var mx_pref=req.body.mx_pref; 
+	
+	res_arr2=[{HostName:host_name, RecordType: record_type, Address: addr_url, MXPref: mx_pref}];
+	
+	//namecheap = new Namecheap('nichesoftware', '1d62913c7d12472f9bc2c4e68a17faec', '52.44.195.201');
+	namecheap = new Namecheap(NCAPIUser, NCAPIKey, NCClientIP);
+	namecheap.domains.dns.getHosts(domain_name, function(err, result) 
+	{
+	
+	res1= getDNSInfo(result);  
+	
+	param1=res1.concat(res_arr2);
+	
+	namecheap.domains.dns.setHosts(domain_name, param1, function(err, res1) 
+	{
+		res.send(res1)
+	});	
+    
+  
+});
+	  
+  
+})
+
+
+function getDNSInfo(result,host_name,record_type,addr_url,mx_pref)
+{
+	var res_arr=[];
+	
+	if(result.length>0)
+	{
+	for (var i=0;i<result.length;i++)
+	{
+		console.log(result[i]['Name']);
+		res_arr[i]={HostName:result[i]['Name'],RecordType:result[i]['Type'],Address:result[i]['Address'],TTL:result[i]['TTL']};
+	}
+	 param1=res_arr;//.concat(res_arr2);
+	}
+	else
+	{
+		res_arr=[{HostName:result['Name'],RecordType:result['Type'],Address:result['Address'],TTL:result['TTL']}];
+		param1=res_arr;//'//.concat(res_arr2);
+	}
+
+	 return param1;
+	
+	
+}
+
+
+
+//===Namecheap Ends Here
 /*
 app.post('/AllRecord',function(req,res){
   var IP = req.body.IP.trim();
