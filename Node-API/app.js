@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const config  = require('./config.js');
-const func = require('./db_functions');
+const func = require('./functions');
 
 const con = config.con;
 const app = express();
