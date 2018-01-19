@@ -25,6 +25,27 @@ app.get('/',(req,res)=>{
   res.json({"status":"Error","statusDescription":"Invalid Request."});
 });
 
+app.post('/CheckPTR',(req,res)=>{
+  const keyIP = req.connection.remoteAddress;
+  const ClientAPIKey = req.body.APIKey;
+  let IP = req.body.IP.trim();
+  let Domain = (typeof req.body.Domain == 'undefined')?"":req.body.Domain.trim();
+  let Zone = IP.split(".").reverse();
+  IP = Zone[0];
+  let NewZone = Zone[1]+'.'+Zone[2]+'.'+Zone[3];
+  Domain = (typeof req.body.Domain == 'undefined')?"":req.body.Domain.trim();
+  func.PTRCheck(AuthID,AuthPassword,NewZone,ZoneDomainName,Domain,Host,Type,(data)=>{
+    if(data)
+    {
+      res.json({"status":"Success","statusDescription":"Record Exist"});
+    }
+    else
+    {
+      res.json({"status":"Error","statusDescription":"Record Not Exist"});
+    }
+  });
+});
+
 app.post('/AddPTR',(req,res)=>{
   const keyIP = req.connection.remoteAddress;
   const ClientAPIKey = req.body.APIKey;
