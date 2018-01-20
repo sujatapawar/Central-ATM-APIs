@@ -30,7 +30,8 @@ const NCClientIP = config.NCClientIP;
 
 app.post('/setDNSHost',(req,res)=>{
   const domain_name=req.body.domain_name;
-  const host_name=req.body.host_name; 
+  
+  /*const host_name=req.body.host_name; 
   const record_type=req.body.record_type; 
   const addr_url=req.body.addr_url; 
   const mx_pref=req.body.mx_pref; 
@@ -40,7 +41,7 @@ app.post('/setDNSHost',(req,res)=>{
   obj["Address1"] = addr_url;
   obj["TTL1"] = mx_pref;
   // res.send(domain_name);
-  func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+  */func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
 	console.log(data);
     result =[
 					{
