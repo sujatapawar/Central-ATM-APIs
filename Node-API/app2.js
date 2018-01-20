@@ -40,7 +40,7 @@ app.post('/setDNSHost',(req,res)=>{
   obj["Address1"] = addr_url;
   obj["TTL1"] = mx_pref;
    res.send(domain_name);
-  /*func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+  func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
 	  console.log(data);
     result =[
 					{
@@ -155,7 +155,7 @@ app.post('/setDNSHost',(req,res)=>{
    // func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
      //res.send(data);
     //});
-  });*/
+  });
 });
 
 app.get('/',(req,res)=>{
