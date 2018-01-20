@@ -40,10 +40,22 @@ app.post('/setDNSHost',(req,res)=>{
   obj["RecordType1"] = record_type;
   obj["Address1"] = addr_url;
   obj["TTL1"] = mx_pref;
-  // res.send(domain_name);
+   //res.send(domain_name);
   func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
-	console.log(data);
-    result =[
+	//res.send(data);
+    xml =data;
+    var result;// =xml;
+  //  console.log(data);
+    var parseString = require('xml2js').parseString;
+    parseString(xml, function (err, data) 
+    {
+		result =data;
+		
+	});
+    //res.send(result);
+   // console.log(js_obj);
+   //js_obj;
+    /*[
 					{
 						"HostId": "129366761",
 						"Name": "@",
@@ -128,31 +140,40 @@ app.post('/setDNSHost',(req,res)=>{
 						"IsActive": "true",
 						"IsDDNSEnabled": "false"
 					}
-				]//data;  //json.toJson(data,{ object: true });
+				]*/
+				//data;  //json.toJson(data,{ object: true });
    // console.log(result);
     
     //result = result.ApiResponse.CommandResponse.DomainDNSGetHostsResult.host;
+    
+//res.send(result);
+     var cr=result['ApiResponse']['CommandResponse'];
+     var result=cr[0]['DomainDNSGetHostsResult'][0]['host'];
+     
+     //console.log(result.length);
+     //res.send(result[0]['$']['Name']);
+    
+    
     if(result.length>0)
     {
       var cnt=1;
       for (var i=0;i<result.length;i++)
       {
         ++cnt;
-        obj["HostName"+cnt] = result[i]['Name'];
-        obj["RecordType"+cnt] = result[i]['Type'];
-        obj["Address"+cnt] = result[i]['Address'];
-        obj["TTL"+cnt] = result[i]['TTL'];
+        obj["HostName"+cnt] = result[i]['$']['Name'];
+        obj["RecordType"+cnt] = result[i]['$']['Type'];
+        obj["Address"+cnt] = result[i]['$']['Address'];
+        obj["TTL"+cnt] = result[i]['$']['TTL'];
       }
     }
     else
     {
-      obj["HostName"] = result['Name'];
-      obj["RecordType"] = result['Type'];
-      obj["Address"] = result['Address'];
-      obj["TTL"] = result['TTL'];
+      obj["HostName"] = result['$']['Name'];
+      obj["RecordType"] = result['$']['Type'];
+      obj["Address"] = result['$']['Address'];
+      obj["TTL"] = result['$']['TTL'];
     }
-    console.log(obj);
-    
+  //  res.send(obj);
     func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
      res.send(data);
     });
