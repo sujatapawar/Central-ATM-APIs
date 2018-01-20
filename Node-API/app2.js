@@ -39,9 +39,9 @@ app.post('/setDNSHost',(req,res)=>{
   obj["RecordType1"] = record_type;
   obj["Address1"] = addr_url;
   obj["TTL1"] = mx_pref;
-   res.send(domain_name);
+  // res.send(domain_name);
   func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
-	  console.log(data);
+	console.log(data);
     result =[
 					{
 						"HostId": "129366761",
