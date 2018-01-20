@@ -150,9 +150,9 @@ app.post('/setDNSHost',(req,res)=>{
       obj["TTL"] = result['TTL'];
     }
     console.log(obj);
-    func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
-     res.send(data);
-    });
+   // func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
+     //res.send(data);
+    //});
   });
 });
 
