@@ -216,10 +216,10 @@ app.post('/AddPTR',(req,res)=>{
 
   Domain = (typeof req.body.Domain == 'undefined')?"":req.body.Domain.trim();
   //Valid IP
-  func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result) => {
+  /* func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result) => {
     console.log(result+" "+keyIP);
     if(result)
-    {
+    { */
       func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,(ID)=>{
         if(ID=='')
         {
@@ -234,12 +234,12 @@ app.post('/AddPTR',(req,res)=>{
           });
         }
       });
-    }
-    else
+    /*}
+     else
     {
       res.json({"status":"Error","statusDescription":"Invalid Request."});
     }
-  });
+  }); */
 });
 
 app.post('/DeletePTR',(req,res)=>{
@@ -251,9 +251,9 @@ app.post('/DeletePTR',(req,res)=>{
   IP = Zone[0];
   let NewZone = Zone[1]+'.'+Zone[2]+'.'+Zone[3];
   
-  func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result)=>{
+  /* func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result)=>{
     if(result)
-    {
+    { */
       func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,(ID)=>{
         if(ID=='')
         {
@@ -266,11 +266,11 @@ app.post('/DeletePTR',(req,res)=>{
           });
         }
       });
-    }
+    /* }
     else{
       res.json({"status":"Error","statusDescription":"Invalid Request."});
     }
-  });
+  }); */
 });
 
 
