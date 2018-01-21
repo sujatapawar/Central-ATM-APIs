@@ -46,15 +46,15 @@ exports.PTRCheck = (AuthID,AuthPassword,NewZone,ZoneDomainName,Domain,Host,Type,
 }
 
 exports.is_valid_IP = (KeyIP,ClientAPIKey,ServerAPIKey,con,callback) => {
-  con.query("SELECT server_id FROM server_master where host_name='"+KeyIP+"'", function (err, result, fields) {
-    if(result=="" || ClientAPIKey!=ServerAPIKey)
+  //con.query("SELECT server_id FROM server_master where host_name='"+KeyIP+"'", function (err, result, fields) {
+    if(ClientAPIKey!=ServerAPIKey)
     {
       callback(false);
     }
     else{
       callback(true);
     }
-  });
+  //});
 };
 
 exports.is_PTR_Exist = (AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,callback) => 

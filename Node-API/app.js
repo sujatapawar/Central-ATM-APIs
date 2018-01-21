@@ -216,10 +216,10 @@ app.post('/AddPTR',(req,res)=>{
 
   Domain = (typeof req.body.Domain == 'undefined')?"":req.body.Domain.trim();
   //Valid IP
-  /* func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result) => {
+   func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result) => {
     console.log(result+" "+keyIP);
     if(result)
-    { */
+    { 
       func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,(ID)=>{
         if(ID=='')
         {
@@ -234,12 +234,12 @@ app.post('/AddPTR',(req,res)=>{
           });
         }
       });
-    /*}
+    }
      else
     {
       res.json({"status":"Error","statusDescription":"Invalid Request."});
     }
-  }); */
+  }); 
 });
 
 app.post('/DeletePTR',(req,res)=>{
