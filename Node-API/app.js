@@ -40,21 +40,17 @@ app.post('/setDNSHost',(req,res)=>{
   obj["RecordType1"] = record_type;
   obj["Address1"] = addr_url;
   obj["TTL1"] = mx_pref;
-   //res.send(domain_name);
+  
   func.get_DNSInfo(domain_name,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
-	//res.send(data);
+	
     xml =data;
-    var result;// =xml;
-  //  console.log(data);
+    var result;
     var parseString = require('xml2js').parseString;
     parseString(xml, function (err, data) 
     {
 		result =data;
 		
 	});
-    //res.send(result);
-   // console.log(js_obj);
-   //js_obj;
     /*[
 					{
 						"HostId": "129366761",
@@ -141,17 +137,11 @@ app.post('/setDNSHost',(req,res)=>{
 						"IsDDNSEnabled": "false"
 					}
 				]*/
-				//data;  //json.toJson(data,{ object: true });
-   // console.log(result);
-    
-    //result = result.ApiResponse.CommandResponse.DomainDNSGetHostsResult.host;
-    
-//res.send(result);
+	
+	
      var cr=result['ApiResponse']['CommandResponse'];
      var result=cr[0]['DomainDNSGetHostsResult'][0]['host'];
      
-     //console.log(result.length);
-     //res.send(result[0]['$']['Name']);
     
     
     if(result.length>0)
@@ -175,7 +165,14 @@ app.post('/setDNSHost',(req,res)=>{
     }
   //  res.send(obj);
     func.setDNS(domain_name,obj,qs,NCAPIKey,NCAPIUser,NCClientIP,(data)=>{
-     res.send(data);
+		parseString(data, function (err, dnsdata) 
+		{
+			dns_result =dnsdata;
+		});
+		var cr=dns_result['ApiResponse']['CommandResponse'];
+        var dnsresult=cr[0]['DomainDNSSetHostsResult'][0]['$']['IsSuccess'];
+     
+     res.send(dnsresult);
     });
   });
 });
