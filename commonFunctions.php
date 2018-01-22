@@ -475,7 +475,36 @@ class commonFunctions {
         else{
             return $buffer;
         }
-    }    
+    } 
+    
+    function isTestIP($blacklistedIPId)
+    {
+        $this->connection_atm();
+        $arrayOfTestChildPools = $this->_dbHandlepdo->sql_Select("childPool_TestIPs", "childPool_id", " where  IP_id=? ", array($blacklistedIPId));
+        $this->connection_disconnect();
+        if(count($arrayOfTestChildPools)>0) return TRUE;
+        else return FALSE;
+    
+    }// end of isTestIP
+    
+    function getAllTestChildPoolIds($badIpId)
+    {
+     $this->connection_atm();
+     $arrayOfChildPoolIds = $this->_dbHandlepdo->sql_Select("childPool_TestIPs", "childPool_id", " where IP_id=?", array($badIpId));
+     $this->connection_disconnect();
+     return $arrayOfChildPoolIds;
+   
+    }// end of getAllTestChildPoolIds
+    
+   
+    
+    function replanishTestIP($warmedUpIP,$childPoolId)
+    {
+         $this->connection_atm();
+         $this->_dbHandlepdo->sql_insert("childPool_TestIPs", "childPool_id,IP_id,web,childStage_id", array($childPoolId,$warmedUpIP,'1',1));
+         $this->connection_disconnect();        
+    
+    }// end of replanishTestIP
     
 
 }// end of class
