@@ -506,6 +506,14 @@ class commonFunctions {
     
     }// end of replanishTestIP
     
+    function putAssetLog($assetId,$action,$details)
+    {
+        $this->connection_atm();
+        $this->_dbHandlepdo->sql_insert("asset_log", "asset_id,action,log_details", array($assetId,$action,$details));
+        $this->connection_disconnect();    
+    
+    }
+    
 
 }// end of class
 
