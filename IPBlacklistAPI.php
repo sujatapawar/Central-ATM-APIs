@@ -30,6 +30,14 @@ if(isset($jsonString) and $jsonString!="")
       $logsArray["Request Type"]="PostORPrep";
 	 
 	 $blacklistedIPId = $obj->inputJsonArray['ip_id'];
+	if($obj->isTestIP($blacklistedIPId))
+	{
+	  $flagTestIP = TRUE;
+	}
+	else
+	{
+	  $flagTestIP = FALSE;
+	}
 	 $jsonData = json_decode($jsonString,true);
 	 $IP_IDs = array_keys($jsonData['ip_wise_counts']);
 	 $PMTAList = array();
@@ -57,33 +65,47 @@ if(isset($jsonString) and $jsonString!="")
 
     //Retain 'childPool_id' of all pools with given IP_Id in an array 
     $childPoolIdsArray = $obj->getAllChildPoolIds($blacklistedIPId);
+    if($flagTestIP)
+	  $testChildPoolIdsArray = $obj->getAllTestChildPoolIds($blacklistedIPId);    
 	//print_r($childPoolIdsArray); //die;
 
     //delete all entries of the IP_Id 
     $obj->removeIP($blacklistedIPId);
-
-	$logsArray["Action1"]="IP Removed";
+    $logsArray["Action1"]="IP Removed";
 
     // get new IP from warm up
 	$warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
 	$warmedUpIPAddr = $obj->getIPAddrWarmUp($warmedUpIP);
 	$warmedUpIPAddr = ($warmedUpIPAddr['IP']!='')?$warmedUpIPAddr['IP']:"None (no appropriate IP available in warm-up pool)"; 
 	if($warmedUpIP !='')
-    {
+       {
          //replanish all the pools with new warmed-up IP 
-    	  foreach($childPoolIdsArray as $childPoolId)
-    	  {
-    	  	$obj->replanishIP($warmedUpIP,$childPoolId[0]);
-		 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-    	  }
-	//die;    
-        $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
-    }
-    else
-    {
-    	$logsArray["Action2"]="Warmedup IP not available";
- 
-    }
+	 if(count($childPoolIdsArray)>0)
+	  {	
+		  foreach($childPoolIdsArray as $childPoolId)
+		  {
+			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+		  }
+	 }	
+	  if(count($testChildPoolIdsArray)>0)
+	  {
+	     foreach($childPoolIdsArray as $childPoolId)
+    	 	 {
+    	  		$obj->replanishTestIP($warmedUpIP,$childPoolId[0]);
+			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+    	  	}
+	  
+	  }	
+		
+	 //die;    
+         $logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
+        }
+        else
+        {
+	   $logsArray["Action2"]="Warmedup IP not available";
+
+         }
 
     //Insert bad ip id into frezzer
     $obj->putIPInFreezer($blacklistedIPId);
