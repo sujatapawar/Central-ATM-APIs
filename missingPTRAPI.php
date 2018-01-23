@@ -61,6 +61,8 @@ if(isset($jsonString) and $jsonString!="")
 
     //delete all entries of the IP_Id 
     $obj->removeIP($missedPTRIP);
+	
+   $obj->putAssetLog($missedPTRIP,"IP removed from pool","IP removed from pool by ATM2 due to Missing PTR");	
 
     $logsArray["Action1"]="IP Removed";
 
@@ -72,6 +74,7 @@ if(isset($jsonString) and $jsonString!="")
 		foreach($childPoolIdsArray as $childPoolId)
 		{
 		$obj->replanishIP($warmedUpIP,$childPoolId[0]);
+		$obj->putAssetLog($warmedUpIP,"IP assigned to child-pool $childPoolId[0]","New IP from warm-up is assigned to child-pool $childPoolId[0]");  	
 		}
 		$logsArray["Action2"]="IP Replanied with Warmedup IP- $warmedUpIP";
 
@@ -102,7 +105,8 @@ if(isset($jsonString) and $jsonString!="")
 
     //Insert bad ip id into Available pool
     $obj->putAssetIntoAvailablePool($missedPTRIP);
-    $logsArray["Action3"]="IP put into Warmup";
+   $obj->putAssetLog($missedPTRIP,"IP put into Available Assets","IP put into Available Assets by ATM2 due to missing PTR");  	
+    $logsArray["Action3"]="IP put into Available Assets";
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
