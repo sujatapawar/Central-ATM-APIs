@@ -514,6 +514,16 @@ class commonFunctions {
     
     }
     
+    function logBlacklistingTransactions($assetId,$agency_id)
+    {
+        $this->connection_atm();
+        $this->_dbHandlepdo->sql_insert("blacklisting_transactions", "asset_id,agency_id,status,listed_datetime", array($assetId,$agency_id,"blacklisted",date("Y-m-d H:i:s")));
+        $this->connection_disconnect();    
+    
+    }
+    
+    
+    
 
 }// end of class
 
