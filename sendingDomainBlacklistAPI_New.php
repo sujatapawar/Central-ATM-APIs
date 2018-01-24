@@ -52,7 +52,7 @@ if(isset($jsonString) and $jsonString!="")
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	$mainDomainId=$obj->getDomainId($main_domain,"sending");
-	$obj->putAssetLog($mainDomainId[0]['domain_id'],"Domain","Domain Blacklisted","Domain blacklist by agency id : $jsonData['agency_id']");
+	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Domain blacklist by agency id : $jsonData['agency_id']");
 	
 	// get all hosts (varients of main domain)
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like ? and type=? and domain_name!=? ");
@@ -84,7 +84,7 @@ if(isset($jsonString) and $jsonString!="")
         $obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	
 	$obj->_dbHandlepdo->sql_delete("Domain_MTA_mapping", " where domain_id=?", array($domain['domain_id']));
-        $obj->putAssetLog($domain['domain_id'],"Domain","Domain removed from domain_master","Domain removed from domain_master by ATM2 due to domain blacklist");
+        $obj->putAssetLog($domain['domain_id'],2,"Domain removed from domain_master","Domain removed from domain_master by ATM2 due to domain blacklist");
 		
 	
     }// end of loop for all hosts
@@ -98,8 +98,8 @@ if(isset($jsonString) and $jsonString!="")
 	//Insert main domain id into frezzer
 	$obj->putDomainInFreezer($mainDomainId[0]['domain_id'],"childPool_SendingDomains");
 	$logsArray["Action2"]="Domain $main_domain put into Freezer";
-	$obj->putAssetLog($mainDomainId[0]['domain_id'],"Domain","Domain put into freezer","Domain put into freezer by ATM2 due to domain blacklist");
-	$obj->logBlacklistingTransactions($mainDomainId[0]['domain_id'],"Domain",$jsonData['agency_id']);
+	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain put into freezer","Domain put into freezer by ATM2 due to domain blacklist");
+	$obj->logBlacklistingTransactions($mainDomainId[0]['domain_id'],2,$jsonData['agency_id']);
 	//Releasing IP
 	$IPID = $obj->releaseIP();
 	$IPRelease = array();
