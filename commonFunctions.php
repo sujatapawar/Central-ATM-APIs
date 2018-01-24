@@ -506,18 +506,18 @@ class commonFunctions {
     
     }// end of replanishTestIP
     
-    function putAssetLog($assetId,$assetType="IP",$action,$details)
+    function putAssetLog($assetId,$assetTypeId=1,$action,$details)
     {
         $this->connection_atm();
-        $this->_dbHandlepdo->sql_insert("asset_log", "asset_id,asset_type,action,log_details", array($assetId,$assetType,$action,$details));
+        $this->_dbHandlepdo->sql_insert("asset_log", "asset_id,asset_type,action,log_details", array($assetId,$assetTypeId,$action,$details));
         $this->connection_disconnect();    
     
     }
     
-    function logBlacklistingTransactions($assetId,$assetType="IP",$agency_id)
+    function logBlacklistingTransactions($assetId,$assetTypeId=1,$agency_id)
     {
         $this->connection_atm();
-        $this->_dbHandlepdo->sql_insert("blacklisting_transactions", "asset_id,asset_type,agency_id,status,listed_datetime", array($assetId,$assetType,$agency_id,"blacklisted",date("Y-m-d H:i:s")));
+        $this->_dbHandlepdo->sql_insert("blacklisting_transactions", "asset_id,$assetTypeId,agency_id,status,listed_datetime", array($assetId,$assetType,$agency_id,"blacklisted",date("Y-m-d H:i:s")));
         $this->connection_disconnect();    
     
     }
