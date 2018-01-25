@@ -52,7 +52,7 @@ if(isset($jsonString) and $jsonString!="")
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	$mainDomainId=$obj->getDomainId($main_domain,"sending");
-	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Domain blacklist by agency id : $jsonData['agency_id']");
+	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Domain blacklist by agency id : $jsonData[agency_id]");
 	
 	// get all hosts (varients of main domain)
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like ? and type=? and domain_name!=? ");
@@ -70,11 +70,11 @@ if(isset($jsonString) and $jsonString!="")
 	{
 		//delete all entries of the IP_Id from all pools 
 		$obj->removeIP($ipIds[0]['IP_id']);	  
-		$obj->putAssetLog($ipIds[0]['IP_id'],"IP removed from pool","IP removed from pool by ATM2 due to domain blacklist");
+		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP removed from pool","IP removed from pool by ATM2 due to domain blacklist");
 
 		//put Ip in available_assets pool
 		$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
-		$obj->putAssetLog($ipIds[0]['IP_id'],"IP put into Available Assets","IP put into Available Assets by ATM2 due to domain blacklist");
+		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP put into Available Assets","IP put into Available Assets by ATM2 due to domain blacklist");
 	}	
 	
 	// remove domain from domain_master and domain_mta_mapping table
