@@ -72,9 +72,9 @@ if(isset($jsonString) and $jsonString!="")
     //delete all entries of the IP_Id  
     $obj->removeIP($blacklistedIPId);
     $logsArray["Action1"]="IP Removed";
-    $obj->putAssetLog($blacklistedIPId,"IP Blacklisted","IP blacklist by agency id : $jsonData[agency_id]");
-    $obj->logBlacklistingTransactions($blacklistedIPId,$jsonData['agency_id']);
-    $obj->putAssetLog($blacklistedIPId,"IP removed from pool","IP removed from pool by ATM2 due to IP blacklist");	
+    $obj->putAssetLog($blacklistedIPId,"IP Blacklisted",1,"IP blacklist by agency id : $jsonData[agency_id]");
+    $obj->logBlacklistingTransactions($blacklistedIPId,1,$jsonData['agency_id']);
+    $obj->putAssetLog($blacklistedIPId,1,"IP removed from pool","IP removed from pool by ATM2 due to IP blacklist");	
 
     // get new IP from warm up
 	$warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
@@ -89,7 +89,7 @@ if(isset($jsonString) and $jsonString!="")
 		  {
 			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
 			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-			 $obj->putAssetLog($warmedUpIP,"IP assigned to child-pool $childPoolId[0]","New IP from warm-up is assigned to child-pool $childPoolId[0]");  
+			 $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool $childPoolId[0]","New IP from warm-up is assigned to child-pool $childPoolId[0]");  
 		  }
 	 }	
 	  if(count($testChildPoolIdsArray)>0)
@@ -98,7 +98,7 @@ if(isset($jsonString) and $jsonString!="")
     	 	 {
     	  		$obj->replanishTestIP($warmedUpIP,$testChildPoolId[0]);
 			echo "\n $testChildPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-		        $obj->putAssetLog($warmedUpIP,"IP assigned to child-pool $testChildPoolId[0]","New IP from warm-up is assigned to test child-pool $testChildPoolId[0] by ATM2 due to IP blacklist");  
+		        $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool $testChildPoolId[0]","New IP from warm-up is assigned to test child-pool $testChildPoolId[0] by ATM2 due to IP blacklist");  
     	  	}
 	  
 	  }	
@@ -116,7 +116,7 @@ if(isset($jsonString) and $jsonString!="")
     $obj->putIPInFreezer($blacklistedIPId);
     $logsArray["Action3"]="IP put into Freezer";
     	
-     $obj->putAssetLog($blacklistedIPId,"IP put into freezer","IP put into freezer by ATM2 due to IP blacklist");  
+     $obj->putAssetLog($blacklistedIPId,1,"IP put into freezer","IP put into freezer by ATM2 due to IP blacklist");  
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
