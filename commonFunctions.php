@@ -521,7 +521,7 @@ class commonFunctions {
         $this->connection_disconnect();    
     
     }
-    
+   /* Functions for Add Domain functionality  */    
     
     
 
