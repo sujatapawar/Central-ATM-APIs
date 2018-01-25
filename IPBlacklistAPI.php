@@ -94,11 +94,11 @@ if(isset($jsonString) and $jsonString!="")
 	 }	
 	  if(count($testChildPoolIdsArray)>0)
 	  {
-	     foreach($childPoolIdsArray as $childPoolId)
+	     foreach($testChildPoolIdsArray as $testChildPoolId)
     	 	 {
-    	  		$obj->replanishTestIP($warmedUpIP,$childPoolId[0]);
-			echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-		        $obj->putAssetLog($warmedUpIP,"IP assigned to child-pool $childPoolId[0]","New IP from warm-up is assigned to child-pool $childPoolId[0] by ATM2 due to IP blacklist");  
+    	  		$obj->replanishTestIP($warmedUpIP,$testChildPoolId[0]);
+			echo "\n $testChildPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
+		        $obj->putAssetLog($warmedUpIP,"IP assigned to child-pool $testChildPoolId[0]","New IP from warm-up is assigned to test child-pool $testChildPoolId[0] by ATM2 due to IP blacklist");  
     	  	}
 	  
 	  }	
