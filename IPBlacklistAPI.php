@@ -72,7 +72,7 @@ if(isset($jsonString) and $jsonString!="")
     //delete all entries of the IP_Id  
     $obj->removeIP($blacklistedIPId);
     $logsArray["Action1"]="IP Removed";
-    $obj->putAssetLog($blacklistedIPId,"IP Blacklisted","IP blacklist by agency id : $jsonData['agency_id']");
+    $obj->putAssetLog($blacklistedIPId,"IP Blacklisted","IP blacklist by agency id : $jsonData[agency_id]");
     $obj->logBlacklistingTransactions($blacklistedIPId,$jsonData['agency_id']);
     $obj->putAssetLog($blacklistedIPId,"IP removed from pool","IP removed from pool by ATM2 due to IP blacklist");	
 
