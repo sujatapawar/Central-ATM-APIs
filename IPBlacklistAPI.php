@@ -11,8 +11,8 @@
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":417,"ip_id":342,"ip_wise_counts":{"342":0, "861":0},"log":"b,2017-09-22 16:31:06+0530,2017-09-22 16:30:42+0530,heather_morrison@edwards.com,failed,5.3.2 (system not accepting network messages),Smtp;550 5.7.1 spam URL , Barracuda, www.niche.com,spam-related,10.136.27.30,ml93patrafinnet,722#1282788#74793#2017-09-22 16:49:14#192276#1218#o#P209#15991#APP64235581#189#229,,15991","agency_id":1}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":417,"ip_id":342,"ip_wise_counts":{"342":0, "861":0},"log":"b,2017-09-22 16:31:06+0530,2017-09-22 16:30:42+0530,heather_morrison@edwards.com,failed,5.3.2 (system not accepting network messages),Smtp;550 5.7.1 spam URL , Barracuda, www.niche.com,spam-related,10.136.27.30,ml93patrafinnet,722#1282788#74793#2017-09-22 16:49:14#192276#1218#o#P209#15991#APP64235581#189#229,,15991","agency_id":1}';
+$jsonString = file_get_contents('php://input');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
