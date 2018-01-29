@@ -62,7 +62,7 @@ if(isset($jsonString) and $jsonString!="")
     //delete all entries of the IP_Id 
     $obj->removeIP($missedPTRIP);
 	
-   $obj->putAssetLog($missedPTRIP,1,"IP removed from pool","Req1=$obj->req1,IP=$AssignIP[0][IP],Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");	
+   $obj->putAssetLog($missedPTRIP,1,"IP removed from pool","Req1=$obj->req1,Reason=IP $AssignIP[0][IP] found with missing PTR,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");	
 
     $logsArray["Action1"]="IP Removed";
 
