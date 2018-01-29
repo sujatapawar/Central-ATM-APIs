@@ -72,9 +72,17 @@ if(isset($jsonString) and $jsonString!="")
     //delete all entries of the IP_Id  
     $obj->removeIP($blacklistedIPId);
     $logsArray["Action1"]="IP Removed";
-    $obj->putAssetLog($blacklistedIPId,1,"IP Blacklisted","IP blacklist by agency id : $jsonData[agency_id]");
+	
+   $obj->connection_atm();
+   $array = array($obj->req1);
+   $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", $array);
+   $AssignIP = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($blacklistedIPId));
+   $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
+   $obj->connection_disconnect();	
+	
+    $obj->putAssetLog($blacklistedIPId,1,"IP Blacklisted","Req1=$obj->req1,IP=$AssignIP[0][IP],Agency id=$jsonData[agency_id],Captured by=ATM2");
     $obj->logBlacklistingTransactions($blacklistedIPId,1,$jsonData['agency_id']);
-    $obj->putAssetLog($blacklistedIPId,1,"IP removed from pool","IP removed from pool by ATM2 due to IP blacklist");	
+    $obj->putAssetLog($blacklistedIPId,1,"IP removed from pool","Req1=$obj->req1,IP=$AssignIP[0][IP],Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");	
 
     // get new IP from warm up
 	$warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
@@ -89,8 +97,8 @@ if(isset($jsonString) and $jsonString!="")
 		  {
 			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
 			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-			 $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool $childPoolId[0]","New IP from warm-up is assigned to child-pool $childPoolId[0]");  
-		  }
+			 $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool ","Req1=$obj->req1,child-pool Id=$childPoolId[0],IP=$AssignIP[0][IP],Done by=ATM2");  
+		  } 
 	 }	
 	  if(count($testChildPoolIdsArray)>0)
 	  {
@@ -98,7 +106,7 @@ if(isset($jsonString) and $jsonString!="")
     	 	 {
     	  		$obj->replanishTestIP($warmedUpIP,$testChildPoolId[0]);
 			echo "\n $testChildPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-		        $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool $testChildPoolId[0]","New IP from warm-up is assigned to test child-pool $testChildPoolId[0] by ATM2 due to IP blacklist");  
+		        $obj->putAssetLog($warmedUpIP,1,"IP assigned to test child-pool","Req1=$obj->req1,child-pool Id=$testChildPoolId[0],IP=$AssignIP[0][IP],Done by=ATM2");  
     	  	}
 	  
 	  }	
@@ -116,7 +124,7 @@ if(isset($jsonString) and $jsonString!="")
     $obj->putIPInFreezer($blacklistedIPId);
     $logsArray["Action3"]="IP put into Freezer";
     	
-     $obj->putAssetLog($blacklistedIPId,1,"IP put into freezer","IP put into freezer by ATM2 due to IP blacklist");  
+     $obj->putAssetLog($blacklistedIPId,1,"IP put into freezer","Req1=$obj->req1,IP=$AssignIP[0][IP],Done by=ATM2");  
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
@@ -137,12 +145,12 @@ if(isset($jsonString) and $jsonString!="")
     {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
-	   $obj->connection_atm();
+	   /*$obj->connection_atm();
 	   $array = array($obj->req1);
            $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", $array);
 		   $AssignIP = $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($blacklistedIPId));
 		   $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
-	   $obj->connection_disconnect();
+	   $obj->connection_disconnect();*/
     
 	    $obj->connection_db_mail_master();
 		$array = array($Req1_Details[0]['cl_id']);
