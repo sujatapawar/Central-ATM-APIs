@@ -58,7 +58,7 @@ if(isset($jsonString) and $jsonString!="")
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	$mainDomainId=$obj->getDomainId($main_domain,"sending");
-	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Req1=$obj->req1,Domain Name=$main_domain,agency id=$jsonData[agency_id],Captured By=ATM2");
+	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2");
 	
 	// get all hosts (varients of main domain)
 	 $sqlDomain = $Conn->prepare("select domain_id,domain_name from domain_master where domain_name like ? and type=? and domain_name!=? ");
@@ -73,13 +73,14 @@ if(isset($jsonString) and $jsonString!="")
 	$freezerIPArray= $obj->_dbHandlepdo->sql_Select("childPool_IPs", "IP_id", " where childPool_id=? and IP_id=?", array(10344,$ipIds[0]['IP_id']));	
 	if(!isset($freezerIPArray[0]['IP_id'])) // check if IP is in freezer
 	{
+		$IPArray= $obj->_dbHandlepdo->sql_Select("IP_master", "IP", " where IP_id=?", array($ipIds[0]['IP_id']));
 		//delete all entries of the IP_Id from all pools 
 		$obj->removeIP($ipIds[0]['IP_id']);	  
-		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP removed from pool","Req1=$obj->req1,IP=,Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
+		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP removed from pool","Req1=$obj->req1,IP=$IPArray[0][IP],Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 
 		//put Ip in available_assets pool
 		$obj->putAssetIntoAvailablePool($ipIds[0]['IP_id']);	
-		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP put into Available Assets","Req1=$obj->req1,IP=,Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
+		$obj->putAssetLog($ipIds[0]['IP_id'],1,"IP put into Available Assets","Req1=$obj->req1,IP=$IPArray[0][IP],Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 	}	
 	
 	// remove domain from domain_master and domain_mta_mapping table
@@ -87,14 +88,13 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->connection_atm(); 
 	$serverMasterArray= $obj->_dbHandlepdo->sql_Select("server_master", "server_id,host_name", " where server_id=(select mta from Domain_MTA_mapping where domain_id=?)", array($domain['domain_id']));	
         $obj->_dbHandlepdo->sql_update("server_master"," reload=1", " where server_id=?", array($serverMasterArray[0]['server_id']));		
-        $obj->putAssetLog($domain['domain_id'],3,"Server reload flag set","Req1=$obj->req1,PMTA=$serverMasterArray[0][host_name],Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
-	
-	$obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
-	$obj->putAssetLog($domain['domain_id'],2,"Domain removed from domain_master","Req1=$obj->req1,Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
+        $obj->putAssetLog($serverMasterArray[0]['server_id'],3,"Server reload flag set","Req1=$obj->req1,PMTA=$serverMasterArray[0][host_name],Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 	
 	$obj->_dbHandlepdo->sql_delete("Domain_MTA_mapping", " where domain_id=?", array($domain['domain_id']));
-        $obj->putAssetLog($domain['domain_id'],2,"Domain removed from Domain_MTA_mapping table","Req1=$obj->req1,Domain=$domain[domain_name],PMTA=$serverMasterArray[0][host_name],Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
+        $obj->putAssetLog($domain['domain_id'],2,"Domain removed from Domain_MTA_mapping table","Req1=$obj->req1,Domain=$domain[domain_name],PMTA=$serverMasterArray[0][host_name],Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 		
+	$obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
+	$obj->putAssetLog($domain['domain_id'],2,"Domain removed from domain_master","Req1=$obj->req1,Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 	
     }// end of loop for all hosts
 	
@@ -107,7 +107,7 @@ if(isset($jsonString) and $jsonString!="")
 	//Insert main domain id into frezzer
 	$obj->putDomainInFreezer($mainDomainId[0]['domain_id'],"childPool_SendingDomains");
 	$logsArray["Action2"]="Domain $main_domain put into Freezer";
-	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain put into freezer","Req1=$obj->req1,Reason=Domain $main_domain got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");
+	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain put into freezer","Req1=$obj->req1,Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],Done by=ATM2");
 	$obj->logBlacklistingTransactions($mainDomainId[0]['domain_id'],2,$jsonData['agency_id']);
 	//Releasing IP
 	$IPID = $obj->releaseIP();
