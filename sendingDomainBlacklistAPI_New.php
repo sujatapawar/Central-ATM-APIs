@@ -47,7 +47,10 @@ if(isset($jsonString) and $jsonString!="")
 	 $Env_Name = $Env_ID->fetch();
 	
 	// update Req1
-          $obj->updateReq1Status("Stopped",'4');	
+	  if($jsonData['domain_type']=='sending_domain') 
+           $obj->updateReq1Status("Stopped",'4');	
+	  else
+	   $obj->updateReq1Status("Stopped",'6');
 	
 	   $obj->connection_atm();
 	   $array = array($obj->req1);
