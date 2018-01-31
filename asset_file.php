@@ -27,7 +27,6 @@ class asset_file
         1 = IP 
         2 = Domain
         */
-        echo "Connected"; die;
         $this->getAgencyName($this->getFreezerIP(),1);
         $this->getAgencyName($this->getFreezerDomain(),2);
         $this->sendFile();
