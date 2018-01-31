@@ -61,7 +61,7 @@ if(isset($jsonString) and $jsonString!="")
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	$mainDomainId=$obj->getDomainId($main_domain,"sending");
-	echo "Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2"; die;
+	echo "Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=".$Req1_Details[0]['assigned_priority'].",Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2"; die;
 	
 	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2");
 	
