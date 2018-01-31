@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":439,"domain":"nl1.sendm.net","ip_wise_counts":{"342":1},"otherReq1":[440],"agency_id":2,"domain_type":"return_path_domain"}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":439,"domain":"nl1.sendm.net","ip_wise_counts":{"342":1},"otherReq1":[440],"agency_id":2,"domain_type":"return_path_domain"}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
@@ -94,10 +94,10 @@ if(isset($jsonString) and $jsonString!="")
 	$serverMasterArray= $obj->_dbHandlepdo->sql_Select("server_master", "server_id,host_name", " where server_id=(select mta from Domain_MTA_mapping where domain_id=?)", array($domain['domain_id']));	
         $obj->_dbHandlepdo->sql_update("server_master"," reload=1", " where server_id=?", array($serverMasterArray[0]['server_id']));		
         $obj->putAssetLog($serverMasterArray[0]['server_id'],3,"Server reload flag set","Req1=$obj->req1,PMTA=".$serverMasterArray[0]['host_name'].",Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$poolId,Pool Name=$poolName,agency id=$agencyId,Done by=ATM2");
-	
+	$obj->connection_atm(); 
 	$obj->_dbHandlepdo->sql_delete("Domain_MTA_mapping", " where domain_id=?", array($domain['domain_id']));
         $obj->putAssetLog($domain['domain_id'],2,"Domain removed from Domain_MTA_mapping table","Req1=$obj->req1,Domain=".$domain['domain_name'].",PMTA=".$serverMasterArray[0]['host_name'].",Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$poolId,Pool Name=$poolName,agency id=$agencyId,Done by=ATM2");
-		
+	$obj->connection_atm(); 	
 	$obj->_dbHandlepdo->sql_delete("domain_master", " where domain_id=?", array($domain['domain_id']));
 	$obj->putAssetLog($domain['domain_id'],2,"Domain removed from domain_master","Req1=$obj->req1,Reason=Domain $main_domain($domainType) got blacklisted,Pool Id=$poolId,Pool Name=$poolName,agency id=$agencyId,Done by=ATM2");
 	
