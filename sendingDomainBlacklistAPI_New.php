@@ -7,8 +7,8 @@
 */
 include("commonFunctions.php");
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-//$jsonString = '{"req1":422,"domain":"nl1.sendm.net","ip_wise_counts":{"342":1},"otherReq1":[382],"agency_id":2}';
-$jsonString = file_get_contents('php://input');
+$jsonString = '{"req1":439,"domain":"nl1.sendm.net","ip_wise_counts":{"342":1},"otherReq1":[440],"agency_id":2}';
+//$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $AccountBlockStatus = 0;
 $obj = new commonFunctions($jsonString);
@@ -55,12 +55,14 @@ if(isset($jsonString) and $jsonString!="")
 	   $obj->connection_atm();
 	   $array = array($obj->req1);
 	   $Req1_Details = $obj->_dbHandlepdo->sql_Select("Req1", "cl_id,mailer_id,created_time,total_unique_mail,assigned_priority", " where req1_id=?", $array);
-	    $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
+	   $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
 	   $obj->connection_disconnect();
 	
 	// get main domain of listed domain
 	 $main_domain = preg_replace("/^(.*\.)?([^.]*\..*)$/", "$2", $obj->inputJsonArray['domain']);
 	$mainDomainId=$obj->getDomainId($main_domain,"sending");
+	echo "Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2"; die;
+	
 	$obj->putAssetLog($mainDomainId[0]['domain_id'],2,"Domain Blacklisted","Req1=$obj->req1,Domain Name=$main_domain,Domain Type=$domainType,Pool Id=$Req1_Details[0][assigned_priority],Pool Name=$Env_ID[0][pool_name],agency id=$jsonData[agency_id],Captured By=ATM2");
 	
 	// get all hosts (varients of main domain)
