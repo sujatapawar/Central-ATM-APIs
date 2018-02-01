@@ -4,6 +4,8 @@ define("ATMDB","ATM");
 define("ATMUsername","juvlonui");
 define("ATMPassword","#u2dwfbeZlJO");
 define("FilePath",getcwd());
+define("PuneEnv","http://103.13.110.7/");
+define("MumbaiEnv","http://150.129.25.10/");
 class asset_file
 {
     protected $host = ATMHost;                  
@@ -39,7 +41,7 @@ class asset_file
             $FileName = basename($f);
             $FilesArr = explode('_', $FileName, 2);
             $Env = $FilesArr[0];
-            $TargetURL = ($Env=="Pune")?"http://103.13.110.7/file_listener.php":"http://150.129.25.10/file_listener.php";
+            $TargetURL = ($Env=="Pune")? PuneEnv."file_listener.php": MumbaiEnv."file_listener.php";
             if (function_exists('curl_file_create')) 
             { 
                 $cFile = curl_file_create($f);
