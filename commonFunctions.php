@@ -156,6 +156,21 @@ class commonFunctions {
     
     }// end of putAssetIntoWormup
     
+    function checkIPAssignInDomainMaster($IP_ID)
+    {
+        $this->connection_atm();
+        $array = array($IP_ID);
+        $RecordExist = $this->_dbHandlepdo->sql_Select("domain_master", "domain_id", " where IP_id=? ", $array);
+        $this->connection_disconnect();
+        return (!empty($RecordExist))?true:false;
+    }
+    function cleanIPStatus($IP_ID)
+    {
+        $this->connection_atm();
+        $array = array("clean",$IP_ID);
+        $this->_dbHandlepdo->sql_Update("IP_master"," status=? ", " where IP_id=?",$array);
+        $this->connection_disconnect();
+    }
     function releaseIP()
     {
         $this->connection_atm();
