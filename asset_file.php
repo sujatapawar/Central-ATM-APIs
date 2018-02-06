@@ -141,7 +141,7 @@ class asset_file
                                         SELECT CPIP.IP_id,IPM.IP,IPM.IP,IPM.env_id 
                                         FROM childPool_IPs CPIP
                                         join IP_master IPM  on IPM.IP_id = CPIP.IP_id
-                                        where CPIP.childPool_id = 10344
+                                        where CPIP.childPool_id = 10344 and IPM.status='listed'
                                         ");
         $Query->execute();
         return $Query->fetchAll(PDO::FETCH_ASSOC);
