@@ -141,7 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
 	
- if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData[agency_id],array(3,4,5))) 
+ if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData['agency_id'],array(3,4,5))) 
     {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
@@ -206,7 +206,7 @@ if(isset($jsonString) and $jsonString!="")
 
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
-	if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData[agency_id],array(3,4,5))) 
+	if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData['agency_id'],array(3,4,5))) 
     {	
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
