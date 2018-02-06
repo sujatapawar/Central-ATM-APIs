@@ -141,7 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
 	
- if($obj->get_request_type()=="PostORPrep") 
+ if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData[agency_id],array(3,4,5))) 
     {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
@@ -206,6 +206,8 @@ if(isset($jsonString) and $jsonString!="")
 
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData[agency_id],array(3,4,5))) 
+    {	
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -229,7 +231,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
 	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
-	
+     }
 	
 	//Send email alert to delivery team 
 	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
