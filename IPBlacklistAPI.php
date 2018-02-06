@@ -80,9 +80,9 @@ if(isset($jsonString) and $jsonString!="")
    $Env_ID = $obj->_dbHandlepdo->sql_Select("pool_master", "pool_name", " where pool_id=?", array($Req1_Details[0]['assigned_priority']));
    $obj->connection_disconnect();	
 	
-    $obj->putAssetLog($blacklistedIPId,1,"IP Blacklisted","Req1=$obj->req1,IP=$AssignIP[0][IP],Agency id=$jsonData[agency_id],Captured by=ATM2");
+    $obj->putAssetLog($blacklistedIPId,1,"IP Blacklisted","Req1=$obj->req1,IP=".$AssignIP[0]['IP'].",Agency id=".$jsonData['agency_id'].",Captured by=ATM2");
     $obj->logBlacklistingTransactions($blacklistedIPId,1,$jsonData['agency_id']);
-    $obj->putAssetLog($blacklistedIPId,1,"IP removed from pool","Req1=$obj->req1,Reason=IP $AssignIP[0][IP] got blacklisted,Pool Id=$Req1_Details[0][assigned_priority],Done by=ATM2");	
+    $obj->putAssetLog($blacklistedIPId,1,"IP removed from pool","Req1=$obj->req1,Reason=IP ".$AssignIP[0]['IP']." got blacklisted,Pool Id=".$Req1_Details[0]['assigned_priority'].",Done by=ATM2");	
 
     // get new IP from warm up
 	$warmedUpIP = $obj->getIPFromWarmUp($blacklistedIPId);
@@ -97,7 +97,7 @@ if(isset($jsonString) and $jsonString!="")
 		  {
 			$obj->replanishIP($warmedUpIP,$childPoolId[0]);
 			 echo "\n $childPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-			 $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool ","Req1=$obj->req1,child-pool Id=$childPoolId[0],Reason=IP $AssignIP[0][IP] got blacklisted,Done by=ATM2");  
+			 $obj->putAssetLog($warmedUpIP,1,"IP assigned to child-pool ","Req1=$obj->req1,child-pool Id=$childPoolId[0],Reason=IP ".$AssignIP[0]['IP']." got blacklisted,Done by=ATM2");  
 		  } 
 	 }	
 	  if(count($testChildPoolIdsArray)>0)
@@ -106,7 +106,7 @@ if(isset($jsonString) and $jsonString!="")
     	 	 {
     	  		$obj->replanishTestIP($warmedUpIP,$testChildPoolId[0]);
 			echo "\n $testChildPoolId[0] Replanied with Warmedup IP- $warmedUpIP";
-		        $obj->putAssetLog($warmedUpIP,1,"IP assigned to test child-pool","Req1=$obj->req1,child-pool Id=$testChildPoolId[0],Reason=IP $AssignIP[0][IP] got blacklisted,Done by=ATM2");  
+		        $obj->putAssetLog($warmedUpIP,1,"IP assigned to test child-pool","Req1=$obj->req1,child-pool Id=$testChildPoolId[0],Reason=IP ."$AssignIP[0]['IP']." got blacklisted,Done by=ATM2");  
     	  	}
 	  
 	  }	
@@ -124,7 +124,7 @@ if(isset($jsonString) and $jsonString!="")
     $obj->putIPInFreezer($blacklistedIPId);
     $logsArray["Action3"]="IP put into Freezer";
     	
-     $obj->putAssetLog($blacklistedIPId,1,"IP put into freezer","Req1=$obj->req1,Reason=IP $AssignIP[0][IP] got blacklisted,Done by=ATM2");  
+     $obj->putAssetLog($blacklistedIPId,1,"IP put into freezer","Req1=$obj->req1,Reason=IP ".$AssignIP[0]['IP']." got blacklisted,Done by=ATM2");  
 	
 	//Releasing IP
 	$IPID = $obj->releaseIP();
@@ -141,7 +141,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->UpdateIPWiseCounts();
 	$logsArray["Action5"]="IP wise counts are updated";
 	
- if($obj->get_request_type()=="PostORPrep") 
+ if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData['agency_id'],array(3,4,5))) 
     {	
 		
     /////////////// Blocking Sending functions //////////////////////////////////////////
@@ -206,6 +206,8 @@ if(isset($jsonString) and $jsonString!="")
 
 	//Send email alert to client
 	//$to = array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
+	if($obj->get_request_type()=="PostORPrep" and !in_array($jsonData['agency_id'],array(3,4,5))) 
+    {	
 	$subject="Your mailing ".$obj->req1." has been discontinued";
 	$message  = "Dear ".$Client_Details[0]['cl_name'].",";
 	$message .= "<p>Your mailing (details below) has caused our sending IP to be blacklisted. In order to protect further degradation of our infrastructure, your mailing has been stopped.</p>";
@@ -229,7 +231,7 @@ if(isset($jsonString) and $jsonString!="")
 	$obj->sendEmailAlert("mahesh.jagdale@nichelive.com",$subject,$message);
 	$obj->sendEmailAlert("support@juvlon.com",$subject,$message);
 	$obj->sendEmailAlert($Client_Details[0]['cl_email'],$subject,$message);
-	
+     }
 	
 	//Send email alert to delivery team 
 	//$to=array("shripad.kulkarni@nichelive.com","mahesh.jagdale@nichelive.com");
