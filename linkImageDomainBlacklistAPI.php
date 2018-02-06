@@ -21,8 +21,8 @@ If the number of times that the domain is blacklisted for this client exceeds 1,
 include("commonFunctions.php");
 
 ///////////////////////////////////PROGRAM INPUT//////////////////////////////////////////////////
-$jsonString = '{"req1":158,"domain":"link.sendm.net","ip_wise_counts":{"342":7,"861":3}}';
-//$jsonString = file_get_contents('php://input');
+//$jsonString = '{"req1":158,"domain":"link.sendm.net","ip_wise_counts":{"342":7,"861":3}}';
+$jsonString = file_get_contents('php://input');
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 $obj = new commonFunctions($jsonString);
 if(isset($jsonString) and $jsonString!="")
@@ -39,9 +39,15 @@ if(isset($jsonString) and $jsonString!="")
 
      $blacklistedDomainIdArr = $obj->getDomainId($obj->inputJsonArray['domain'],"link");
     $blacklistedDomainId=$blacklistedDomainIdArr[0]['domain_id']; //die;
+   // put asset log
+   $obj->putAssetLog($blacklistedDomainId,2,"Domain Blacklisted","Req1=$obj->req1,Domain Name=".$obj->inputJsonArray['domain'].",Domain Type=$domainType,agency id=$agencyId,Captured By=ATM2");
+	
+	
+   // put log in blacklist transcations	
+   $obj->logBlacklistingTransactions( $blacklistedDomainId,2,$jsonData['agency_id']);	
 
     //Retain 'childPool_id' of all pools with given domain id in an array 
-    $childPoolIdsArray = $obj->getAllChildPoolIdsOfDomains($blacklistedDomainId,"childPool_LinkDomains");
+   /* $childPoolIdsArray = $obj->getAllChildPoolIdsOfDomains($blacklistedDomainId,"childPool_LinkDomains");
 	//print_r($childPoolIdsArray); //die;
 
     //delete all entries of the domain id 
@@ -114,7 +120,7 @@ if(isset($jsonString) and $jsonString!="")
 	$subject="Central ATM API] Email Alert to Deliver for Link/Image domain Blacklist ";
 	$message="Email Alert for Returnpath domain Blacklist from Central ATM API";
 	$obj->sendEmailAlert($to,$subject,$message);
-
+    */
 
 }
 else
