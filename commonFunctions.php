@@ -317,6 +317,14 @@ class commonFunctions {
     $this->connection_disconnect();
    }// end of putIPInFreezer
 
+   function removeIPFromFreezer($IP_ID)
+   {
+    $this->connection_atm();
+    $this->_dbHandlepdo->sql_delete("childPool_IPs", " where childPool_id=? and IP_id=?", array(10344,$IP_ID));
+    $this->_dbHandlepdo->sql_Update("IP_master"," status=? ", " where IP_id=?",array('clean',$IP_ID));   
+    $this->connection_disconnect();
+   }
+
    function putIPInWarmup($badIPId)
    {
     $this->connection_atm();
