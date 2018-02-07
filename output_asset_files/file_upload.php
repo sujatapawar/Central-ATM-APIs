@@ -6,7 +6,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 $files = glob(getcwd()."/*.csv");
 foreach($files as $f):
     $FileName = basename($f);
-    $TargetURL = "http://localhost/Central-ATM-APIs/output_assetFiles/update_asset.php";
+    $TargetURL = "http://52.44.195.201/Central-ATM-APIs/output_assetFiles/update_asset.php";
     if (function_exists('curl_file_create')) 
     { 
         $cFile = curl_file_create($f);
