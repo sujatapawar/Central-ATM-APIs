@@ -1,6 +1,7 @@
 <?php
 include "../commonFunctions.php";
 $obj = new commonFunctions("Demo");
+echo "****";
 print_r($_FILES);
 exit;
 if(!empty($_FILES))
