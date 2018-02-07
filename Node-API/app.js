@@ -190,7 +190,7 @@ app.post('/CheckPTR',(req,res)=>{
   IP = Zone[0];
   let NewZone = Zone[1]+'.'+Zone[2]+'.'+Zone[3];
   Domain = (typeof req.body.Domain == 'undefined')?"":req.body.Domain.trim();
-  func.PTRCheck(AuthID,AuthPassword,NewZone,ZoneDomainName,Domain,Host,Type,(data)=>{
+  func.PTRCheck(AuthID,AuthPassword,NewZone,ZoneDomainName,Domain,IP,Type,(data)=>{
     if(data)
     {
       res.json({"status":"Success","statusDescription":"Record Exist"});
@@ -217,16 +217,16 @@ app.post('/AddPTR',(req,res)=>{
     console.log(result+" "+keyIP);
     if(result)
     { 
-      func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,(ID)=>{
+      func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,IP,Type,(ID)=>{
         if(ID=='')
         {
-          func.AddPTR(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Domain,(result)=>{
+          func.AddPTR(AuthID,AuthPassword,NewZone,ZoneDomainName,IP,Domain,(result)=>{
             res.send(result);
           });
         }
         else
         {
-          func.update_PTR(AuthID,AuthPassword,NewZone,ZoneDomainName,ID,Host,Domain,(result)=>{
+          func.update_PTR(AuthID,AuthPassword,NewZone,ZoneDomainName,ID,IP,Domain,(result)=>{
             res.send(result);
           });
         }
@@ -251,7 +251,7 @@ app.post('/DeletePTR',(req,res)=>{
   /* func.is_valid_IP(keyIP,ClientAPIKey,ServerAPIKey,con,(result)=>{
     if(result)
     { */
-      func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,Host,Type,(ID)=>{
+      func.is_PTR_Exist(AuthID,AuthPassword,NewZone,ZoneDomainName,IP,Type,(ID)=>{
         if(ID=='')
         {
           res.json({"status":"Error","statusDescription":"Please enter valid record."});
