@@ -545,8 +545,21 @@ class commonFunctions {
     
     }
    /* Functions for Add Domain functionality  */    
-    
-    
+   
+    /*function to check PTR */
+    function checkPTR($url,$stringToPost)
+    {
+    	$ch = curl_init();
+        $option = json_encode( array( "IP"=> "$ipp","Domain"=>"$entire_host_name","APIKey"=>"Niche-User") );
+        //echo "CHECK".$option;//die();
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $option );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_URL, "http://52.44.195.201:3000/CheckPTR");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        //echo $output;//die();
+        curl_close($ch);
+    }
 
 }// end of class
 
