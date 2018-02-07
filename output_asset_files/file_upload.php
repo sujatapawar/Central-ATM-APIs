@@ -1,5 +1,6 @@
 <?php
 $files = glob(getcwd()."/*.csv");
+print_r($files);
 foreach($files as $f):
     $FileName = basename($f);
     $TargetURL = "http://localhost/Central-ATM-APIs/output_assetFiles/update_asset.php";
