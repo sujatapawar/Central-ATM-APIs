@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+echo "*****";
 $files = glob(getcwd()."/*.csv");
 print_r($files);
 foreach($files as $f):
