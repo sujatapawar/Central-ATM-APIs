@@ -1,4 +1,7 @@
 <?php
+
+/* For teting */
+
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 $files = glob(getcwd()."/*.csv");
 foreach($files as $f):
