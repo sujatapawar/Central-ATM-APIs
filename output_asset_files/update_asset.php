@@ -1,7 +1,8 @@
 <?php
 include "../commonFunctions.php";
 $obj = new commonFunctions("Demo");
-
+print_r($_FILES);
+exit;
 if(!empty($_FILES))
 {
     $FileName = $_FILES["file_contents"]["name"];
