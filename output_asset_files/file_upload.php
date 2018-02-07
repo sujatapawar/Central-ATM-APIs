@@ -3,6 +3,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 echo "*****";
 $files = glob(getcwd()."/*.csv");
 print_r($files);
+die;
 foreach($files as $f):
     $FileName = basename($f);
     $TargetURL = "http://localhost/Central-ATM-APIs/output_assetFiles/update_asset.php";
